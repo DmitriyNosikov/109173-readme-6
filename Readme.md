@@ -1,7 +1,7 @@
 # Личный проект «Readme»
 
 * Студент: [Дмитрий Носиков](https://up.htmlacademy.ru/nodejs-2/6/user/109173).
-* Наставник: `Неизвестно`.
+* Наставник: [Евгений Наумов](https://htmlacademy.ru/profile/naumov_evg).
 
 ---
 
