@@ -1,0 +1,24 @@
+{
+  "name": "comment",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "apps/comment/src",
+  "projectType": "application",
+  "targets": {
+    "serve": {
+      "executor": "@nx/js:node",
+      "defaultConfiguration": "development",
+      "options": {
+        "buildTarget": "comment:build"
+      },
+      "configurations": {
+        "development": {
+          "buildTarget": "comment:build:development"
+        },
+        "production": {
+          "buildTarget": "comment:build:production"
+        }
+      }
+    }
+  },
+  "tags": []
+}
