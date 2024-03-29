@@ -1,0 +1,9 @@
+{
+  "name": "hasher",
+  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/shared/hasher/src",
+  "projectType": "library",
+  "tags": [],
+  "// targets": "to see all targets run: nx show project hasher --web",
+  "targets": {}
+}
