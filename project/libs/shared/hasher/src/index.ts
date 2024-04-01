@@ -1,1 +1,1 @@
-export { BCryptHasher } from './lib/BCryptHasher'
+export { BCryptHasher } from './lib/bcrypt.hasher'

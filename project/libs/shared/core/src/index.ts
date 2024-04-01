@@ -1,14 +1,21 @@
 export { Entity } from "./lib/base/entity"
 
-export { AuthUserInterface } from "./lib/types/user/auth-user.interface"
-export { UserInterface } from "./lib/types/user/user.interface"
+// INTERFACES
+export { AuthUserInterface } from "./lib/interfaces/user/auth-user.interface"
+export { UserInterface } from "./lib/interfaces/user/user.interface"
 
 export { PostTypeEnum } from './lib/types/post/post-type.enum'
-export { PostTextInterface } from './lib/types/post/post-text.interface'
-export { PostQuoteInterface } from './lib/types/post/post-quote.interface'
-export { PostLinkInterface } from './lib/types/post/post-link.interface'
-export { PostPhotoInterface } from './lib/types/post/post-photo.interface'
-export { PostVideoInterface } from './lib/types/post/post-video.interface'
+export { PostTextInterface } from './lib/interfaces/post/post-text.interface'
+export { PostQuoteInterface } from './lib/interfaces/post/post-quote.interface'
+export { PostLinkInterface } from './lib/interfaces/post/post-link.interface'
+export { PostPhotoInterface } from './lib/interfaces/post/post-photo.interface'
+export { PostVideoInterface } from './lib/interfaces/post/post-video.interface'
 
-export { CommentInterface } from './lib/types/comment.interface'
-export { LikeInterface } from './lib/types/like.interface'
+export { CommentInterface } from './lib/interfaces/comment.interface'
+export { LikeInterface } from './lib/interfaces/like.interface'
+export { StorableEntity } from './lib/interfaces/storable-entity.interface'
+export { EntityFactory } from './lib/interfaces/entity-factory.interface'
+
+
+// TYPES
+export { PlainObject } from './lib/types/plain-object.type'

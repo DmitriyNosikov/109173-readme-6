@@ -1,5 +1,5 @@
 import { UserInterface } from '../user/user.interface';
-import { PostTypeEnum } from './post-type.enum';
+import { PostTypeEnum } from '../../types/post/post-type.enum';
 
 export interface PostInterface {
   id: string;

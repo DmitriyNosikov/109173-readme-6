@@ -1,6 +1,5 @@
 import { plainToClass, ClassConstructor, ClassTransformOptions } from 'class-transformer';
-
-type PlainObject = Record<string, unknown>;
+import { PlainObject } from '../../../core/src/index'
 
 export function fillDTO<T, O extends PlainObject | PlainObject[]> (
   DTOClass: ClassConstructor<T>,
