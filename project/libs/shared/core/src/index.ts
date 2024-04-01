@@ -1,4 +1,4 @@
-export * from './lib/core';
+export { Entity } from "./lib/base/entity"
 
-export { AuthUserInterface } from "./lib/types/auth-user.interface"
-export { UserInterface } from "./lib/types/user.interface"
+export { AuthUserInterface } from "./lib/types/user/auth-user.interface"
+export { UserInterface } from "./lib/types/user/user.interface"
