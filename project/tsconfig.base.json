@@ -20,6 +20,7 @@
       "@project/core": ["libs/shared/core/src/index.ts"],
       "@project/data-access": ["libs/shared/data-access/src/index.ts"],
       "@project/hasher": ["libs/shared/hasher/src/index.ts"],
+      "@project/helpers": ["libs/shared/helpers/src/index.ts"],
       "@project/like": ["libs/post/like/src/index.ts"],
       "@project/password": ["libs/user/password/src/index.ts"],
       "@project/repost": ["libs/post/repost/src/index.ts"],
