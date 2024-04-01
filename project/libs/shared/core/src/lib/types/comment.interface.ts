@@ -1,4 +1,4 @@
-export interface Comment {
+export interface CommentInterface {
   id: string;
   text: string;
   postId: string;
