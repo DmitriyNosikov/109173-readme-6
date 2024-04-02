@@ -1,1 +1,1 @@
-export * from './lib/helpers';
+export { fillDTO } from './lib/common'
