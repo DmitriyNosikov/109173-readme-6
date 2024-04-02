@@ -9,6 +9,6 @@ import { BlogUserFactory } from './blog-user.factory';
 @Module({
   controllers: [BlogUserController],
   providers: [BlogUserService, BlogUserRepository, BlogUserFactory],
-  exports: [BlogUserRepository]
+  exports: [BlogUserRepository, BlogUserFactory]
 })
 export class BlogUserModule {}

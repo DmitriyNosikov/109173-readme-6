@@ -1,1 +1,1 @@
-export { fillDTO } from './lib/common'
+export { fillDTO, getdate } from './lib/common'

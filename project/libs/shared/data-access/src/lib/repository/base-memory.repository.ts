@@ -1,7 +1,7 @@
 import { randomUUID } from 'node:crypto';
 import { Entity, EntityFactory, StorableEntity } from '@project/shared/core';
 import { Repository } from './repository.interface';
-import { RepositoryMessage } from './repository.messages';
+import { RepositoryMessage } from './repository.contant';
 
 export abstract class BaseMemoryRepository<T extends Entity &
   StorableEntity<ReturnType<T['toPOJO']>>> implements Repository<T> {
@@ -27,8 +27,11 @@ export abstract class BaseMemoryRepository<T extends Entity &
     }
 
     entity.id = randomUUID();
+    const entityPlainObject = entity.toPOJO();
 
-    this.storage.set(entity.id, entity.toPOJO());
+    await this.storage.set(entity.id, entityPlainObject);
+
+    return await entityPlainObject;
   }
 
   public async updateById(entityId: T['id'], updatedFields: Partial<T>): Promise<void> {

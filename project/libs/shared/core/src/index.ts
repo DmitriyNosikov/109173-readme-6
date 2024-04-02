@@ -19,3 +19,4 @@ export { EntityFactory } from './lib/interfaces/entity-factory.interface'
 
 // TYPES
 export { PlainObject } from './lib/types/plain-object.type'
+export { MessagesType } from './lib/types/messages.type'

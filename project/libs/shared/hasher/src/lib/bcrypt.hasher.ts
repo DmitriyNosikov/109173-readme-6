@@ -5,13 +5,13 @@ import { genSalt, hash, compare } from 'bcrypt';
 const SALT_ROUNDS = 10;
 
 export class BCryptHasher implements HasherInterface {
-  getHash(value: string): string {
+  async getHash(value: string): Promise<string> {
     const salt = genSalt(SALT_ROUNDS);
 
     return hash(value, salt);
   }
 
-  checkHash(value: string, hashedValue: string) {
+  async checkHash(value: string, hashedValue: string): Promise<boolean> {
     return compare(value, hashedValue);
   }
 }

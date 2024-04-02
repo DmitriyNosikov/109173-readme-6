@@ -8,3 +8,7 @@ export function fillDTO<T, O extends PlainObject | PlainObject[]> (
 ): T | T[] {
   return plainToClass(DTOClass, plainObject, options);
 }
+
+export function getdate(): string {
+  return new Date().toDateString();
+}
