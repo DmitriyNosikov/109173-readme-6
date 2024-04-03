@@ -9,7 +9,7 @@ export class BlogUserService {
   constructor(
     private readonly blogUserRepository: BlogUserRepository,
 
-    @Inject('hasher')
+    @Inject('Hasher')
     private readonly hasher: BCryptHasher
   ) {}
 
