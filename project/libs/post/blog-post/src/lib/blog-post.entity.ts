@@ -14,7 +14,7 @@ export class BlogPostEntity extends Entity implements StorableEntity<PostInterfa
 
   constructor(post?: PostInterface) {
     super();
-
+    this.populate(post);
   }
 
   public populate(post?: PostInterface) {
