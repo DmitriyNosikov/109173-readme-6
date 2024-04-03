@@ -21,7 +21,7 @@ export abstract class BaseMemoryRepository<T extends Entity &
     return this.entityFactory.create(entity);
   }
 
-  public async create(entity: T): Promise<void> {
+  public async create(entity: T): Promise<unknown> {
     if(this.exists(entity.id)) {
       return;
     }
@@ -31,7 +31,7 @@ export abstract class BaseMemoryRepository<T extends Entity &
 
     await this.storage.set(entity.id, entityPlainObject);
 
-    return await entityPlainObject;
+    return entityPlainObject;
   }
 
   public async updateById(entityId: T['id'], updatedFields: Partial<T>): Promise<void> {
