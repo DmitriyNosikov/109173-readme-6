@@ -18,7 +18,7 @@ export abstract class BaseMemoryRepository<T extends Entity &
 
     const entity = this.storage.get(entityId);
 
-    return this.entityFactory.create(entity);
+    return Promise.resolve(this.entityFactory.create(entity));
   }
 
   public async create(entity: T): Promise<unknown> {
@@ -31,18 +31,21 @@ export abstract class BaseMemoryRepository<T extends Entity &
 
     await this.storage.set(entity.id, entityPlainObject);
 
-    return entityPlainObject;
+    return Promise.resolve(entityPlainObject);
   }
 
-  public async updateById(entityId: T['id'], updatedFields: Partial<T>): Promise<void> {
+  public async updateById(entityId: T['id'], updatedFields: Partial<T>): Promise<T> {
     if(this.exists(entityId)) {
       throw new Error(RepositoryMessage.ERROR.ENTITY_NOT_FOUND);
     }
 
-    const entity = this.findById(entityId);
-    const updatedEntity = { entity, ...updatedFields };
+    const entity = await this.findById(entityId);
+    const entityPlainObject = entity.toPOJO();
+    const updatedEntity: ReturnType<T['toPOJO']> = { entityPlainObject, ...updatedFields.toPOJO() };
 
-    this.storage.set(entityId, updatedEntity.toPOJO());
+    await this.storage.set(entityId, updatedEntity);
+
+    return Promise.resolve(this.entityFactory.create(updatedEntity));
   }
 
   public async deleteById(entityId: any): Promise<void> {
@@ -50,10 +53,12 @@ export abstract class BaseMemoryRepository<T extends Entity &
       throw new Error(RepositoryMessage.ERROR.ENTITY_NOT_FOUND);
     }
 
-    this.storage.delete(entityId);
+    await this.storage.delete(entityId);
+
+    return Promise.resolve();
   }
 
-  public async exists(entityId: string) {
-    return this.storage.has(entityId);
+  public async exists(entityId: string): Promise<boolean> {
+    return Promise.resolve(this.storage.has(entityId));
   }
 }

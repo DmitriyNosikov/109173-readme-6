@@ -24,6 +24,10 @@ export class BlogUserEntity extends Entity implements StorableEntity<AuthUserInt
     this.passwordHash = user.passwordHash;
   }
 
+  public setPassword(password: string) {
+    this.passwordHash = password;
+  }
+
   public toPOJO(): AuthUserInterface {
     return {
       id: this.id,

@@ -12,7 +12,7 @@ export class BlogUserRepository extends BaseMemoryRepository<BlogUserEntity> {
     const user = entities.find((user) => user.email === userEmail);
 
     if(!user) {
-      return null;
+      return Promise.resolve(null);
     }
 
     const userEntity = this.entityFactory.create(user);
