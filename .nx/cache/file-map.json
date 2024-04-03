@@ -1,0 +1,1359 @@
+{
+  "version": "6.0",
+  "nxVersion": "18.1.2",
+  "deps": {
+    "bcrypt": "5.1.1"
+  },
+  "pathMappings": {},
+  "nxJsonPlugins": [],
+  "fileMap": {
+    "projectFileMap": {
+      "subscription": [
+        {
+          "file": "project/libs/user/subscription/.eslintrc.json",
+          "hash": "9703569748258640057"
+        },
+        {
+          "file": "project/libs/user/subscription/README.md",
+          "hash": "17536215681673124304"
+        },
+        {
+          "file": "project/libs/user/subscription/jest.config.ts",
+          "hash": "12372733558736055960"
+        },
+        {
+          "file": "project/libs/user/subscription/project.json",
+          "hash": "17400441563941734127"
+        },
+        {
+          "file": "project/libs/user/subscription/src/index.ts",
+          "hash": "16350333244300392997"
+        },
+        {
+          "file": "project/libs/user/subscription/src/lib/subscription.spec.ts",
+          "hash": "16810897603235752603"
+        },
+        {
+          "file": "project/libs/user/subscription/src/lib/subscription.ts",
+          "hash": "14988587572119394763"
+        },
+        {
+          "file": "project/libs/user/subscription/tsconfig.json",
+          "hash": "6693614989438379715"
+        },
+        {
+          "file": "project/libs/user/subscription/tsconfig.lib.json",
+          "hash": "4913686798867512656"
+        },
+        {
+          "file": "project/libs/user/subscription/tsconfig.spec.json",
+          "hash": "9110660443763673899"
+        }
+      ],
+      "data-access": [
+        {
+          "file": "project/libs/shared/data-access/.eslintrc.json",
+          "hash": "9703569748258640057"
+        },
+        {
+          "file": "project/libs/shared/data-access/README.md",
+          "hash": "5712561892401178510"
+        },
+        {
+          "file": "project/libs/shared/data-access/jest.config.ts",
+          "hash": "4913977981115006695"
+        },
+        {
+          "file": "project/libs/shared/data-access/project.json",
+          "hash": "554312300979868107"
+        },
+        {
+          "file": "project/libs/shared/data-access/src/index.ts",
+          "hash": "8859144107462666792"
+        },
+        {
+          "file": "project/libs/shared/data-access/src/lib/repository/base-memory.repository.ts",
+          "hash": "11853810282606716171"
+        },
+        {
+          "file": "project/libs/shared/data-access/src/lib/repository/repository.contant.ts",
+          "hash": "305063371774034011"
+        },
+        {
+          "file": "project/libs/shared/data-access/src/lib/repository/repository.interface.ts",
+          "hash": "9668524187751879060"
+        },
+        {
+          "file": "project/libs/shared/data-access/tsconfig.json",
+          "hash": "6693614989438379715"
+        },
+        {
+          "file": "project/libs/shared/data-access/tsconfig.lib.json",
+          "hash": "4913686798867512656"
+        },
+        {
+          "file": "project/libs/shared/data-access/tsconfig.spec.json",
+          "hash": "9110660443763673899"
+        }
+      ],
+      "helpers": [
+        {
+          "file": "project/libs/shared/helpers/.eslintrc.json",
+          "hash": "9703569748258640057"
+        },
+        {
+          "file": "project/libs/shared/helpers/README.md",
+          "hash": "7988955941586324043"
+        },
+        {
+          "file": "project/libs/shared/helpers/jest.config.ts",
+          "hash": "4194748251149995405"
+        },
+        {
+          "file": "project/libs/shared/helpers/project.json",
+          "hash": "11945247757039392239"
+        },
+        {
+          "file": "project/libs/shared/helpers/src/index.ts",
+          "hash": "7623758281685542816"
+        },
+        {
+          "file": "project/libs/shared/helpers/src/lib/common.ts",
+          "hash": "15588040896205264730"
+        },
+        {
+          "file": "project/libs/shared/helpers/tsconfig.json",
+          "hash": "6693614989438379715"
+        },
+        {
+          "file": "project/libs/shared/helpers/tsconfig.lib.json",
+          "hash": "4913686798867512656"
+        },
+        {
+          "file": "project/libs/shared/helpers/tsconfig.spec.json",
+          "hash": "9110660443763673899"
+        }
+      ],
+      "user": [
+        {
+          "file": "project/apps/user/.eslintrc.json",
+          "hash": "2295303304320410742"
+        },
+        {
+          "file": "project/apps/user/jest.config.ts",
+          "hash": "2337467090740452295"
+        },
+        {
+          "file": "project/apps/user/project.json",
+          "hash": "12227836212202170426"
+        },
+        {
+          "file": "project/apps/user/src/app/app.module.ts",
+          "hash": "5842802527449580178"
+        },
+        {
+          "file": "project/apps/user/src/assets/.gitkeep",
+          "hash": "3244421341483603138"
+        },
+        {
+          "file": "project/apps/user/src/main.ts",
+          "hash": "14819337011353640225"
+        },
+        {
+          "file": "project/apps/user/tsconfig.app.json",
+          "hash": "17628448778285850515"
+        },
+        {
+          "file": "project/apps/user/tsconfig.json",
+          "hash": "3490524966360018312"
+        },
+        {
+          "file": "project/apps/user/tsconfig.spec.json",
+          "hash": "11550347367511341917"
+        },
+        {
+          "file": "project/apps/user/webpack.config.js",
+          "hash": "11799428799329055757"
+        }
+      ],
+      "blog-user": [
+        {
+          "file": "project/libs/user/blog-user/.eslintrc.json",
+          "hash": "9703569748258640057"
+        },
+        {
+          "file": "project/libs/user/blog-user/README.md",
+          "hash": "17032162312820475983"
+        },
+        {
+          "file": "project/libs/user/blog-user/jest.config.ts",
+          "hash": "1820627941736730336"
+        },
+        {
+          "file": "project/libs/user/blog-user/project.json",
+          "hash": "12233937103230665985"
+        },
+        {
+          "file": "project/libs/user/blog-user/src/index.ts",
+          "hash": "3782978982028760825"
+        },
+        {
+          "file": "project/libs/user/blog-user/src/lib/blog-user.constant.ts",
+          "hash": "1553647133476392715"
+        },
+        {
+          "file": "project/libs/user/blog-user/src/lib/blog-user.controller.ts",
+          "hash": "15389687032738504139"
+        },
+        {
+          "file": "project/libs/user/blog-user/src/lib/blog-user.entity.ts",
+          "hash": "8351615677165215211"
+        },
+        {
+          "file": "project/libs/user/blog-user/src/lib/blog-user.factory.ts",
+          "hash": "8125875433999265995"
+        },
+        {
+          "file": "project/libs/user/blog-user/src/lib/blog-user.module.ts",
+          "hash": "899240391486907461"
+        },
+        {
+          "file": "project/libs/user/blog-user/src/lib/blog-user.repository.ts",
+          "hash": "4806372003349839024"
+        },
+        {
+          "file": "project/libs/user/blog-user/src/lib/blog-user.service.ts",
+          "hash": "10509692065563423798"
+        },
+        {
+          "file": "project/libs/user/blog-user/src/lib/dto/change-password.dto.ts",
+          "hash": "13170638482181957024"
+        },
+        {
+          "file": "project/libs/user/blog-user/src/lib/dto/create-user.dto.ts",
+          "hash": "10801016086138744362"
+        },
+        {
+          "file": "project/libs/user/blog-user/src/lib/dto/login-user.dto.ts",
+          "hash": "16320561394105693491"
+        },
+        {
+          "file": "project/libs/user/blog-user/src/lib/rdo/user.rdo.ts",
+          "hash": "8730930917124809287"
+        },
+        {
+          "file": "project/libs/user/blog-user/tsconfig.json",
+          "hash": "6693614989438379715"
+        },
+        {
+          "file": "project/libs/user/blog-user/tsconfig.lib.json",
+          "hash": "4913686798867512656"
+        },
+        {
+          "file": "project/libs/user/blog-user/tsconfig.spec.json",
+          "hash": "9110660443763673899"
+        }
+      ],
+      "repost": [
+        {
+          "file": "project/libs/post/repost/.eslintrc.json",
+          "hash": "9703569748258640057"
+        },
+        {
+          "file": "project/libs/post/repost/README.md",
+          "hash": "12756292320223868143"
+        },
+        {
+          "file": "project/libs/post/repost/jest.config.ts",
+          "hash": "10827562276392594942"
+        },
+        {
+          "file": "project/libs/post/repost/project.json",
+          "hash": "13359397985597327414"
+        },
+        {
+          "file": "project/libs/post/repost/src/index.ts",
+          "hash": "9063202057785919330"
+        },
+        {
+          "file": "project/libs/post/repost/src/lib/repost.spec.ts",
+          "hash": "8984738945646249103"
+        },
+        {
+          "file": "project/libs/post/repost/src/lib/repost.ts",
+          "hash": "4769052625987349087"
+        },
+        {
+          "file": "project/libs/post/repost/tsconfig.json",
+          "hash": "6693614989438379715"
+        },
+        {
+          "file": "project/libs/post/repost/tsconfig.lib.json",
+          "hash": "4913686798867512656"
+        },
+        {
+          "file": "project/libs/post/repost/tsconfig.spec.json",
+          "hash": "9110660443763673899"
+        }
+      ],
+      "comment": [
+        {
+          "file": "project/libs/post/comment/.eslintrc.json",
+          "hash": "9703569748258640057"
+        },
+        {
+          "file": "project/libs/post/comment/README.md",
+          "hash": "15099864595926860947"
+        },
+        {
+          "file": "project/libs/post/comment/jest.config.ts",
+          "hash": "9670473821705102422"
+        },
+        {
+          "file": "project/libs/post/comment/project.json",
+          "hash": "6779839008233337642"
+        },
+        {
+          "file": "project/libs/post/comment/src/index.ts",
+          "hash": "579600572525925381"
+        },
+        {
+          "file": "project/libs/post/comment/src/lib/comment.spec.ts",
+          "hash": "12644194558534538655"
+        },
+        {
+          "file": "project/libs/post/comment/src/lib/comment.ts",
+          "hash": "2455876930254408698"
+        },
+        {
+          "file": "project/libs/post/comment/tsconfig.json",
+          "hash": "6693614989438379715"
+        },
+        {
+          "file": "project/libs/post/comment/tsconfig.lib.json",
+          "hash": "4913686798867512656"
+        },
+        {
+          "file": "project/libs/post/comment/tsconfig.spec.json",
+          "hash": "9110660443763673899"
+        }
+      ],
+      "core": [
+        {
+          "file": "project/libs/shared/core/.eslintrc.json",
+          "hash": "9703569748258640057"
+        },
+        {
+          "file": "project/libs/shared/core/README.md",
+          "hash": "862743182427189852"
+        },
+        {
+          "file": "project/libs/shared/core/jest.config.ts",
+          "hash": "8299526261437281734"
+        },
+        {
+          "file": "project/libs/shared/core/project.json",
+          "hash": "14953535992067324329"
+        },
+        {
+          "file": "project/libs/shared/core/src/index.ts",
+          "hash": "10783371465871384476"
+        },
+        {
+          "file": "project/libs/shared/core/src/lib/base/entity.ts",
+          "hash": "6587757072234653607"
+        },
+        {
+          "file": "project/libs/shared/core/src/lib/interfaces/comment.interface.ts",
+          "hash": "11460306147998378603"
+        },
+        {
+          "file": "project/libs/shared/core/src/lib/interfaces/entity-factory.interface.ts",
+          "hash": "4100690302695872986"
+        },
+        {
+          "file": "project/libs/shared/core/src/lib/interfaces/like.interface.ts",
+          "hash": "11946063916191929870"
+        },
+        {
+          "file": "project/libs/shared/core/src/lib/interfaces/post/post-link.interface.ts",
+          "hash": "13675446404206486962"
+        },
+        {
+          "file": "project/libs/shared/core/src/lib/interfaces/post/post-photo.interface.ts",
+          "hash": "6535079588993196736"
+        },
+        {
+          "file": "project/libs/shared/core/src/lib/interfaces/post/post-quote.interface.ts",
+          "hash": "2024828670580365070"
+        },
+        {
+          "file": "project/libs/shared/core/src/lib/interfaces/post/post-text.interface.ts",
+          "hash": "11153377406771366536"
+        },
+        {
+          "file": "project/libs/shared/core/src/lib/interfaces/post/post-video.interface.ts",
+          "hash": "10770922827234138007"
+        },
+        {
+          "file": "project/libs/shared/core/src/lib/interfaces/post/post-with-text.interface.ts",
+          "hash": "3652377026663382822"
+        },
+        {
+          "file": "project/libs/shared/core/src/lib/interfaces/post/post-with-title.interface.ts",
+          "hash": "4238679733053247869"
+        },
+        {
+          "file": "project/libs/shared/core/src/lib/interfaces/post/post.interface.ts",
+          "hash": "5051573682137458825"
+        },
+        {
+          "file": "project/libs/shared/core/src/lib/interfaces/storable-entity.interface.ts",
+          "hash": "9230735519064500300"
+        },
+        {
+          "file": "project/libs/shared/core/src/lib/interfaces/user/auth-user.interface.ts",
+          "hash": "16952014757672131182"
+        },
+        {
+          "file": "project/libs/shared/core/src/lib/interfaces/user/user.interface.ts",
+          "hash": "3777986542773982258"
+        },
+        {
+          "file": "project/libs/shared/core/src/lib/types/messages.type.ts",
+          "hash": "16162024031524809053"
+        },
+        {
+          "file": "project/libs/shared/core/src/lib/types/plain-object.type.ts",
+          "hash": "6979628503062242771"
+        },
+        {
+          "file": "project/libs/shared/core/src/lib/types/post/post-type.enum.ts",
+          "hash": "413641557484893281"
+        },
+        {
+          "file": "project/libs/shared/core/tsconfig.json",
+          "hash": "6693614989438379715"
+        },
+        {
+          "file": "project/libs/shared/core/tsconfig.lib.json",
+          "hash": "4913686798867512656"
+        },
+        {
+          "file": "project/libs/shared/core/tsconfig.spec.json",
+          "hash": "9110660443763673899"
+        }
+      ],
+      "filesystem": [
+        {
+          "file": "project/apps/filesystem/.eslintrc.json",
+          "hash": "13800677001662881425"
+        },
+        {
+          "file": "project/apps/filesystem/jest.config.ts",
+          "hash": "11206440336410767471"
+        },
+        {
+          "file": "project/apps/filesystem/project.json",
+          "hash": "360316153319138351"
+        },
+        {
+          "file": "project/apps/filesystem/src/app/app.controller.spec.ts",
+          "hash": "9499997688052526633"
+        },
+        {
+          "file": "project/apps/filesystem/src/app/app.controller.ts",
+          "hash": "9005150069945785676"
+        },
+        {
+          "file": "project/apps/filesystem/src/app/app.module.ts",
+          "hash": "3163250445227373966"
+        },
+        {
+          "file": "project/apps/filesystem/src/app/app.service.spec.ts",
+          "hash": "8587461140686713758"
+        },
+        {
+          "file": "project/apps/filesystem/src/app/app.service.ts",
+          "hash": "9967902337593410053"
+        },
+        {
+          "file": "project/apps/filesystem/src/assets/.gitkeep",
+          "hash": "3244421341483603138"
+        },
+        {
+          "file": "project/apps/filesystem/src/main.ts",
+          "hash": "11205222914964382693"
+        },
+        {
+          "file": "project/apps/filesystem/tsconfig.app.json",
+          "hash": "3171572500325445971"
+        },
+        {
+          "file": "project/apps/filesystem/tsconfig.json",
+          "hash": "3490524966360018312"
+        },
+        {
+          "file": "project/apps/filesystem/tsconfig.spec.json",
+          "hash": "11550347367511341917"
+        },
+        {
+          "file": "project/apps/filesystem/webpack.config.js",
+          "hash": "7111178211472281905"
+        }
+      ],
+      "hasher": [
+        {
+          "file": "project/libs/shared/hasher/.eslintrc.json",
+          "hash": "9703569748258640057"
+        },
+        {
+          "file": "project/libs/shared/hasher/README.md",
+          "hash": "17982952625195419365"
+        },
+        {
+          "file": "project/libs/shared/hasher/jest.config.ts",
+          "hash": "7658117341028902383"
+        },
+        {
+          "file": "project/libs/shared/hasher/project.json",
+          "hash": "6947800644080300789"
+        },
+        {
+          "file": "project/libs/shared/hasher/src/index.ts",
+          "hash": "4430016357750034579"
+        },
+        {
+          "file": "project/libs/shared/hasher/src/lib/bcrypt.hasher.ts",
+          "hash": "1246972564702633867"
+        },
+        {
+          "file": "project/libs/shared/hasher/src/lib/hasher.interfase.ts",
+          "hash": "2749879893462485048"
+        },
+        {
+          "file": "project/libs/shared/hasher/tsconfig.json",
+          "hash": "6693614989438379715"
+        },
+        {
+          "file": "project/libs/shared/hasher/tsconfig.lib.json",
+          "hash": "4913686798867512656"
+        },
+        {
+          "file": "project/libs/shared/hasher/tsconfig.spec.json",
+          "hash": "9110660443763673899"
+        }
+      ],
+      "like": [
+        {
+          "file": "project/libs/post/like/.eslintrc.json",
+          "hash": "9703569748258640057"
+        },
+        {
+          "file": "project/libs/post/like/README.md",
+          "hash": "15224643740336845944"
+        },
+        {
+          "file": "project/libs/post/like/jest.config.ts",
+          "hash": "9561572076454913171"
+        },
+        {
+          "file": "project/libs/post/like/project.json",
+          "hash": "14690719110572187867"
+        },
+        {
+          "file": "project/libs/post/like/src/index.ts",
+          "hash": "749611195042178079"
+        },
+        {
+          "file": "project/libs/post/like/src/lib/like.spec.ts",
+          "hash": "10152134844622506255"
+        },
+        {
+          "file": "project/libs/post/like/src/lib/like.ts",
+          "hash": "2435532433293663504"
+        },
+        {
+          "file": "project/libs/post/like/tsconfig.json",
+          "hash": "6693614989438379715"
+        },
+        {
+          "file": "project/libs/post/like/tsconfig.lib.json",
+          "hash": "4913686798867512656"
+        },
+        {
+          "file": "project/libs/post/like/tsconfig.spec.json",
+          "hash": "9110660443763673899"
+        }
+      ],
+      "search": [
+        {
+          "file": "project/libs/post/search/.eslintrc.json",
+          "hash": "9703569748258640057"
+        },
+        {
+          "file": "project/libs/post/search/README.md",
+          "hash": "2918268056342767444"
+        },
+        {
+          "file": "project/libs/post/search/jest.config.ts",
+          "hash": "10544866333270636724"
+        },
+        {
+          "file": "project/libs/post/search/project.json",
+          "hash": "9405285255322643709"
+        },
+        {
+          "file": "project/libs/post/search/src/index.ts",
+          "hash": "1465623782141027614"
+        },
+        {
+          "file": "project/libs/post/search/src/lib/search.spec.ts",
+          "hash": "1184935100732482873"
+        },
+        {
+          "file": "project/libs/post/search/src/lib/search.ts",
+          "hash": "4922884709023892743"
+        },
+        {
+          "file": "project/libs/post/search/tsconfig.json",
+          "hash": "6693614989438379715"
+        },
+        {
+          "file": "project/libs/post/search/tsconfig.lib.json",
+          "hash": "4913686798867512656"
+        },
+        {
+          "file": "project/libs/post/search/tsconfig.spec.json",
+          "hash": "9110660443763673899"
+        }
+      ],
+      "authentication": [
+        {
+          "file": "project/libs/user/authentication/.eslintrc.json",
+          "hash": "9703569748258640057"
+        },
+        {
+          "file": "project/libs/user/authentication/README.md",
+          "hash": "15166027206486989941"
+        },
+        {
+          "file": "project/libs/user/authentication/jest.config.ts",
+          "hash": "13259994753618282807"
+        },
+        {
+          "file": "project/libs/user/authentication/project.json",
+          "hash": "14126331911993159954"
+        },
+        {
+          "file": "project/libs/user/authentication/src/index.ts",
+          "hash": "17694791500050475356"
+        },
+        {
+          "file": "project/libs/user/authentication/src/lib/authentication.constant.ts",
+          "hash": "16276566806736342775"
+        },
+        {
+          "file": "project/libs/user/authentication/src/lib/authentication.controller.ts",
+          "hash": "11928769991762685975"
+        },
+        {
+          "file": "project/libs/user/authentication/src/lib/authentication.module.ts",
+          "hash": "12872109591499370856"
+        },
+        {
+          "file": "project/libs/user/authentication/src/lib/authentication.service.ts",
+          "hash": "17310373848598971259"
+        },
+        {
+          "file": "project/libs/user/authentication/tsconfig.json",
+          "hash": "6693614989438379715"
+        },
+        {
+          "file": "project/libs/user/authentication/tsconfig.lib.json",
+          "hash": "4913686798867512656"
+        },
+        {
+          "file": "project/libs/user/authentication/tsconfig.spec.json",
+          "hash": "9110660443763673899"
+        }
+      ],
+      "notification": [
+        {
+          "file": "project/apps/notification/.eslintrc.json",
+          "hash": "13800677001662881425"
+        },
+        {
+          "file": "project/apps/notification/jest.config.ts",
+          "hash": "5294777988512405827"
+        },
+        {
+          "file": "project/apps/notification/project.json",
+          "hash": "146713911341238827"
+        },
+        {
+          "file": "project/apps/notification/src/app/app.controller.spec.ts",
+          "hash": "9499997688052526633"
+        },
+        {
+          "file": "project/apps/notification/src/app/app.controller.ts",
+          "hash": "9005150069945785676"
+        },
+        {
+          "file": "project/apps/notification/src/app/app.module.ts",
+          "hash": "3163250445227373966"
+        },
+        {
+          "file": "project/apps/notification/src/app/app.service.spec.ts",
+          "hash": "8587461140686713758"
+        },
+        {
+          "file": "project/apps/notification/src/app/app.service.ts",
+          "hash": "9967902337593410053"
+        },
+        {
+          "file": "project/apps/notification/src/assets/.gitkeep",
+          "hash": "3244421341483603138"
+        },
+        {
+          "file": "project/apps/notification/src/main.ts",
+          "hash": "11205222914964382693"
+        },
+        {
+          "file": "project/apps/notification/tsconfig.app.json",
+          "hash": "3171572500325445971"
+        },
+        {
+          "file": "project/apps/notification/tsconfig.json",
+          "hash": "3490524966360018312"
+        },
+        {
+          "file": "project/apps/notification/tsconfig.spec.json",
+          "hash": "11550347367511341917"
+        },
+        {
+          "file": "project/apps/notification/webpack.config.js",
+          "hash": "7470491162320107997"
+        }
+      ],
+      "password": [
+        {
+          "file": "project/libs/user/password/.eslintrc.json",
+          "hash": "9703569748258640057"
+        },
+        {
+          "file": "project/libs/user/password/README.md",
+          "hash": "1308659244179987932"
+        },
+        {
+          "file": "project/libs/user/password/jest.config.ts",
+          "hash": "14718283531351187381"
+        },
+        {
+          "file": "project/libs/user/password/project.json",
+          "hash": "10919511635898643597"
+        },
+        {
+          "file": "project/libs/user/password/src/index.ts",
+          "hash": "13472816676423309811"
+        },
+        {
+          "file": "project/libs/user/password/src/lib/password.spec.ts",
+          "hash": "11675257333395746633"
+        },
+        {
+          "file": "project/libs/user/password/src/lib/password.ts",
+          "hash": "8802551057820130609"
+        },
+        {
+          "file": "project/libs/user/password/tsconfig.json",
+          "hash": "6693614989438379715"
+        },
+        {
+          "file": "project/libs/user/password/tsconfig.lib.json",
+          "hash": "4913686798867512656"
+        },
+        {
+          "file": "project/libs/user/password/tsconfig.spec.json",
+          "hash": "9110660443763673899"
+        }
+      ],
+      "post": [
+        {
+          "file": "project/apps/post/.eslintrc.json",
+          "hash": "13800677001662881425"
+        },
+        {
+          "file": "project/apps/post/jest.config.ts",
+          "hash": "12711569252250218250"
+        },
+        {
+          "file": "project/apps/post/project.json",
+          "hash": "8502045380753250112"
+        },
+        {
+          "file": "project/apps/post/src/app/app.controller.spec.ts",
+          "hash": "9499997688052526633"
+        },
+        {
+          "file": "project/apps/post/src/app/app.controller.ts",
+          "hash": "9005150069945785676"
+        },
+        {
+          "file": "project/apps/post/src/app/app.module.ts",
+          "hash": "3163250445227373966"
+        },
+        {
+          "file": "project/apps/post/src/app/app.service.spec.ts",
+          "hash": "8587461140686713758"
+        },
+        {
+          "file": "project/apps/post/src/app/app.service.ts",
+          "hash": "9967902337593410053"
+        },
+        {
+          "file": "project/apps/post/src/assets/.gitkeep",
+          "hash": "3244421341483603138"
+        },
+        {
+          "file": "project/apps/post/src/main.ts",
+          "hash": "11205222914964382693"
+        },
+        {
+          "file": "project/apps/post/tsconfig.app.json",
+          "hash": "3171572500325445971"
+        },
+        {
+          "file": "project/apps/post/tsconfig.json",
+          "hash": "3490524966360018312"
+        },
+        {
+          "file": "project/apps/post/tsconfig.spec.json",
+          "hash": "11550347367511341917"
+        },
+        {
+          "file": "project/apps/post/webpack.config.js",
+          "hash": "12862890940185875264"
+        }
+      ]
+    },
+    "nonProjectFiles": [
+      {
+        "file": ".editorconfig",
+        "hash": "2982398511463853799"
+      },
+      {
+        "file": ".eslintignore",
+        "hash": "14388797753150440555"
+      },
+      {
+        "file": ".github/workflows/check.yml",
+        "hash": "5872144641286170605"
+      },
+      {
+        "file": ".gitignore",
+        "hash": "14760868251076070154"
+      },
+      {
+        "file": "Contributing.md",
+        "hash": "6066357221913487068"
+      },
+      {
+        "file": "Readme.md",
+        "hash": "17220545537748243242"
+      },
+      {
+        "file": "Workflow.md",
+        "hash": "17873645885097545098"
+      },
+      {
+        "file": "markup/adding-post.html",
+        "hash": "7372634261919076701"
+      },
+      {
+        "file": "markup/css/main.css",
+        "hash": "14892928891924708593"
+      },
+      {
+        "file": "markup/feed.html",
+        "hash": "5605997760454994890"
+      },
+      {
+        "file": "markup/fonts/rubik-bold.ttf",
+        "hash": "13736802351517595056"
+      },
+      {
+        "file": "markup/fonts/rubik-bold.woff",
+        "hash": "2834151125866641656"
+      },
+      {
+        "file": "markup/fonts/rubik-bold.woff2",
+        "hash": "1807603647062074584"
+      },
+      {
+        "file": "markup/fonts/rubik-light.ttf",
+        "hash": "4206359119792870213"
+      },
+      {
+        "file": "markup/fonts/rubik-light.woff",
+        "hash": "11750399217352377167"
+      },
+      {
+        "file": "markup/fonts/rubik-light.woff2",
+        "hash": "9640188790354548680"
+      },
+      {
+        "file": "markup/fonts/rubik-medium.ttf",
+        "hash": "4059692936362342642"
+      },
+      {
+        "file": "markup/fonts/rubik-medium.woff",
+        "hash": "16514981762519984219"
+      },
+      {
+        "file": "markup/fonts/rubik-medium.woff2",
+        "hash": "12206965785949031440"
+      },
+      {
+        "file": "markup/fonts/rubik-regular.ttf",
+        "hash": "11782224546469337049"
+      },
+      {
+        "file": "markup/fonts/rubik-regular.woff",
+        "hash": "16360409526714188449"
+      },
+      {
+        "file": "markup/fonts/rubik-regular.woff2",
+        "hash": "2715589231518538293"
+      },
+      {
+        "file": "markup/img/barbershop.png",
+        "hash": "5810899786229841633"
+      },
+      {
+        "file": "markup/img/barbershop@2x.png",
+        "hash": "16918863942547727153"
+      },
+      {
+        "file": "markup/img/cat.jpg",
+        "hash": "14803886347186502213"
+      },
+      {
+        "file": "markup/img/coast-adding.png",
+        "hash": "10919037732740920910"
+      },
+      {
+        "file": "markup/img/coast-medium.jpg",
+        "hash": "13093356366135154778"
+      },
+      {
+        "file": "markup/img/coast-small.png",
+        "hash": "3961276641258664193"
+      },
+      {
+        "file": "markup/img/coast.jpg",
+        "hash": "1849520572204341619"
+      },
+      {
+        "file": "markup/img/drag-and-drop.svg",
+        "hash": "2126744079019348901"
+      },
+      {
+        "file": "markup/img/error.svg",
+        "hash": "10319059910754222395"
+      },
+      {
+        "file": "markup/img/everything.svg",
+        "hash": "12199966316088612087"
+      },
+      {
+        "file": "markup/img/feed.svg",
+        "hash": "1261433335120598424"
+      },
+      {
+        "file": "markup/img/icon-arrow-right-ad.svg",
+        "hash": "18134754786276629888"
+      },
+      {
+        "file": "markup/img/icon-attach.svg",
+        "hash": "3615930964863484880"
+      },
+      {
+        "file": "markup/img/icon-close.svg",
+        "hash": "4231661380907688123"
+      },
+      {
+        "file": "markup/img/icon-comment.svg",
+        "hash": "16565140136280247173"
+      },
+      {
+        "file": "markup/img/icon-filter-link.svg",
+        "hash": "18262700510157229132"
+      },
+      {
+        "file": "markup/img/icon-filter-people.svg",
+        "hash": "9234774591321410212"
+      },
+      {
+        "file": "markup/img/icon-filter-photo.svg",
+        "hash": "7711353779640404755"
+      },
+      {
+        "file": "markup/img/icon-filter-quote.svg",
+        "hash": "6379789686688324940"
+      },
+      {
+        "file": "markup/img/icon-filter-text.svg",
+        "hash": "13674528567341676739"
+      },
+      {
+        "file": "markup/img/icon-filter-video.svg",
+        "hash": "6876987666555717840"
+      },
+      {
+        "file": "markup/img/icon-heart-active.svg",
+        "hash": "1626980596861865003"
+      },
+      {
+        "file": "markup/img/icon-heart.svg",
+        "hash": "15859870874000097353"
+      },
+      {
+        "file": "markup/img/icon-htmlacademy.svg",
+        "hash": "1213088474730285440"
+      },
+      {
+        "file": "markup/img/icon-input-password.svg",
+        "hash": "18056708845925337842"
+      },
+      {
+        "file": "markup/img/icon-input-user.svg",
+        "hash": "10939990483708492954"
+      },
+      {
+        "file": "markup/img/icon-link-arrow.svg",
+        "hash": "6841413668891478071"
+      },
+      {
+        "file": "markup/img/icon-repost.svg",
+        "hash": "63528698275903855"
+      },
+      {
+        "file": "markup/img/icon-search.svg",
+        "hash": "16803268474944351636"
+      },
+      {
+        "file": "markup/img/icon-sort.svg",
+        "hash": "12993188806882897676"
+      },
+      {
+        "file": "markup/img/icon-user.svg",
+        "hash": "8037340030396594852"
+      },
+      {
+        "file": "markup/img/icon-video-play-big.svg",
+        "hash": "4890843132463966960"
+      },
+      {
+        "file": "markup/img/link.svg",
+        "hash": "10700097510987285584"
+      },
+      {
+        "file": "markup/img/logo-vita-medium.jpg",
+        "hash": "3928118977696471313"
+      },
+      {
+        "file": "markup/img/logo-vita.jpg",
+        "hash": "1119669266143282937"
+      },
+      {
+        "file": "markup/img/logo.svg",
+        "hash": "440032193018219479"
+      },
+      {
+        "file": "markup/img/messages.svg",
+        "hash": "15295061497355144971"
+      },
+      {
+        "file": "markup/img/no-feed-bg.svg",
+        "hash": "1011322101736805836"
+      },
+      {
+        "file": "markup/img/no-games.svg",
+        "hash": "10564045671804550230"
+      },
+      {
+        "file": "markup/img/no-results.png",
+        "hash": "750657072745423347"
+      },
+      {
+        "file": "markup/img/no-results@2x.png",
+        "hash": "6175312168213691455"
+      },
+      {
+        "file": "markup/img/plus.svg",
+        "hash": "201032142752046838"
+      },
+      {
+        "file": "markup/img/pointer.png",
+        "hash": "16236983730070983791"
+      },
+      {
+        "file": "markup/img/popular.svg",
+        "hash": "12003988548292577196"
+      },
+      {
+        "file": "markup/img/quote.svg",
+        "hash": "5023764532566042105"
+      },
+      {
+        "file": "markup/img/rock-adding.png",
+        "hash": "7124306180125495478"
+      },
+      {
+        "file": "markup/img/rock-default.jpg",
+        "hash": "14746324328681245192"
+      },
+      {
+        "file": "markup/img/rock-medium.jpg",
+        "hash": "12212400069863205719"
+      },
+      {
+        "file": "markup/img/rock-small.png",
+        "hash": "13212646451024039527"
+      },
+      {
+        "file": "markup/img/rock.jpg",
+        "hash": "13674613629073940149"
+      },
+      {
+        "file": "markup/img/sort-up.svg",
+        "hash": "10321827949027044420"
+      },
+      {
+        "file": "markup/img/sprite.svg",
+        "hash": "13284806086975868347"
+      },
+      {
+        "file": "markup/img/technomart.png",
+        "hash": "16762102773513132401"
+      },
+      {
+        "file": "markup/img/technomart@2x.png",
+        "hash": "15231789065969394906"
+      },
+      {
+        "file": "markup/img/user-dropdown.svg",
+        "hash": "16511599538670099186"
+      },
+      {
+        "file": "markup/img/userpic-big.jpg",
+        "hash": "139710231523030475"
+      },
+      {
+        "file": "markup/img/userpic-elvira.jpg",
+        "hash": "3370311586942434215"
+      },
+      {
+        "file": "markup/img/userpic-larisa-small.jpg",
+        "hash": "2882301785381404218"
+      },
+      {
+        "file": "markup/img/userpic-larisa.jpg",
+        "hash": "13310386007862851186"
+      },
+      {
+        "file": "markup/img/userpic-mark.jpg",
+        "hash": "13163594758588092637"
+      },
+      {
+        "file": "markup/img/userpic-medium.jpg",
+        "hash": "3838575000886038361"
+      },
+      {
+        "file": "markup/img/userpic-petro.jpg",
+        "hash": "15619697554691986028"
+      },
+      {
+        "file": "markup/img/userpic-tanya.jpg",
+        "hash": "15663355575477185118"
+      },
+      {
+        "file": "markup/img/userpic.jpg",
+        "hash": "17489743559996347461"
+      },
+      {
+        "file": "markup/img/video-collapse.svg",
+        "hash": "7696869318577025906"
+      },
+      {
+        "file": "markup/img/video-expand.svg",
+        "hash": "6047459669181917315"
+      },
+      {
+        "file": "markup/img/video-pause.svg",
+        "hash": "671158077465970402"
+      },
+      {
+        "file": "markup/img/video-play-small.svg",
+        "hash": "8515523217814971757"
+      },
+      {
+        "file": "markup/img/view.svg",
+        "hash": "14911395754181696029"
+      },
+      {
+        "file": "markup/index.html",
+        "hash": "46982913264771625"
+      },
+      {
+        "file": "markup/js/dropzone-settings.js",
+        "hash": "5691745973299510319"
+      },
+      {
+        "file": "markup/js/main.js",
+        "hash": "3550084300020015772"
+      },
+      {
+        "file": "markup/libs/dropzone.js",
+        "hash": "12746623407397027619"
+      },
+      {
+        "file": "markup/libs/normalize-8.0.1.scss",
+        "hash": "13510262539588141358"
+      },
+      {
+        "file": "markup/login-validation.html",
+        "hash": "17042059848419824661"
+      },
+      {
+        "file": "markup/login.html",
+        "hash": "7129170625405664175"
+      },
+      {
+        "file": "markup/main.html",
+        "hash": "12982878302213519053"
+      },
+      {
+        "file": "markup/messages.html",
+        "hash": "8590263599612696218"
+      },
+      {
+        "file": "markup/modal.html",
+        "hash": "7825130602682219251"
+      },
+      {
+        "file": "markup/no-content.html",
+        "hash": "16559641297466556413"
+      },
+      {
+        "file": "markup/no-results.html",
+        "hash": "2058562598505392963"
+      },
+      {
+        "file": "markup/popular.html",
+        "hash": "425674650486905806"
+      },
+      {
+        "file": "markup/post-details.html",
+        "hash": "4728768224238626234"
+      },
+      {
+        "file": "markup/profile-likes.html",
+        "hash": "17642025553740999165"
+      },
+      {
+        "file": "markup/profile-posts.html",
+        "hash": "15313055573408079169"
+      },
+      {
+        "file": "markup/profile-subscriptions.html",
+        "hash": "16323724456922836236"
+      },
+      {
+        "file": "markup/profile.html",
+        "hash": "5367244587075252618"
+      },
+      {
+        "file": "markup/registration.html",
+        "hash": "15696276934001686800"
+      },
+      {
+        "file": "markup/search-results.html",
+        "hash": "9214131903561931315"
+      },
+      {
+        "file": "markup/uploads/.gitkeep",
+        "hash": "3244421341483603138"
+      },
+      {
+        "file": "package-lock.json",
+        "hash": "142227306928339943"
+      },
+      {
+        "file": "package.json",
+        "hash": "18212756578088711842"
+      },
+      {
+        "file": "project/.editorconfig",
+        "hash": "5443105041930014821"
+      },
+      {
+        "file": "project/.eslintignore",
+        "hash": "7663861978715868291"
+      },
+      {
+        "file": "project/.eslintrc.json",
+        "hash": "1482810769789930301"
+      },
+      {
+        "file": "project/.gitignore",
+        "hash": "16877376182141465221"
+      },
+      {
+        "file": "project/.prettierignore",
+        "hash": "16448050467312557263"
+      },
+      {
+        "file": "project/.prettierrc",
+        "hash": "16267754514737964994"
+      },
+      {
+        "file": "project/README.md",
+        "hash": "8841021893486784366"
+      },
+      {
+        "file": "project/jest.config.ts",
+        "hash": "8529806343087814844"
+      },
+      {
+        "file": "project/jest.preset.js",
+        "hash": "4185368808439573122"
+      },
+      {
+        "file": "project/nx.json",
+        "hash": "9611113771578258298"
+      },
+      {
+        "file": "project/package-lock.json",
+        "hash": "3999094851855584245"
+      },
+      {
+        "file": "project/package.json",
+        "hash": "18306391573125317951"
+      },
+      {
+        "file": "project/tsconfig.base.json",
+        "hash": "15816729158880002984"
+      },
+      {
+        "file": "specification.excalidraw",
+        "hash": "11427660876111569952"
+      },
+      {
+        "file": "specification.png",
+        "hash": "16993487976539174180"
+      }
+    ]
+  }
+}

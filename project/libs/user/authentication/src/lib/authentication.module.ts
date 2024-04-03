@@ -4,9 +4,6 @@ import { AuthenticationController } from './authentication.controller';
 import { AuthenticationService } from './authentication.service';
 import { BCryptHasher } from '@project/shared/hasher'
 @Module({
-  // Импортируем модуль управления пользователями блога
-  // для дальнейшей возможности пользоваться его провайдерами
-  imports: [BlogUserModule],
   controllers: [AuthenticationController],
   providers: [
     AuthenticationService,
@@ -14,6 +11,9 @@ import { BCryptHasher } from '@project/shared/hasher'
       provide: 'Hasher',
       useClass: BCryptHasher
     }
-  ]
+  ],
+  // Импортируем модуль управления пользователями блога
+  // для дальнейшей возможности пользоваться его провайдерами
+  imports: [BlogUserModule],
 })
 export class AuthenticationModule {}
