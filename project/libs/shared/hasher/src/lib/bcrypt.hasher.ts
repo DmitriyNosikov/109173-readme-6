@@ -6,7 +6,7 @@ const SALT_ROUNDS = 10;
 
 export class BCryptHasher implements HasherInterface {
   async getHash(value: string): Promise<string> {
-    const salt = genSalt(SALT_ROUNDS);
+    const salt = await genSalt(SALT_ROUNDS);
 
     return hash(value, salt);
   }
