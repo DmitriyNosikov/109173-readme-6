@@ -10,5 +10,5 @@ export function fillDTO<T, O extends PlainObject | PlainObject[]> (
 }
 
 export function getdate(): string {
-  return new Date().toDateString();
+  return new Date().toISOString();
 }

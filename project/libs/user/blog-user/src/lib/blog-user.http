@@ -1,0 +1,19 @@
+# Server settings
+@host = 127.0.0.1
+@port = 8000
+@baseUrl = http://{{host}}:{{port}}/api
+
+# Environment
+@userId = 4c9a5b96-ac57-4bea-872f-5a90aec977c5
+
+GET {{baseUrl}}/users/{{userId}}
+###
+
+PATCH {{baseUrl}}/users/password/{{userId}}
+Content-Type: application/json
+
+{
+  "password": "test-password123",
+  "newPassword": "123456"
+}
+###

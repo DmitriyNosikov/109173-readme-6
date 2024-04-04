@@ -16,6 +16,8 @@ export class BlogUserService {
   public async getUser(userId: string): Promise<BlogUserEntity | null> {
     const user = await this.blogUserRepository.findById(userId);
 
+    console.log('Found user: ', user);
+
     if(!user) {
       throw new NotFoundException(BlogUserMessage.ERROR.NOT_FOUND);
     }
