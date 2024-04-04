@@ -3,8 +3,8 @@ import { BlogUserFactory, BlogUserRepository, CreateUserDTO, LoginUserDTO } from
 import { HasherInterface } from '@project/shared/hasher';
 import { getdate } from '@project/shared/helpers'
 import { AuthenticationMessage } from './authentication.constant';
-import { BlogUserEntity } from 'libs/user/blog-user/src/lib/blog-user.entity';
 
+type BlogUserEntity = ReturnType<BlogUserFactory['create']>;
 @Injectable()
 export class AuthenticationService {
   constructor(

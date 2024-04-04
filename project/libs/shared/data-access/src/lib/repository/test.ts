@@ -9,9 +9,11 @@ export abstract class BaseMemoryRepository<T extends Entity &
 
   constructor(
     protected entityFactory: EntityFactory<T>
-  ) {}
+  ) {
+    console.log('Base memory repo constructed!');
+  }
 
-  public async findById(entityId: T['id']): Promise<T | null> {
+  public async findById(entityId: any): Promise<T | null> {
     if(!this.exists(entityId)) {
       return null;
     }
@@ -22,6 +24,11 @@ export abstract class BaseMemoryRepository<T extends Entity &
   }
 
   public async create(entity: T): Promise<ReturnType<T['toPOJO']>> {
+    console.log('Trying to create a new user');
+    if(entity.id && this.exists(entity.id)) {
+      return;
+    }
+
     entity.id = randomUUID();
     const entityPlainObject = entity.toPOJO();
 
@@ -44,7 +51,7 @@ export abstract class BaseMemoryRepository<T extends Entity &
     return Promise.resolve(this.entityFactory.create(updatedEntity));
   }
 
-  public async deleteById(entityId: T['id']): Promise<void> {
+  public async deleteById(entityId: any): Promise<void> {
     if(!this.exists(entityId)) {
       throw new Error(RepositoryMessage.ERROR.ENTITY_NOT_FOUND);
     }
