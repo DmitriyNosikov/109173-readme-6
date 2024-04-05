@@ -16,8 +16,6 @@ export class BlogUserService {
   public async getUser(userId: string): Promise<BlogUserEntity | null> {
     const user = await this.blogUserRepository.findById(userId);
 
-    console.log('Found user: ', user);
-
     if(!user) {
       throw new NotFoundException(BlogUserMessage.ERROR.NOT_FOUND);
     }
@@ -51,7 +49,8 @@ export class BlogUserService {
     }
 
     const newPasswordHash = await this.hasher.getHash(newPassword);
+    const updatedUser =  await this.blogUserRepository.updateById(userId, { passwordHash: newPasswordHash });
 
-    return await this.updateUser(userId, { passwordHash: newPasswordHash });
+    return updatedUser;
   }
 }

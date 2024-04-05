@@ -1,7 +1,7 @@
 import { randomUUID } from 'node:crypto';
 import { Entity, EntityFactory, StorableEntity } from '@project/shared/core';
 import { Repository } from './repository.interface';
-import { RepositoryMessage } from './repository.contant';
+import { RepositoryMessage } from './repository.constant';
 
 export abstract class BaseMemoryRepository<T extends Entity &
   StorableEntity<ReturnType<T['toPOJO']>>> implements Repository<T> {
@@ -12,11 +12,11 @@ export abstract class BaseMemoryRepository<T extends Entity &
   ) {}
 
   public async findById(entityId: T['id']): Promise<T | null> {
-    if(!this.exists(entityId)) {
+    const entity = this.storage.get(entityId);
+
+    if(!entity) {
       return null;
     }
-
-    const entity = this.storage.get(entityId);
 
     return Promise.resolve(this.entityFactory.create(entity));
   }
@@ -31,13 +31,13 @@ export abstract class BaseMemoryRepository<T extends Entity &
   }
 
   public async updateById(entityId: T['id'], updatedFields: Partial<T>): Promise<T> {
-    if(this.exists(entityId)) {
-      throw new Error(RepositoryMessage.ERROR.ENTITY_NOT_FOUND);
-    }
-
     const entity = await this.findById(entityId);
     const entityPlainObject = entity.toPOJO();
-    const updatedEntity: ReturnType<T['toPOJO']> = { entityPlainObject, ...updatedFields.toPOJO() };
+    const updatedEntity = { ...entityPlainObject, ...updatedFields } as ReturnType<T['toPOJO']>;
+
+    console.log('ENTITY: ', entityPlainObject);
+    console.log('FIELDS: ', updatedFields);
+    console.log('UPDATED ENTITY: ', updatedEntity);
 
     await this.storage.set(entityId, updatedEntity);
 
