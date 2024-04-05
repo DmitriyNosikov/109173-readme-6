@@ -1,7 +1,7 @@
-import { PostLinkInterface } from '@project/shared/core';
+import { PostLinkInterface, StorableEntity } from '@project/shared/core';
 import { BlogPostEntity } from '../blog-post.entity';
 
-export class PostLinkEntity extends BlogPostEntity {
+export class PostLinkEntity extends BlogPostEntity implements StorableEntity<PostLinkInterface> {
   public linkURL: string;
   public description: string;
 

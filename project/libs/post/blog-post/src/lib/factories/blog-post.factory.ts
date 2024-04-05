@@ -1,4 +1,3 @@
-import { Constructor } from '@nestjs/common/utils/merge-with-values.util'
 import {
   EntityFactory,
   PostLinkInterface,
@@ -16,34 +15,36 @@ import { PostQuoteFactory } from './post-quote.factory';
 import { PostPhotoFactory } from './post-photo.factory';
 import { PostVideoFactory } from './post-video.factory';
 
-type PostsTypes = PostLinkInterface  |
-                  PostTextInterface  |
-                  PostQuoteInterface |
-                  PostPhotoInterface |
-                  PostVideoInterface;
+type PostsTypes = PostLinkInterface & PostTextInterface & PostQuoteInterface & PostPhotoInterface & PostVideoInterface;
+type FactoriesTypes = typeof PostLinkFactory  | typeof PostTextFactory  | typeof PostQuoteFactory | typeof PostPhotoFactory | typeof PostVideoFactory;
 
 export class BlogPostFactory implements EntityFactory<BlogPostEntity> {
   // Типы фаблик { тип_поста: конструктор_фабрики }
-  private factotiesTypes: Map<PostTypeEnum, Constructor<any>> = new Map();
+  private factoriesTypes: Map<PostTypeEnum, FactoriesTypes> = new Map();
 
   constructor() {
-    this.factotiesTypes.set(PostType.LINK, PostLinkFactory)
-    this.factotiesTypes.set(PostType.TEXT, PostTextFactory)
-    this.factotiesTypes.set(PostType.QUOTE, PostQuoteFactory)
-    this.factotiesTypes.set(PostType.PHOTO, PostPhotoFactory)
-    this.factotiesTypes.set(PostType.VIDEO, PostVideoFactory)
+    this.factoriesTypes.set(PostType.LINK, PostLinkFactory)
+    this.factoriesTypes.set(PostType.TEXT, PostTextFactory)
+    this.factoriesTypes.set(PostType.QUOTE, PostQuoteFactory)
+    this.factoriesTypes.set(PostType.PHOTO, PostPhotoFactory)
+    this.factoriesTypes.set(PostType.VIDEO, PostVideoFactory)
   }
 
-  public create(entityPlainData: PostsTypes): BlogPostEntity {
-    const factoryType: PostTypeEnum = entityPlainData.type;
-
-    if(!this.factotiesTypes.has(factoryType)) {
+  public getFactoryInstance(postType: PostTypeEnum) {
+    if(!this.factoriesTypes.has(postType)) {
       return;
     }
 
-    // Определяем фабрику для поста по типу переданного поста
-    const postFactory = this.factotiesTypes.get(factoryType)
+    const postFactory = this.factoriesTypes.get(postType);
+    const postFactoryInstance =  new postFactory();
 
-    return new postFactory(entityPlainData);
+    return postFactoryInstance;
+  }
+
+  public create(entityPlainData: PostsTypes) {
+    const postFactory = this.getFactoryInstance(entityPlainData.type);
+    const postEntity = postFactory.create(entityPlainData);
+
+    return postEntity;
   }
 }

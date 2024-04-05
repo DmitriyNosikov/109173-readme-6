@@ -1,7 +1,7 @@
-import { PostQuoteInterface } from '@project/shared/core';
+import { PostQuoteInterface, StorableEntity } from '@project/shared/core';
 import { BlogPostEntity } from '../blog-post.entity';
 
-export class PostQuoteEntity extends BlogPostEntity {
+export class PostQuoteEntity extends BlogPostEntity implements StorableEntity<PostQuoteInterface> {
   public authorId: string;
   public text: string;
 

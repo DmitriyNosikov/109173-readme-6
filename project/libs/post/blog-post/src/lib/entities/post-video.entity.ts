@@ -1,9 +1,9 @@
-import { PostVideoInterface } from '@project/shared/core';
+import { PostVideoInterface, StorableEntity } from '@project/shared/core';
 import { BlogPostEntity } from '../blog-post.entity';
 
-export class PostVideoEntity extends BlogPostEntity {
-  public videoURL: string;
+export class PostVideoEntity extends BlogPostEntity implements StorableEntity<PostVideoInterface> {
   public title: string;
+  public videoURL: string;
 
   constructor(post: PostVideoInterface) {
     super(post)

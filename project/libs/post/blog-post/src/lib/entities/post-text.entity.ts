@@ -1,7 +1,7 @@
-import { PostTextInterface } from '@project/shared/core';
+import { PostTextInterface, StorableEntity } from '@project/shared/core';
 import { BlogPostEntity } from '../blog-post.entity';
 
-export class PostTextEntity extends BlogPostEntity {
+export class PostTextEntity extends BlogPostEntity implements StorableEntity<PostTextInterface> {
   public announce: string;
   public title: string;
   public text: string;
