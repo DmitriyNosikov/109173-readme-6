@@ -4,11 +4,13 @@
 @baseUrl = http://{{host}}:{{port}}/api
 
 # Environment
-@userId = 5a614a31-92c9-48da-9551-f09548184234
+@userId = 9701522a-3a76-4f19-a2e2-939d0e00d66a
 
+# Get detail info about user
 GET {{baseUrl}}/users/{{userId}}
 ###
 
+# Change user password
 PATCH {{baseUrl}}/users/password/{{userId}}
 Content-Type: application/json
 
@@ -16,4 +18,17 @@ Content-Type: application/json
   "password": "test-password123",
   "newPassword": "123456"
 }
+###
+
+# Update user info
+PATCH  {{baseUrl}}/users/{{userId}}
+Content-Type: application/json
+
+{
+  "name": "Tony Stark"
+}
+###
+
+# Delete user
+DELETE {{baseUrl}}/users/{{userId}}
 ###

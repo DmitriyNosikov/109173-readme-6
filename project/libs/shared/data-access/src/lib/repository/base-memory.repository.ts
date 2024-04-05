@@ -1,7 +1,6 @@
 import { randomUUID } from 'node:crypto';
 import { Entity, EntityFactory, StorableEntity } from '@project/shared/core';
 import { Repository } from './repository.interface';
-import { RepositoryMessage } from './repository.constant';
 
 export abstract class BaseMemoryRepository<T extends Entity &
   StorableEntity<ReturnType<T['toPOJO']>>> implements Repository<T> {
@@ -12,13 +11,15 @@ export abstract class BaseMemoryRepository<T extends Entity &
   ) {}
 
   public async findById(entityId: T['id']): Promise<T | null> {
-    const entity = this.storage.get(entityId);
+    const entityObject = this.storage.get(entityId);
 
-    if(!entity) {
+    if(!entityObject) {
       return null;
     }
 
-    return Promise.resolve(this.entityFactory.create(entity));
+    const entity = this.entityFactory.create(entityObject);
+
+    return Promise.resolve(entity);
   }
 
   public async create(entity: T): Promise<ReturnType<T['toPOJO']>> {
@@ -35,20 +36,12 @@ export abstract class BaseMemoryRepository<T extends Entity &
     const entityPlainObject = entity.toPOJO();
     const updatedEntity = { ...entityPlainObject, ...updatedFields } as ReturnType<T['toPOJO']>;
 
-    console.log('ENTITY: ', entityPlainObject);
-    console.log('FIELDS: ', updatedFields);
-    console.log('UPDATED ENTITY: ', updatedEntity);
-
     await this.storage.set(entityId, updatedEntity);
 
     return Promise.resolve(this.entityFactory.create(updatedEntity));
   }
 
   public async deleteById(entityId: T['id']): Promise<void> {
-    if(!this.exists(entityId)) {
-      throw new Error(RepositoryMessage.ERROR.ENTITY_NOT_FOUND);
-    }
-
     await this.storage.delete(entityId);
 
     return Promise.resolve();

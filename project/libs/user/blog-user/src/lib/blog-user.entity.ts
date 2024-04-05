@@ -17,6 +17,8 @@ export class BlogUserEntity extends Entity implements StorableEntity<AuthUserInt
       return;
     }
 
+    console.log('Catched user: ', user);
+
     this.id = user.id ?? '';
     this.email = user.email;
     this.name = user.name;

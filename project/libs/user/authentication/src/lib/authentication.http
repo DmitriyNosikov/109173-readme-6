@@ -11,9 +11,18 @@ POST {{baseUrl}}/auth/register/ HTTP/1.1
 Content-Type: application/json
 
 {
-  "email": "test-user@mail.ru",
-  "name": "Test user",
-  "avatar": "/test/avarar/image.jpeg",
-  "password": "test-password123"
+  "email": "iron-man@starkindustries.it",
+  "name": "Tony Stark",
+  "avatar": "/playboy/millioner/philanthropist.jpeg",
+  "password": "jarvis-iron-hearth123"
 }
 ###
+
+# Login user
+POST  {{baseUrl}}/auth/login/ HTTP/1.1
+Content-Type: application/json
+
+{
+  "email": "iron-man@starkindustries.it",
+  "password": "jarvis-iron-hearth123"
+}
