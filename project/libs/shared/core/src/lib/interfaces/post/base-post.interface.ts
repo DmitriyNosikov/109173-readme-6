@@ -9,7 +9,7 @@ import { PostVideoInterface } from './post-video.interface';
 export type ExtraFields = PostLinkInterface | PostTextInterface | PostQuoteInterface | PostPhotoInterface | PostVideoInterface;
 
 export interface BasePostInterface {
-  id: string;
+  id?: string;
   type: PostTypeEnum;
   tags: string[];
   publishedAt: string;

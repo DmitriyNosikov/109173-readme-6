@@ -1,5 +1,4 @@
 export const PostType = {
-  BASE: 'base',
   TEXT: 'text',
   LINK: 'link',
   QUOTE: 'quote',

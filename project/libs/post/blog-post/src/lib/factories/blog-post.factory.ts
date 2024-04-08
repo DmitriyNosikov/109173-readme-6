@@ -1,15 +1,12 @@
 import { Injectable } from '@nestjs/common';
-import { ExtraFields, PostType, PostTypeEnum } from '@project/shared/core';
+import { PostType, PostTypeEnum } from '@project/shared/core';
 import { PostTextFactory } from './post-text.factory';
 import { PostLinkFactory } from './post-link.factory';
 import { PostQuoteFactory } from './post-quote.factory';
 import { PostPhotoFactory } from './post-photo.factory';
 import { PostVideoFactory } from './post-video.factory';
-import { BasePostFactory } from './base-post.factory';
-import { BasePostEntity } from '../entities/base-post.entity';
 
 const FactoryType = {
-  [PostType.BASE]: BasePostFactory,
   [PostType.TEXT]: PostTextFactory,
   [PostType.LINK]: PostLinkFactory,
   [PostType.QUOTE]: PostQuoteFactory,

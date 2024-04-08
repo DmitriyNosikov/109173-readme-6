@@ -9,10 +9,8 @@ import { PostLinkRepository } from '../repositories/post-link.repository';
 import { PostQuoteRepository } from '../repositories/post-quote.repository';
 import { PostPhotoRepository } from '../repositories/post-photo.repository';
 import { PostVideoRepository } from '../repositories/post-video.repository';
-import { BasePostRepository } from '../repositories/base-post.repository';
 
 const RepositoryType = {
-  [PostType.BASE]: BasePostRepository,
   [PostType.TEXT]: PostTextRepository,
   [PostType.LINK]: PostLinkRepository,
   [PostType.QUOTE]: PostQuoteRepository,

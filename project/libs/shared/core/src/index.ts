@@ -4,6 +4,8 @@ export { Entity } from "./lib/base/entity"
 export { AuthUserInterface } from "./lib/interfaces/user/auth-user.interface"
 export { UserInterface } from "./lib/interfaces/user/user.interface"
 
+export { AllPostRelationInterface } from './lib/interfaces/post/all-post-relation.interface'
+
 export { PostType, PostTypeEnum } from './lib/types/post/post-type.enum'
 export { BasePostInterface } from './lib/interfaces/post/base-post.interface'
 export { PostTextInterface } from './lib/interfaces/post/post-text.interface'
