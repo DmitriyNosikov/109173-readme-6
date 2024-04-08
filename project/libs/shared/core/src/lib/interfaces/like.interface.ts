@@ -1,8 +1,8 @@
-import { PostInterface } from './post/post.interface';
+import { BasePostInterface } from './post/base-post.interface';
 import { UserInterface } from './user/user.interface';
 
 export interface LikeInterface {
   id: string;
-  postId: PostInterface['id'];
+  postId: BasePostInterface['id'];
   authorId: UserInterface['id'];
 }

@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 // import { BlogPostServiceInterface } from './blog-post-service.interface'
 // import { SortTypeEnum, SortDirectionEnum } from '@project/shared/core';
 // import { BlogPostEntity } from './blog-post.entity';
-import { BlogPostTypesDTO } from './dto/blog-post.dto';
+import { BlogPostDTO } from './dto/blog-post.dto';
 import { BlogPostFactory } from './factories/blog-post.factory';
 import { BlogPostRepositoryFactory } from './factories/blog-post-repository.factory';
 
@@ -13,10 +13,10 @@ export class BlogPostService {
     private blogPostRepositoryFactory: BlogPostRepositoryFactory
   ) {}
   // create(dto: BlogPostTypesDTO): Promise<BlogPostEntity> {
-  create(dto: BlogPostTypesDTO): void {
-    const postFactoryInstance = this.blogPostFactory.getFactoryInstance(dto.type);
-    const postRepositoryConstructor = this.blogPostRepositoryFactory.getRepository(dto.type);
-    const postRepository = new postRepositoryConstructor(postFactoryInstance);
+  create(dto: BlogPostDTO): void {
+    // const postFactoryInstance = this.blogPostFactory.getFactoryInstance(dto.type);
+    // const postRepositoryConstructor = this.blogPostRepositoryFactory.getRepository(dto.type);
+    // const postRepository = new postRepositoryConstructor(postFactoryInstance);
 
     console.log('POST DATA: ', dto);
     console.log('REPO: ', postRepository);

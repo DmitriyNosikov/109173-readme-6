@@ -1,6 +1,4 @@
-import { PostInterface } from './post.interface';
-
-export interface PostLinkInterface extends PostInterface {
+export interface PostLinkInterface {
   linkURL: string;
   description: string;
 }

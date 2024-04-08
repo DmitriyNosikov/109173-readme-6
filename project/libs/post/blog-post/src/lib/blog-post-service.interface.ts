@@ -1,16 +1,16 @@
-import { BlogPostEntity } from './blog-post.entity';
-import { BlogPostTypesDTO } from './dto/blog-post.dto';
+import { BasePostEntity } from './entities/base-post.entity';
+import { ExtraFieldsDTO } from './dto/blog-post.dto';
 import { SortTypeEnum, SortDirectionEnum } from '@project/shared/core'
 export interface BlogPostServiceInterface {
-  create(dto: BlogPostTypesDTO): Promise<BlogPostEntity>;
-  update(postId: string, updatedFields: Partial<BlogPostEntity>);
-  delete(): Promise<BlogPostEntity>;
+  create(dto: ExtraFieldsDTO): Promise<BasePostEntity>;
+  update(postId: string, updatedFields: Partial<BasePostEntity>);
+  delete(): Promise<BasePostEntity>;
 
-  show(postId: string): Promise<BlogPostEntity | null>;
-  getList(): Promise<BlogPostEntity[] | null>;
+  show(postId: string): Promise<BasePostEntity | null>;
+  getList(): Promise<BasePostEntity[] | null>;
 
-  repost(postId: string, userId: string): Promise<BlogPostEntity>
-  search(title: string): Promise<BlogPostEntity | null>;
+  repost(postId: string, userId: string): Promise<BasePostEntity>
+  search(title: string): Promise<BasePostEntity | null>;
   uploadImage(postId: string, data: unknown);
-  sort(sortType: SortTypeEnum, sortDirection: SortDirectionEnum): Promise<BlogPostEntity>
+  sort(sortType: SortTypeEnum, sortDirection: SortDirectionEnum): Promise<BasePostEntity>
 }

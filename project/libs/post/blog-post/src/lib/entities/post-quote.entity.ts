@@ -1,12 +1,11 @@
-import { PostQuoteInterface, StorableEntity } from '@project/shared/core';
-import { BlogPostEntity } from '../blog-post.entity';
+import { Entity, PostQuoteInterface, StorableEntity } from '@project/shared/core';
 
-export class PostQuoteEntity extends BlogPostEntity implements StorableEntity<PostQuoteInterface> {
+export class PostQuoteEntity extends Entity implements PostQuoteInterface, StorableEntity<PostQuoteInterface> {
   public authorId: string;
   public text: string;
 
   constructor(post: PostQuoteInterface) {
-    super(post)
+    super()
 
     if(!post) {
       return;
@@ -14,12 +13,10 @@ export class PostQuoteEntity extends BlogPostEntity implements StorableEntity<Po
 
     this.authorId = post.authorId;
     this.text = post.text;
-    this.populate(post);
   }
 
   public toPOJO(): PostQuoteInterface {
     return {
-      ...super.toPOJO(),
       authorId: this.authorId,
       text: this.text,
     };

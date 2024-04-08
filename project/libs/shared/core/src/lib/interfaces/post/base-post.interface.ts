@@ -6,8 +6,9 @@ import { PostQuoteInterface } from './post-quote.interface';
 import { PostPhotoInterface } from './post-photo.interface';
 import { PostVideoInterface } from './post-video.interface';
 
-export type PostInterfaces = PostLinkInterface & PostTextInterface & PostQuoteInterface & PostPhotoInterface & PostVideoInterface;
-export interface PostInterface {
+export type ExtraFields = PostLinkInterface | PostTextInterface | PostQuoteInterface | PostPhotoInterface | PostVideoInterface;
+
+export interface BasePostInterface {
   id: string;
   type: PostTypeEnum;
   tags: string[];
@@ -17,5 +18,6 @@ export interface PostInterface {
   isRepost: boolean;
   authorId: UserInterface['id'];
   originAuthorId: UserInterface['id'] | null;
-  originPostId: PostInterface['id'] | null;
+  originPostId: BasePostInterface['id'] | null;
+  extraFields: ExtraFields
 }

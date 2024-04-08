@@ -1,5 +1,3 @@
-import { BlogPostDTO } from './blog-post.dto';
-
-export class PostPhotoDTO extends BlogPostDTO {
+export class PostPhotoDTO {
   public photoURL: string;
 }

@@ -1,13 +1,12 @@
-import { PostTextInterface, StorableEntity } from '@project/shared/core';
-import { BlogPostEntity } from '../blog-post.entity';
+import { Entity, PostTextInterface, StorableEntity } from '@project/shared/core';
 
-export class PostTextEntity extends BlogPostEntity implements StorableEntity<PostTextInterface> {
+export class PostTextEntity extends Entity implements PostTextInterface, StorableEntity<PostTextInterface> {
   public announce: string;
   public title: string;
   public text: string;
 
   constructor(post: PostTextInterface) {
-    super(post)
+    super()
 
     if(!post) {
       return;
@@ -16,12 +15,10 @@ export class PostTextEntity extends BlogPostEntity implements StorableEntity<Pos
     this.title = post.title;
     this.announce = post.announce;
     this.text = post.text;
-    this.populate(post);
   }
 
   public toPOJO(): PostTextInterface {
     return {
-      ...super.toPOJO(),
       title: this.title,
       announce: this.announce,
       text: this.text,

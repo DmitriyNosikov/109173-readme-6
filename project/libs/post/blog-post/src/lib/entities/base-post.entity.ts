@@ -1,7 +1,14 @@
-import { Entity, PostInterface, PostTypeEnum, StorableEntity, UserInterface } from '@project/shared/core'
+import {
+  Entity,
+  PostTypeEnum,
+  StorableEntity,
+  BasePostInterface,
+  ExtraFields,
+  UserInterface
+} from '@project/shared/core'
 import { getdate } from '@project/shared/helpers'
 
-export class BlogPostEntity extends Entity implements StorableEntity<PostInterface> {
+export class BasePostEntity extends Entity implements BasePostInterface, StorableEntity<BasePostInterface> {
   public type: PostTypeEnum;
   public tags: string[];
   public publishedAt: string;
@@ -10,14 +17,15 @@ export class BlogPostEntity extends Entity implements StorableEntity<PostInterfa
   public isRepost: boolean;
   public authorId: UserInterface['id'];
   public originAuthorId: UserInterface['id'] | null;
-  public originPostId: PostInterface['id'] | null;
+  public originPostId: BasePostInterface['id'] | null;
+  public extraFields: ExtraFields;
 
-  constructor(post?: PostInterface) {
+  constructor(post?: BasePostInterface) {
     super();
     this.populate(post);
   }
 
-  public populate(post?: PostInterface) {
+  public populate(post?: BasePostInterface) {
     if(!post) {
       return;
     }
@@ -32,9 +40,10 @@ export class BlogPostEntity extends Entity implements StorableEntity<PostInterfa
     this.authorId = post.authorId ?? '';
     this.originAuthorId = post.originAuthorId ?? '';
     this.originPostId = post.originPostId ?? '';
+    this.extraFields = post.extraFields;
   }
 
-  public toPOJO(): PostInterface {
+  public toPOJO(): BasePostInterface {
     return {
       id: this.id,
       type: this.type,
@@ -46,6 +55,7 @@ export class BlogPostEntity extends Entity implements StorableEntity<PostInterfa
       authorId: this.authorId,
       originAuthorId: this.originAuthorId,
       originPostId: this.originPostId,
+      extraFields: this.extraFields,
     };
   }
 }

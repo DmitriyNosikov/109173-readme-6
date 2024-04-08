@@ -1,12 +1,18 @@
 import { Injectable } from '@nestjs/common';
+import { ModuleRef } from '@nestjs/core';
 import { PostType, PostTypeEnum } from '@project/shared/core'
+import { Repository } from '@project/shared/data-access';
+
+import { BasePostEntity } from '../entities/base-post.entity';
 import { PostTextRepository } from '../repositories/post-text.repository';
 import { PostLinkRepository } from '../repositories/post-link.repository';
 import { PostQuoteRepository } from '../repositories/post-quote.repository';
 import { PostPhotoRepository } from '../repositories/post-photo.repository';
 import { PostVideoRepository } from '../repositories/post-video.repository';
+import { BasePostRepository } from '../repositories/base-post.repository';
 
 const RepositoryType = {
+  [PostType.BASE]: BasePostRepository,
   [PostType.TEXT]: PostTextRepository,
   [PostType.LINK]: PostLinkRepository,
   [PostType.QUOTE]: PostQuoteRepository,
@@ -18,13 +24,18 @@ const RepositoryType = {
 
 @Injectable()
 export class BlogPostRepositoryFactory {
-  public getRepository<T extends PostTypeEnum>(postType: T): typeof RepositoryType[T] {
-    const postRepository = RepositoryType[postType];
+  constructor( // Получаем ссылку на хранилище инстансов (как в inversify)
+    private moduleRef: ModuleRef
+  ) {}
 
-    if(!postRepository) {
+  public getRepository(postType: PostTypeEnum): Repository<BasePostEntity> {
+    const repositoryType = RepositoryType[postType];
+
+    if(!repositoryType) {
       return;
     }
 
-    return postRepository;
+    // Возвращаем из хранилища инстанс нужного репозитория
+    return this.moduleRef.get(repositoryType);
   }
 }

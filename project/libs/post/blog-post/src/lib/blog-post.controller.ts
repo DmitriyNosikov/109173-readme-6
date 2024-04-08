@@ -1,5 +1,5 @@
 import { Body, Controller, Post } from '@nestjs/common';
-import { BlogPostTypesDTO } from './dto/blog-post.dto'
+import { ExtraFieldsDTO } from './dto/blog-post.dto'
 import { BlogPostService } from './blog-post.service';
 
 
@@ -10,7 +10,7 @@ export class BlogPostController {
   ){}
 
   @Post()
-  async create(@Body() dto: BlogPostTypesDTO): Promise<void> {
+  async create(@Body() dto: ExtraFieldsDTO): Promise<void> {
     await this.blogPostService.create(dto);
   }
 }

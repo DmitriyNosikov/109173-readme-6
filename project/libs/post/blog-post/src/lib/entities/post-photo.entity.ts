@@ -1,23 +1,19 @@
-import { PostPhotoInterface, StorableEntity } from '@project/shared/core';
-import { BlogPostEntity } from '../blog-post.entity';
-
-export class PostPhotoEntity extends BlogPostEntity implements StorableEntity<PostPhotoInterface> {
+import { Entity, PostPhotoInterface, StorableEntity } from '@project/shared/core';
+export class PostPhotoEntity extends Entity implements PostPhotoInterface, StorableEntity<PostPhotoInterface> {
   public photoURL: string;
 
   constructor(post: PostPhotoInterface) {
-    super(post)
+    super()
 
     if(!post) {
       return;
     }
 
     this.photoURL = post.photoURL;
-    this.populate(post);
   }
 
   public toPOJO(): PostPhotoInterface {
     return {
-      ...super.toPOJO(),
       photoURL: this.photoURL
     };
   }

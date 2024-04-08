@@ -1,6 +1,4 @@
-import { BlogPostDTO } from './blog-post.dto';
-
-export class PostLinkDTO extends BlogPostDTO {
+export class PostLinkDTO {
   public linkURL: string;
   public description: string;
 }

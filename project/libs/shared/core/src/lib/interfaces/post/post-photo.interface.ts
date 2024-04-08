@@ -1,5 +1,3 @@
-import { PostInterface } from './post.interface';
-
-export interface PostPhotoInterface extends PostInterface {
+export interface PostPhotoInterface {
   photoURL: string;
 }
