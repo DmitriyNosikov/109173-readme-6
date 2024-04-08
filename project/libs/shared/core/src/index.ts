@@ -5,6 +5,7 @@ export { AuthUserInterface } from "./lib/interfaces/user/auth-user.interface"
 export { UserInterface } from "./lib/interfaces/user/user.interface"
 
 export { PostType, PostTypeEnum } from './lib/types/post/post-type.enum'
+export { PostInterfaces } from './lib/interfaces/post/post.interface'
 export { PostInterface } from './lib/interfaces/post/post.interface'
 export { PostTextInterface } from './lib/interfaces/post/post-text.interface'
 export { PostQuoteInterface } from './lib/interfaces/post/post-quote.interface'

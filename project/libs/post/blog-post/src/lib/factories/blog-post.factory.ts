@@ -1,33 +1,30 @@
-import {
-  EntityFactory,
-  PostLinkInterface,
-  PostPhotoInterface,
-  PostQuoteInterface,
-  PostTextInterface,
-  PostType,
-  PostTypeEnum,
-  PostVideoInterface
-} from '@project/shared/core';
-import { BlogPostEntity } from '../blog-post.entity';
-import { PostLinkFactory } from './post-link.factory';
+import { Injectable } from '@nestjs/common';
+import { PostInterfaces, PostType, PostTypeEnum } from '@project/shared/core';
+import { ConstructorRegistrator } from './constructor-registrator';
 import { PostTextFactory } from './post-text.factory';
+import { PostLinkFactory } from './post-link.factory';
 import { PostQuoteFactory } from './post-quote.factory';
 import { PostPhotoFactory } from './post-photo.factory';
 import { PostVideoFactory } from './post-video.factory';
 
-type PostsTypes = PostLinkInterface & PostTextInterface & PostQuoteInterface & PostPhotoInterface & PostVideoInterface;
-type FactoriesTypes = typeof PostLinkFactory  | typeof PostTextFactory  | typeof PostQuoteFactory | typeof PostPhotoFactory | typeof PostVideoFactory;
+const FactoryType = {
+  [PostType.TEXT]: PostTextFactory,
+  [PostType.LINK]: PostLinkFactory,
+  [PostType.QUOTE]: PostQuoteFactory,
+  [PostType.PHOTO]: PostPhotoFactory,
+  [PostType.VIDEO]: PostVideoFactory,
+} as const;
 
-export class BlogPostFactory implements EntityFactory<BlogPostEntity> {
-  // Типы фаблик { тип_поста: конструктор_фабрики }
-  private factoriesTypes: Map<PostTypeEnum, FactoriesTypes> = new Map();
+export type PostFactoryTypes = (typeof FactoryType)[keyof typeof FactoryType];
 
-  constructor() {
-    this.factoriesTypes.set(PostType.LINK, PostLinkFactory)
-    this.factoriesTypes.set(PostType.TEXT, PostTextFactory)
-    this.factoriesTypes.set(PostType.QUOTE, PostQuoteFactory)
-    this.factoriesTypes.set(PostType.PHOTO, PostPhotoFactory)
-    this.factoriesTypes.set(PostType.VIDEO, PostVideoFactory)
+@Injectable()
+export class BlogPostFactory extends ConstructorRegistrator<PostTypeEnum, PostFactoryTypes> {
+  private factoriesTypes: Map<PostTypeEnum, PostFactoryTypes>;
+
+  constructor(FactoryType) {
+    super(FactoryType);
+
+    this.factoriesTypes = this.getConstructorsList();
   }
 
   public getFactoryInstance(postType: PostTypeEnum) {
@@ -35,15 +32,16 @@ export class BlogPostFactory implements EntityFactory<BlogPostEntity> {
       return;
     }
 
+    // const postFactory = this.factoriesTypes.get(postType);
     const postFactory = this.factoriesTypes.get(postType);
     const postFactoryInstance =  new postFactory();
 
     return postFactoryInstance;
   }
 
-  public create(entityPlainData: PostsTypes) {
-    const postFactory = this.getFactoryInstance(entityPlainData.type);
-    const postEntity = postFactory.create(entityPlainData);
+  public create(entityPlainData: PostInterfaces) {
+    const postFactoryInstance = this.getFactoryInstance(entityPlainData.type);
+    const postEntity = postFactoryInstance.create(entityPlainData);
 
     return postEntity;
   }

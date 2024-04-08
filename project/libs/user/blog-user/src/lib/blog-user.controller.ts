@@ -25,7 +25,7 @@ export class BlogUserController {
     @Body() dto: UpdateUserDTO
   ): Promise<BlogUserEntity> {
     const { email, name, avatar } = dto;
-    const updatedUser = await this.blogUserService.editUser(userId, { email, name, avatar });
+    const updatedUser = await this.blogUserService.updateUser(userId, { email, name, avatar });
 
     return updatedUser;
   }
