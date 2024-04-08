@@ -1,6 +1,5 @@
 import { Injectable } from '@nestjs/common';
 import { PostType, PostTypeEnum } from '@project/shared/core'
-import { ConstructorRegistrator } from './constructor-registrator';
 import { PostTextRepository } from '../repositories/post-text.repository';
 import { PostLinkRepository } from '../repositories/post-link.repository';
 import { PostQuoteRepository } from '../repositories/post-quote.repository';
@@ -15,23 +14,17 @@ const RepositoryType = {
   [PostType.VIDEO]: PostVideoRepository,
 } as const;
 
-type PostRepositoryTypes = (typeof RepositoryType)[keyof typeof RepositoryType];
+// type PostRepositoryTypes = (typeof RepositoryType)[keyof typeof RepositoryType];
 
 @Injectable()
-export class BlogPostRepositoryFactory extends ConstructorRegistrator<PostTypeEnum, PostRepositoryTypes>{
-  private repositoriesTypes: Map<PostTypeEnum, PostRepositoryTypes>;
+export class BlogPostRepositoryFactory {
+  public getRepository<T extends PostTypeEnum>(postType: T): typeof RepositoryType[T] {
+    const postRepository = RepositoryType[postType];
 
-  constructor(RepositoryType) {
-    super(RepositoryType);
-
-    this.repositoriesTypes = this.getConstructorsList();
-  }
-
-  public getRepository(postType: PostTypeEnum) {
-    if(!this.repositoriesTypes.has(postType)) {
+    if(!postRepository) {
       return;
     }
 
-    return this.repositoriesTypes.get(postType);
+    return postRepository;
   }
 }

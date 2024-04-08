@@ -1,6 +1,5 @@
 import { Injectable } from '@nestjs/common';
 import { PostInterfaces, PostType, PostTypeEnum } from '@project/shared/core';
-import { ConstructorRegistrator } from './constructor-registrator';
 import { PostTextFactory } from './post-text.factory';
 import { PostLinkFactory } from './post-link.factory';
 import { PostQuoteFactory } from './post-quote.factory';
@@ -16,25 +15,15 @@ const FactoryType = {
 } as const;
 
 export type PostFactoryTypes = (typeof FactoryType)[keyof typeof FactoryType];
-
 @Injectable()
-export class BlogPostFactory extends ConstructorRegistrator<PostTypeEnum, PostFactoryTypes> {
-  private factoriesTypes: Map<PostTypeEnum, PostFactoryTypes>;
-
-  constructor(FactoryType) {
-    super(FactoryType);
-
-    this.factoriesTypes = this.getConstructorsList();
-  }
-
-  public getFactoryInstance(postType: PostTypeEnum) {
-    if(!this.factoriesTypes.has(postType)) {
+export class BlogPostFactory {
+  public getFactoryInstance<T extends PostTypeEnum>(postType: T) {
+    if(!FactoryType[postType]) {
       return;
     }
 
-    // const postFactory = this.factoriesTypes.get(postType);
-    const postFactory = this.factoriesTypes.get(postType);
-    const postFactoryInstance =  new postFactory();
+    const postFactory = FactoryType[postType];
+    const postFactoryInstance = new postFactory();
 
     return postFactoryInstance;
   }
