@@ -1,4 +1,17 @@
+import { ApiProperty } from '@nestjs/swagger'
+
 export class LoginUserDTO {
-  public email: string;
-  public password: string;
+  @ApiProperty({
+    description: 'User email',
+    example: 'iron-man@starkindustries.it'
+  })
+  email: string;
+
+  @ApiProperty({
+    description: 'User password',
+    example: 'jarvis-iron-hearth123',
+    minimum: 6,
+    maximum: 12
+  })
+  password: string;
 }

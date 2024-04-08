@@ -4,7 +4,7 @@
 @baseUrl = http://{{host}}:{{port}}/api
 
 # Environment
-@userId = 9701522a-3a76-4f19-a2e2-939d0e00d66a
+@userId = 7f043208-b5fc-403a-9ee9-3f6e4beab155
 
 # Get detail info about user
 GET {{baseUrl}}/users/{{userId}}

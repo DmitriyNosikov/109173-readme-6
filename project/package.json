@@ -19,6 +19,7 @@
   },
   "devDependencies": {
     "@nestjs/schematics": "^10.0.1",
+    "@nestjs/swagger": "7.3.1",
     "@nestjs/testing": "^10.0.2",
     "@nx/eslint": "18.1.2",
     "@nx/eslint-plugin": "18.1.2",

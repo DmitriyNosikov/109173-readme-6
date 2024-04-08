@@ -5,5 +5,9 @@ export const AuthenticationMessage: MessagesType = {
     ALREADY_EXISTS: 'User already exists',
     NOT_FOUND: 'User not found',
     INCORRECT_CREDENTIALS: 'Incorrect user email/password',
+  },
+  SUCCESS: {
+    LOGGED_IN: 'User logged in',
+    CREATED: 'User has been successfully created',
   }
 } as const;
