@@ -12,7 +12,7 @@ Content-Type: application/json
 
 {
   "email": "iron-man@starkindustries.it",
-  "name": "Tony Stark",
+  "name": "Tony Stark2",
   "avatar": "/playboy/millioner/philanthropist.jpeg",
   "password": "jarvis-iron-hearth123"
 }

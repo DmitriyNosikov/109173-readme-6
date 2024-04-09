@@ -3,7 +3,8 @@
   "version": "0.0.0",
   "license": "MIT",
   "scripts": {
-    "start:dev": "nx reset & nx run user:serve"
+    "user:dev": "nx reset & nx run user:serve",
+    "post:dev": "nx reset & nx run post:serve"
   },
   "private": true,
   "dependencies": {

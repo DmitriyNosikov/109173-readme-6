@@ -5,20 +5,22 @@ export class PostTextEntity extends Entity implements PostTextInterface, Storabl
   public title: string;
   public text: string;
 
-  constructor(post: PostTextInterface) {
+  constructor(extraFields: PostTextInterface) {
     super()
 
-    if(!post) {
+    if(!extraFields) {
       return;
     }
 
-    this.title = post.title;
-    this.announce = post.announce;
-    this.text = post.text;
+    this.id =  extraFields.id ?? '';
+    this.title = extraFields.title;
+    this.announce = extraFields.announce;
+    this.text = extraFields.text;
   }
 
   public toPOJO(): PostTextInterface {
     return {
+      id: this.id,
       title: this.title,
       announce: this.announce,
       text: this.text,

@@ -4,12 +4,25 @@
 @baseUrl = http://{{host}}:{{port}}/api
 
 # Environment
-@userId = 9701522a-3a76-4f19-a2e2-939d0e00d66a
+@userId = 6dd03634-9785-49b8-a403-9ab61bb5656e
 
 # Create post
 POST {{baseUrl}}/posts HTTP/1.1
 Content-Type: application/json
 
 {
-
+  "type": "text",
+"tags": [],
+"publishedAt": "2024-04-09T13:25:53+0000",
+"createdAt": "2024-04-09T13:25:53+0000",
+"isPublished": "true",
+"isRepost": "false",
+"authorId": "6dd03634-9785-49b8-a403-9ab61bb5656e",
+"originAuthorId": "",
+"originPostId": "",
+"extraFields": {
+    "announce": "Some announce text",
+    "title": "Article title",
+    "text": "Long story short text"
+  }
 }

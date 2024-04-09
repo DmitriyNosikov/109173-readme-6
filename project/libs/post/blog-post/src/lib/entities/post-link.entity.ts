@@ -4,15 +4,15 @@ export class PostLinkEntity extends Entity implements PostLinkInterface, Storabl
   public linkURL: string;
   public description: string;
 
-  constructor(post: PostLinkInterface) {
+  constructor(extraFields: PostLinkInterface) {
     super()
 
-    if(!post) {
+    if(!extraFields) {
       return;
     }
 
-    this.linkURL = post.linkURL;
-    this.description = post.description;
+    this.linkURL = extraFields.linkURL;
+    this.description = extraFields.description;
   }
 
   public toPOJO(): PostLinkInterface {

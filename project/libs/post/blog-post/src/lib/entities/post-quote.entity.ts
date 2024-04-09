@@ -4,15 +4,15 @@ export class PostQuoteEntity extends Entity implements PostQuoteInterface, Stora
   public authorId: string;
   public text: string;
 
-  constructor(post: PostQuoteInterface) {
+  constructor(extraFields: PostQuoteInterface) {
     super()
 
-    if(!post) {
+    if(!extraFields) {
       return;
     }
 
-    this.authorId = post.authorId;
-    this.text = post.text;
+    this.authorId = extraFields.authorId;
+    this.text = extraFields.text;
   }
 
   public toPOJO(): PostQuoteInterface {

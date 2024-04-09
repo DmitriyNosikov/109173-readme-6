@@ -1,7 +1,7 @@
-import { BasePostInterface } from './base-post.interface';
-
+import { PostTypeEnum } from '../../types/post/post-type.enum';
 export interface AllPostRelationInterface {
+  id?: string;
   postId: string;
-  postType: BasePostInterface['type'];
+  postType: PostTypeEnum;
   extraFieldsId: string;
 }

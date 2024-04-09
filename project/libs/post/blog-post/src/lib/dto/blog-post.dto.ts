@@ -5,9 +5,9 @@ import { PostQuoteDTO } from './post-quote.dto';
 import { PostPhotoDTO } from './post-photo.dto';
 import { PostVideoDTO } from './post-video.dto';
 
-export type ExtraFieldsDTO = BlogPostDTO | PostLinkDTO | PostTextDTO | PostQuoteDTO | PostPhotoDTO | PostVideoDTO;
+export type ExtraFieldsDTO = BasePostDTO | PostLinkDTO | PostTextDTO | PostQuoteDTO | PostPhotoDTO | PostVideoDTO;
 
-export class BlogPostDTO {
+export class BasePostDTO {
   public type: PostTypeEnum;
   public tags: string[];
   public publishedAt: string;

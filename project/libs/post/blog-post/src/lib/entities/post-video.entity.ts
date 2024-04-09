@@ -3,15 +3,15 @@ export class PostVideoEntity extends Entity implements PostVideoInterface, Stora
   public title: string;
   public videoURL: string;
 
-  constructor(post: PostVideoInterface) {
+  constructor(extraFields: PostVideoInterface) {
     super()
 
-    if(!post) {
+    if(!extraFields) {
       return;
     }
 
-    this.title = post.title;
-    this.videoURL = post.videoURL;
+    this.title = extraFields.title;
+    this.videoURL = extraFields.videoURL;
   }
 
   public toPOJO(): PostVideoInterface {

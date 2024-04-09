@@ -3,16 +3,16 @@ import { ModuleRef } from '@nestjs/core';
 import { PostTypeEnum } from '@project/shared/core'
 import { Repository } from '@project/shared/data-access';
 
-import { BasePostEntity } from '../entities/base-post.entity';
 import { RepositoryType } from '../types/repositories.enum';
+import { PostEntities } from '../types/entities.enum';
 
 @Injectable()
-export class BlogPostRepositoryFactory {
+export class BlogPostRepositoryDeterminant {
   constructor( // Получаем ссылку на хранилище инстансов (как в inversify)
     private moduleRef: ModuleRef
   ) {}
 
-  public getRepository(postType: PostTypeEnum): Repository<BasePostEntity> {
+  public getRepository(postType: PostTypeEnum): Repository<PostEntities> {
     const repositoryType = RepositoryType[postType];
 
     if(!repositoryType) {
