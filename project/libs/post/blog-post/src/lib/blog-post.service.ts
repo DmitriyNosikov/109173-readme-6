@@ -44,7 +44,7 @@ export class BlogPostService {
     };
     const blogPostEntity = this.blogPostFactory.create(extraFields)
     const blogPostRepository = this.blogPostRepositoryFactory.getRepository(dto.type);
-    await blogPostRepository.create(blogPostEntity);
+    const blogPost = await blogPostRepository.create(blogPostEntity);
 
     // Cохраняем все части нашего боста (базовая + дополнительная)
     // в связующую таблицу
@@ -54,7 +54,11 @@ export class BlogPostService {
       extraFieldsId: blogPostEntity.id
     };
     const allPostRelationEntity: AllPostRelationEntity = this.allPostRelationFactory.create(allPostRelationFields);
-    await this.allPostRelationRepository.create(allPostRelationEntity);
+    const relationPost = await this.allPostRelationRepository.create(allPostRelationEntity);
+
+    console.log('BASE POST: ', basePost);
+    console.log('BLOG POST: ', blogPost);
+    console.log('RELATION POST: ', relationPost);
 
     return allPostRelationEntity;
   }
