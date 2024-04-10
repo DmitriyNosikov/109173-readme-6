@@ -1,5 +1,5 @@
 import { registerAs } from '@nestjs/config'
-import { ConfigEnvironment, DEFAULT_PORT } from '../config.constant';
+import { ConfigEnvironment, DEFAULT_PORT } from '../user-config.constant';
 
 export interface DbConfig {
   host: string;

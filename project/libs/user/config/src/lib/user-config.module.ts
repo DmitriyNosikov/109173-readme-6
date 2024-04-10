@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common'
 import { ConfigModule } from '@nestjs/config'
-import { USERS_ENV_FILE_PATH } from './config.constant'
+import { USERS_ENV_FILE_PATH } from './user-config.constant'
 import appConfig from './configurations/app.config'
 import dbConfig from './configurations/db.config'
 
