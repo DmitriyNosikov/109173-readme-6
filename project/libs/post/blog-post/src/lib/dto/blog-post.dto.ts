@@ -21,6 +21,9 @@ export class BasePostDTO {
     type: [String],
     description: 'Post tags',
     example: '[ interesting, news, city]',
+    minLength: 3,
+    maxLength: 10,
+    maxProperties: 8
   })
   public tags: string[];
 
