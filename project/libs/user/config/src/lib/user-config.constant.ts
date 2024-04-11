@@ -6,5 +6,6 @@ export const DEFAULT_PORT = 8000;
 export const UserConfigMessage: MessagesType = {
   ERROR: {
     USER_APP_HOST_REQUIRED: '[User App Config] host name is required',
+    VALIDATION: '[User App Config] Validation failed. Errors: '
   },
 } as const;

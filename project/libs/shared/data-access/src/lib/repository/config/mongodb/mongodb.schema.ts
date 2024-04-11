@@ -1,4 +1,4 @@
-import { IsNumber, IsOptional, IsString, Max, Min, validateOrReject } from 'class-validator';
+import { IsNumber, IsOptional, IsString, Max, Min, ValidationError, validateOrReject } from 'class-validator';
 import { DEFAULT_MONGODB_PORT, MongoMessage } from './mongodb.constant';
 import { MAX_PORT, MIN_PORT } from '@project/shared/core';
 
@@ -34,6 +34,10 @@ export class MongoConfigSchema implements MongoConfigInterface {
   public authBase: string;
 
   async validate() {
-    return await validateOrReject(this);
+    return await validateOrReject(this).catch(errors => {
+      console.log(MongoMessage.ERROR.VALIDATION, errors);
+
+      throw new ValidationError();
+    });
   }
 }

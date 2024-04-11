@@ -1,6 +1,7 @@
-import { IsNumber, IsOptional, IsString, Max, Min, validateOrReject } from 'class-validator';
+import { IsNumber, IsOptional, IsString, Max, Min, ValidationError, validateOrReject } from 'class-validator';
 import { DEFAULT_PORT, UserConfigMessage } from './user-config.constant';
 import { MAX_PORT, MIN_PORT } from '@project/shared/core';
+import { Console, error } from 'console';
 
 export interface UserConfigInterface {
   host: string;
@@ -18,6 +19,10 @@ export class UserConfigSchema implements UserConfigInterface {
   port: number = DEFAULT_PORT;
 
   async validate() {
-    return await validateOrReject(this);
+    return await validateOrReject(this).catch(errors => {
+      console.log(UserConfigMessage.ERROR.VALIDATION, errors);
+
+      throw new ValidationError();
+    });
   }
 }
