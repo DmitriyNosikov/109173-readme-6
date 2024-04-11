@@ -6,6 +6,7 @@ export interface MongoConfigInterface {
   name: string;
   host: string;
   port: number;
+  express_port: number;
   user: string;
   password: string;
   authBase: string;
@@ -23,6 +24,12 @@ export class MongoConfigSchema implements MongoConfigInterface {
   @Min(MIN_PORT)
   @IsOptional()
   public port: number = DEFAULT_MONGODB_PORT;
+
+  @IsNumber()
+  @Max(MAX_PORT)
+  @Min(MIN_PORT)
+  @IsOptional()
+  public express_port: number = DEFAULT_MONGODB_PORT;
 
   @IsString({ message: MongoMessage.ERROR.MONGODB_USER_REQUIRED })
   public user: string;

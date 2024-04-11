@@ -2,6 +2,8 @@ import { MessagesType } from '@project/shared/core';
 
 export const USERS_ENV_FILE_PATH = 'apps/user/user.env'
 export const DEFAULT_PORT = 8000;
+export const DEFAULT_DB_PORT = 27017;
+export const DEFAULT_DB_UI_PORT = 8081;
 
 export const UserConfigMessage: MessagesType = {
   ERROR: {

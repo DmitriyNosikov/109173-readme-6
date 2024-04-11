@@ -11,6 +11,8 @@ async function getConfig(): Promise<UserConfigInterface> {
   const config = plainToClass(UserConfigSchema, {
     port: parseInt(port, 10),
     host: process.env.HOST,
+    db_port: process.env.DB_PORT,
+    db_ui_port: process.env.DB_UI_PORT
   })
 
   await config.validate();

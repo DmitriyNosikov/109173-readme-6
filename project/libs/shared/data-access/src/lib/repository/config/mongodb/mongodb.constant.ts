@@ -2,6 +2,7 @@ import { MessagesType } from '@project/shared/core';
 
 
 export const DEFAULT_MONGODB_PORT = 27017;
+export const DEFAULT_MONGODB_EXPRESS_PORT = 8081;
 
 export const MongoMessage: MessagesType = {
   ERROR: {
