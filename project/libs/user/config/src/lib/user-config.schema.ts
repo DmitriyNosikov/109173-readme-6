@@ -2,11 +2,18 @@ import { IsNumber, IsOptional, IsString, Max, Min, ValidationError, validateOrRe
 import { DEFAULT_DB_PORT, DEFAULT_DB_UI_PORT, DEFAULT_PORT, UserConfigMessage } from './user-config.constant';
 import { MAX_PORT, MIN_PORT } from '@project/shared/core';
 
+export const UserConfigEnum = {
+  HOST: 'host',
+  PORT: 'port',
+  DB_PORT: 'db_port',
+  DB_UI_PORT: 'db_ui_port',
+} as const;
+
 export interface UserConfigInterface {
-  host: string;
-  port: number;
-  db_port: number;
-  db_ui_port: number;
+  [UserConfigEnum.HOST]: string;
+  [UserConfigEnum.PORT]: number;
+  [UserConfigEnum.DB_PORT]: number;
+  [UserConfigEnum.DB_UI_PORT]: number;
 }
 
 export class UserConfigSchema implements UserConfigInterface {

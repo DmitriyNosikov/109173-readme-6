@@ -1,1 +1,1 @@
-export { fillDTO, omitUndefined, getdate } from './lib/common'
+export { fillDTO, omitUndefined, getdate, getMongoConnectionString } from './lib/common'

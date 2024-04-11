@@ -13,10 +13,10 @@ async function getConfig(): Promise<MongoConfigSchema> {
     port: parseInt(port, 10),
     express_port: parseInt(express_port, 10),
     host: process.env.MONGODB_HOST,
-    name: process.env.MONGODB,
+    dbName: process.env.MONGODB,
     user: process.env.MONGODB_USER,
     password: process.env.MONGODB_PASSWORD,
-    authBase: process.env.MONGODB_AUTH_BASE
+    authDatabase: process.env.MONGODB_AUTH_DATABASE
   })
 
   await config.validate();
