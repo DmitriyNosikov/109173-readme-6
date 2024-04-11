@@ -26,3 +26,12 @@ export { MessagesType } from './lib/types/messages.type'
 
 // SORT
 export { SortType, SortDirection, SortTypeEnum, SortDirectionEnum } from './lib/types/post/sort-type.enum'
+
+// CONSTANTS
+export {
+  MIN_PORT,
+  MAX_PORT,
+  Environment,
+  ConfigEnvironment,
+  EnvironmentType
+} from './lib/constants/app.constant'

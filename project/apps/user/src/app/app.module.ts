@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
 
-import { UserConfigModule } from '@project/config'
+import { UserConfigModule } from '@project/user/config'
 import { AuthenticationModule } from '@project/authentication';
 import { BlogUserModule } from '@project/blog-user';
 @Module({

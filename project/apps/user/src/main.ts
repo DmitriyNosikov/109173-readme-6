@@ -9,7 +9,7 @@ import { ConfigService } from '@nestjs/config';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger'
 
 import { AppModule } from './app/app.module';
-import { ConfigEnvironment } from '@project/config';
+import { ConfigEnvironment } from '@project/shared/core';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -27,8 +27,8 @@ async function bootstrap() {
   const swaggerDocument = SwaggerModule.createDocument(app, swaggerConfig);
   SwaggerModule.setup('spec', app, swaggerDocument);
 
-  const host = configService.get(`${ConfigEnvironment.APP}.host`);
-  const port = configService.get(`${ConfigEnvironment.APP}.port`);
+  const host = configService.get(`${ConfigEnvironment.USER}.host`);
+  const port = configService.get(`${ConfigEnvironment.USER}.port`);
 
   await app.listen(port, host);
 

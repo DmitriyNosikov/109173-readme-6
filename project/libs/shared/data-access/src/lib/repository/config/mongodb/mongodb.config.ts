@@ -1,28 +1,27 @@
-import { IsPort, IsString, Max, Min, validateOrReject } from 'class-validator';
-import { DEFAULT_MONGODB_PORT, MAX_PORT, MIN_PORT, MongoMessage } from './mongodb.constant';
+import { ConfigType, registerAs } from '@nestjs/config'
+import { plainToClass } from 'class-transformer';
+import { MongoConfigSchema } from './mongodb.schema';
+import { DEFAULT_MONGODB_PORT } from './mongodb.constant';
+import { ConfigEnvironment } from '@project/shared/core';
 
-export class MongoConfig {
-  @IsString({ message: MongoMessage.ERROR.MONGODB_NAME_REQUIRED })
-  public name: string;
+type PromisifiedConfig = Promise<ConfigType<typeof getConfig>>;
 
-  @IsString({ message: MongoMessage.ERROR.MONGODB_HOST_REQUIRED })
-  public host: string;
+async function getConfig(): Promise<MongoConfigSchema> {
+  const port = process.env.MONGODB_PORT || String(DEFAULT_MONGODB_PORT);
+  const config = plainToClass(MongoConfigSchema, {
+    port: parseInt(port, 10),
+    host: process.env.MONGODB_HOST,
+    name: process.env.MONGODB,
+    user: process.env.MONGODB_USER,
+    password: process.env.MONGODB_PASSWORD,
+    authBase: process.env.MONGODB_AUTH_BASE
+  })
 
-  @IsPort()
-  @Min(MIN_PORT)
-  @Max(MAX_PORT)
-  public port: number = DEFAULT_MONGODB_PORT;
+  await config.validate();
 
-  @IsString({ message: MongoMessage.ERROR.MONGODB_USER_REQUIRED })
-  public user: string;
-
-  @IsString({ message: MongoMessage.ERROR.MONGODB_PASSWORD })
-  public  password: string;
-
-  @IsString({ message: MongoMessage.ERROR.MONGODB_AUTH_BASE_REQUIRED })
-  public authBase: string;
-
-  public validate() {
-    return validateOrReject(this);
-  }
+  return config;
 }
+
+export default registerAs(ConfigEnvironment.DB, async (): PromisifiedConfig => {
+  return getConfig();
+})
