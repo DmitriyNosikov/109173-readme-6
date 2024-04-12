@@ -4,9 +4,16 @@ import { BlogUserService } from './blog-user.service'
 import { BlogUserRepository } from './blog-user.repository';
 import { BlogUserFactory } from './blog-user.factory';
 import { BCryptHasher } from '@project/shared/hasher'
+import { MongooseModule } from '@nestjs/mongoose';
+import { BlogUserModel, BlogUserSchema } from './bog-user.model';
 
 
 @Module({
+  imports: [
+    MongooseModule.forFeature([
+      { name: BlogUserModel.name, schema: BlogUserSchema }
+    ])
+  ],
   controllers: [BlogUserController],
   // Провайдеры модуля (API)
   providers: [
