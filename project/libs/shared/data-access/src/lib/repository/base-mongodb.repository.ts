@@ -1,5 +1,5 @@
 import { Entity, EntityFactory, StorableEntity } from '@project/shared/core';
-import { Document, InferId, Model } from 'mongoose';
+import { Document, InferId, Model  } from 'mongoose';
 import { Repository } from './repository.interface';
 import { NotFoundException } from '@nestjs/common';
 import { RepositoryMessage } from './repository.constant';
@@ -9,8 +9,8 @@ export class BaseMongoDbRepository<
   DocumentType extends Document
 > implements Repository<T> {
   constructor(
-    private readonly entityFactory: EntityFactory<T>,
-    private readonly model: Model<DocumentType>
+    protected readonly entityFactory: EntityFactory<T>,
+    protected readonly model: Model<DocumentType>
   ) {}
 
   protected createEntityFromDocument(document: DocumentType): T | null {
@@ -18,7 +18,9 @@ export class BaseMongoDbRepository<
       return null;
     }
 
-    const plainObject = document.toObject({ versionKey: false }) as ReturnType<T['toPOJO']>;
+    const plainObject = document.toObject({ versionKey: false });
+
+    plainObject.id = plainObject._id.toString();
 
     return this.entityFactory.create(plainObject);
   }
@@ -31,8 +33,9 @@ export class BaseMongoDbRepository<
     return this.createEntityFromDocument(document);
   }
 
-  async create(entity: T): Promise<unknown> {
-    const document = await this.model.create(entity);
+  async create(entity: T): Promise<T> {
+    const entityPlainObject = entity.toPOJO();
+    const document = await this.model.create(entityPlainObject);
 
     entity.id = document.id;
 
