@@ -1,15 +1,15 @@
 import { Module } from '@nestjs/common'
 import { ConfigModule } from '@nestjs/config'
-
-const USERS_ENV_FILE_PATH = 'apps/user/user.env'
-
+import { USERS_ENV_FILE_PATH } from './user-config.constant'
+import { mongoConfig } from '@project/shared/data-access'
+import userConfig from './user.config'
 @Module({
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
       cache: true,
-      // TODO: Передать список конфигураций для загрузки
-      load: [],
+      // Cписок конфигураций для загрузки
+      load: [userConfig, mongoConfig],
 
       envFilePath: USERS_ENV_FILE_PATH
     })

@@ -2,9 +2,8 @@
 @host = 127.0.0.1
 @port = 8000
 @baseUrl = http://{{host}}:{{port}}/api
-
 # Environment
-@userId = 7f043208-b5fc-403a-9ee9-3f6e4beab155
+@userId = 661908de1671ea44276cfe06
 
 # Get detail info about user
 GET {{baseUrl}}/users/{{userId}}
@@ -15,7 +14,7 @@ PATCH {{baseUrl}}/users/password/{{userId}}
 Content-Type: application/json
 
 {
-  "password": "test-password123",
+  "password": "jarvis-iron-hearth123",
   "newPassword": "123456"
 }
 ###

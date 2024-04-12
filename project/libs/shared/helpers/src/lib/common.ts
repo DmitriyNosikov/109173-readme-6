@@ -20,3 +20,8 @@ export function omitUndefined(value: Record<string, unknown>) {
 export function getdate(): string {
   return new Date().toISOString();
 }
+
+export function getMongoConnectionString({ username, password, host, port, dbName, authDatabase }): string {
+  // https://www.mongodb.com/docs/manual/reference/connection-string/#standard-connection-string-format
+  return `mongodb://${username}:${password}@${host}:${port}/${dbName}?authSource=${authDatabase}`
+}

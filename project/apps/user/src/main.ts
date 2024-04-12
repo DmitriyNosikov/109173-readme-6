@@ -5,12 +5,16 @@
 
 import { Logger } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
+import { ConfigService } from '@nestjs/config';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger'
 
 import { AppModule } from './app/app.module';
+import { ConfigEnvironment } from '@project/shared/core';
+import { UserConfigEnum } from '@project/user/config';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
+  const configService = app.get(ConfigService);
   const swaggerConfig = new DocumentBuilder()
     .setTitle('The "User" service')
     .setDescription('User service API')
@@ -24,8 +28,8 @@ async function bootstrap() {
   const swaggerDocument = SwaggerModule.createDocument(app, swaggerConfig);
   SwaggerModule.setup('spec', app, swaggerDocument);
 
-  const host = "127.0.0.1";
-  const port = process.env.PORT || 8000;
+  const host = configService.get(`${ConfigEnvironment.USER}.${UserConfigEnum.HOST}`);
+  const port = configService.get(`${ConfigEnvironment.USER}.${UserConfigEnum.PORT}`);
 
   await app.listen(port, host);
 

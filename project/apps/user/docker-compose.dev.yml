@@ -1,0 +1,35 @@
+# docker compose --file=./apps/user/docker-compose.dev.yml --project-name "readme-user" --env-file=./apps/user/user.env up -d
+version: '3.9'
+services:
+  readme.user.mongodb:
+    image: mongo:4.4
+    restart: always
+    container_name: readme.user.mongodb
+
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ${MONGODB_USER}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGODB_PASSWORD}
+      MONGO_INITDB_DATABASE: ${MONGODB}
+
+    # Forwarded MongoDB port / Virtual machine MongoDB port
+    ports:
+      - ${DB_PORT}:${MONGODB_PORT}
+
+    volumes:
+      - readme.mongodb.user:/data/db
+
+  readme.user.mongodb.ui:
+    image: mongo-express:1.0.2-20
+    restart: always
+    container_name: readme.user.mongodb.ui
+    ports:
+      - ${DB_UI_PORT}:${MONGODB_EXPRESS_PORT}
+    environment:
+      ME_CONFIG_BASICAUTH_USERNAME: ${MONGODB_USER}
+      ME_CONFIG_BASICAUTH_PASSWORD: ${MONGODB_PASSWORD}
+      ME_CONFIG_MONGODB_ADMINUSERNAME: ${MONGODB_USER}
+      ME_CONFIG_MONGODB_ADMINPASSWORD: ${MONGODB_PASSWORD}
+      ME_CONFIG_MONGODB_URL: mongodb://${MONGODB_USER}:${MONGODB_PASSWORD}@readme.user.mongodb:${DB_PORT}/
+
+volumes:
+  readme.mongodb.user:
