@@ -2,7 +2,6 @@
 @host = 127.0.0.1
 @port = 8000
 @baseUrl = http://{{host}}:{{port}}/api
-
 # Environment
 @userId = 661908de1671ea44276cfe06
 
@@ -15,7 +14,7 @@ PATCH {{baseUrl}}/users/password/{{userId}}
 Content-Type: application/json
 
 {
-  "password": "test-password123",
+  "password": "jarvis-iron-hearth123",
   "newPassword": "123456"
 }
 ###

@@ -21,7 +21,7 @@ export class BlogPostController {
     description: BlogPostMessage.ERROR.UNAUTHORIZED
   })
   @Post()
-  async create(@Body() dto: BasePostDTO): Promise<void> {
+  public async create(@Body() dto: BasePostDTO): Promise<void> {
     const allPostRelation = await this.blogPostService.create(dto);
 
     console.log('RELATED POST: ', allPostRelation);
@@ -32,7 +32,7 @@ export class BlogPostController {
     description: BlogPostMessage.SUCCESS.FOUND
   })
   @Get(':postId')
-  async show(@Param('postId') postId: string): Promise<void> {
+  public async show(@Param('postId') postId: string): Promise<void> {
     console.log('POST ID:', postId);
     throw new Error('Method not implemented yet');
   }
@@ -42,7 +42,7 @@ export class BlogPostController {
     description: BlogPostMessage.SUCCESS.UPDATED
   })
   @Patch(':postId')
-  async update(@Param('postId') postId: string, @Body() updatedFields: Partial<BasePostDTO>) {
+  public async update(@Param('postId') postId: string, @Body() updatedFields: Partial<BasePostDTO>) {
     console.log('POST ID:', postId);
     console.log('UPDATED FIELDS:', updatedFields);
     throw new Error('Method not implemented yet');
@@ -53,7 +53,7 @@ export class BlogPostController {
     description: BlogPostMessage.SUCCESS.DELETED
   })
   @Delete(':postId')
-  async delete(@Param('postId') postId: string): Promise<void> {
+  public async delete(@Param('postId') postId: string): Promise<void> {
     console.log('POST ID:', postId);
     throw new Error('Method not implemented yet');
   }
@@ -67,7 +67,7 @@ export class BlogPostController {
     description: BlogPostMessage.ERROR.NOT_FOUND
   })
   @Post('search')
-  async searct(@Body() title: string): Promise<void> {
+  public async searct(@Body() title: string): Promise<void> {
     console.log('POST TITLE:', title);
     throw new Error('Method not implemented yet');
   }

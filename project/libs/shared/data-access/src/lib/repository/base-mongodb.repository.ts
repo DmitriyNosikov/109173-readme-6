@@ -1,5 +1,5 @@
 import { Entity, EntityFactory, StorableEntity } from '@project/shared/core';
-import { Document, InferId, Model  } from 'mongoose';
+import { Document, InferId, Model, UpdateQuery  } from 'mongoose';
 import { Repository } from './repository.interface';
 import { NotFoundException } from '@nestjs/common';
 import { RepositoryMessage } from './repository.constant';
@@ -46,7 +46,7 @@ export class BaseMongoDbRepository<
     const updatedDocument = await this.model
       .findByIdAndUpdate(
         entityId,
-        updatedFields.toPOJO(),
+        updatedFields as UpdateQuery<DocumentType>,
         { new: true, runValidators: true }
       )
       .exec();
