@@ -17,6 +17,11 @@ services:
 
     volumes:
       - readme.mongodb.user:/data/db
+    healthcheck:
+      test: echo 'db.runCommand({ serverStatus:1 }).ok' | mongo admin -u ${MONGODB_USER} -p ${MONGODB_PASSWORD} --quiet | grep 1
+      interval: 10s
+      timeout: 10s
+      retries: 5
 
   readme.user.mongodb.ui:
     image: mongo-express:1.0.2-20
