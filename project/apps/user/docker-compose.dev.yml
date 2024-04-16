@@ -17,6 +17,7 @@ services:
 
     volumes:
       - readme.mongodb.user:/data/db
+
     healthcheck:
       test: echo 'db.runCommand({ serverStatus:1 }).ok' | mongo admin -u ${MONGODB_USER} -p ${MONGODB_PASSWORD} --quiet | grep 1
       interval: 10s
@@ -29,6 +30,8 @@ services:
     container_name: readme.user.mongodb.ui
     ports:
       - ${DB_UI_PORT}:${MONGODB_EXPRESS_PORT}
+    depends_on:
+      - readme.user.mongodb
     environment:
       ME_CONFIG_BASICAUTH_USERNAME: ${MONGODB_USER}
       ME_CONFIG_BASICAUTH_PASSWORD: ${MONGODB_PASSWORD}
