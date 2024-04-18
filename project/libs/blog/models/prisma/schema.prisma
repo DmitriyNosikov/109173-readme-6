@@ -13,25 +13,104 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model User {
-  id           String   @id @default(uuid())
-  email        String   @unique
-  firstName    String   @db.VarChar(30) @map("fisrt_name")
-  lastName     String   @db.VarChar(30) @map("last_name")
-  avatar       String   @db.VarChar(255)
-  createdAt    DateTime @default(now()) @map("created_at")
-  passwordHash String   @map("password_hash")
-
-  @@map("users")
+//////////////////// POSTS ////////////////////
+enum PostType {
+  text
+  link
+  quote
+  video
+  photo
 }
 model Post {
-  id String @id @default(uuid())
-  type String @db.VarChar(255)
-  tags String
+  id              String   @id @default(uuid())
+  type            PostType
+  tags            Tag[]
+  comments        Comment[]
+  likes           String[]
+  createdAt       DateTime @default(now()) @map("created_at")
+  updatedAt       DateTime @updatedAt @map("updated_at")
+  isPublished     Boolean  @map("is_published")
+  isRepost        Boolean  @map("is_repost")
+  authorId        String   @map("author_id")
+  originAuthorId  String   @map("origin_author_id")
+  originPostId    String   @map("origin_post_id")
+
+  // --- Отношения
+  // Связь с таблицей отношений постов и экстра-полей
+  postRelation PostRelation?
+
+
+  @@map("posts")
+}
+
+model PostRelation {
+  id              String @id @default(uuid())
+  postId          String @unique @db.VarChar(255) @map("post_id")
+  postType        String @map("post_type") // Таблицу, из которой нужно получить экстра-филды, определяем по типу поста
+  extraFieldsId   String @map("extra_fields_id") // Через данное поле будем вручную получать экстра-филды
+
+  // --- Отношения
+  post Post @relation(fields: [postId], references: [id]) // Связываем с таблицей Post через внутреннее поле postId
+
+  @@map("posts_relations")
+}
+
+model TextPost {
+  id        String @id @default(uuid())
+  announce  String
+  title     String @db.VarChar(255)
+  text      String
+
+  @@index([title])
+}
+
+model LinkPost {
+  id          String @id @default(uuid())
+  linkURL     String @map("link_url")
+  description String @db.VarChar(300)
+}
+
+model QuotePost {
+  id        String @id @default(uuid())
+  authorId  String @map("author_id")
+  text      String @db.VarChar(300)
+}
+
+model VideoPost {
+  id        String @id @default(uuid())
+  title     String @db.VarChar(50)
+  videoURL  String @map("video_url")
+
+  @@index([title])
+}
+
+model PhotoPost {
+  id        String @id @default(uuid())
+  photoURL  String @map("photo_url")
+}
+
+//////////////////// TAGS ////////////////////
+model Tag {
+  id        String    @id @default(uuid())
+  posts     Post[]
+  createdAt DateTime  @default(now()) @map("created_at")
+  updatedAt DateTime  @updatedAt @map("updated_at")
+  title     String    @db.VarChar(10)
+
+  @@map("tags")
+}
+
+//////////////////// COMMENTS ////////////////////
+model Comment {
+  id        String   @id @default(uuid())
+  postId    String   @unique @map("postId")
+  authorId  String   @map("author_id")
   createdAt DateTime @default(now()) @map("created_at")
-  isPublished Boolean @map("is_published")
-  isRepost Boolean @map("is_repost")
-  authorId String @map("author_id")
-  originAuthorId String @map("origin_author_id")
-  originPostId String @map("origin_post_id")
+  updatedAt DateTime @updatedAt @map("updated_at")
+  text      String   @db.VarChar(300)
+
+  // --- Отношения
+  post Post @relation(fields: [postId], references: [id])
+
+  @@map("comments")
 }
