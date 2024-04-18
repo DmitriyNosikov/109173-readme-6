@@ -1,7 +1,7 @@
 import { MessagesType } from '@project/shared/core';
 
 export const POSTGRES_DEFAULT_PORT=5432
-export const PGADMIN_DEFAULT_PORT=5432
+export const PGADMIN_DEFAULT_PORT=8082
 
 export const PostgresConfigMessage: MessagesType = {
   ERROR: {

@@ -1,4 +1,4 @@
-import { IsNumber, IsOptional, IsString, MIN, Max, Min, ValidationError, validateOrReject } from 'class-validator';
+import { IsNumber, IsOptional, IsString, Max, Min, ValidationError, validateOrReject } from 'class-validator';
 import { PGADMIN_DEFAULT_PORT, POSTGRES_DEFAULT_PORT, PostgresConfigMessage } from './postgres.constant';
 import { MAX_PORT, MIN_PORT } from '@project/shared/core';
 
@@ -17,7 +17,9 @@ export interface PostgresConfigInterface {
   [PostgresConfigEnum.POSTGRES_USER]: string;
   [PostgresConfigEnum.POSTGRES_PASSWORD]: string;
   [PostgresConfigEnum.POSTGRES_PORT]: number;
-  [PostgresConfigEnum.PGADMIN_DEFAULT_EMAIL]: string;
+  [PostgresConfigEnum.POSTGRES_DB_NAME]: string;
+
+  [PostgresConfigEnum.PGADMIN_DEFAULT_PORT]: number;
   [PostgresConfigEnum.PGADMIN_DEFAULT_EMAIL]: string;
   [PostgresConfigEnum.PGADMIN_DEFAULT_PASSWORD]: string;
 }

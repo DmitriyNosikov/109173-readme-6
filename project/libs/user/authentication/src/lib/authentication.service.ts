@@ -1,5 +1,5 @@
 import { ConflictException, Inject, Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common'
-import { BlogUserFactory, BlogUserRepository, CreateUserDTO, LoginUserDTO } from '@project/blog-user';
+import { BlogUserFactory, BlogUserRepository, CreateUserDTO, LoginUserDTO } from '@project/user/blog-user';
 import { HasherInterface } from '@project/shared/hasher';
 import { getdate } from '@project/shared/helpers'
 import { AuthenticationMessage } from './authentication.constant';

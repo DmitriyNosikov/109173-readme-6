@@ -1,5 +1,5 @@
 import { Module } from '@nestjs/common';
-import { BlogUserModule } from '@project/blog-user'
+import { BlogUserModule } from '@project/user/blog-user'
 import { AuthenticationController } from './authentication.controller';
 import { AuthenticationService } from './authentication.service';
 import { BCryptHasher } from '@project/shared/hasher'
