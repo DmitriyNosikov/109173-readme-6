@@ -1,3 +1,5 @@
+# Compose: docker compose --file=./apps/post/docker-compose.dev.yml --project-name "readme-post" --env-file=./apps/post/post.env up -d
+# Healthcheck: docker inspect readme.post.pgadmin --format='{{.State.Health}}'
 version: '3.9'
 services:
   readme.post.postgres:
@@ -10,17 +12,23 @@ services:
     ports:
       - ${POSTGRES_PORT}:5432
     volumes:
-      - readme.postgres.post:/var/lib/postgresql/data
+      - readme.postgres.post:/data/postgresql
 
     healthcheck:
-      test: [ "CMD", "pg_isready -U ${POSTGRES_USER} -d {POSTGRES_PASSWORD}" ]
+      test: [ "CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d {POSTGRES_PASSWORD}" ]
       interval: 10s
       timeout: 5s
       retries: 5
       start_period: 10s
 
+    # По-кмолчанию, все сервисы находятся в одной сети
+    # Данной настройкой мы можем принудительно задать другое имя сети
+    # Тем самым, разнося нужные сервисы друг относительно друга
+    # В текущем случае, сервисы readme.post.postgres и readme.post.pgadmin
+    # находятся по-прежнему в одной сети (readme.post), как это было бы по-умолчанию
+    # а настройка сделана просто для примера наличия такой возможности
     networks:
-      - typoteka.blog
+      - readme.post
 
   readme.post.pgadmin:
     image: dpage/pgadmin4
@@ -31,6 +39,8 @@ services:
       PGADMIN_CONFIG_SERVER_MODE: "False"
     ports:
       - ${PGADMIN_DEFAULT_PORT}:80
+    # Указываем зависимость от сервиса (данный сервис стартует только)
+    # после того, как будет запущен сервис, который указан в зависимости
     depends_on:
       - readme.post.postgres
     networks:

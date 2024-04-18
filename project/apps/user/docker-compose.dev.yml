@@ -1,4 +1,5 @@
-# docker compose --file=./apps/user/docker-compose.dev.yml --project-name "readme-user" --env-file=./apps/user/user.env up -d
+# Compose: docker compose --file=./apps/user/docker-compose.dev.yml --project-name "readme-user" --env-file=./apps/user/user.env up -d
+# Healthcheck: docker inspect readme.user.mongodb --format='{{.State.Health}}'
 version: '3.9'
 services:
   readme.user.mongodb:
