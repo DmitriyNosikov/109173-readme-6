@@ -5,5 +5,4 @@ export interface Repository<T extends Entity> {
   create(entity: T): Promise<unknown>;
   updateById(entityId: T['id'], updatedFields: Partial<T>): Promise<T>;
   deleteById(entityId: T['id']): Promise<void>;
-  exists(entityId: string): Promise<boolean>
 }

@@ -11,6 +11,7 @@ export const MongoMessage: MessagesType = {
     MONGODB_USER_REQUIRED: '[MongoDB Config] user name is required',
     MONGODB_PASSWORD_REQUIRED: '[MongoDB Config] user password is required',
     MONGODB_AUTH_DATABASE_REQUIRED: '[MongoDB Config] auth database name is required',
+
     VALIDATION: '[User App Config] Validation failed. Errors: ',
   },
 } as const;

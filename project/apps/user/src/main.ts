@@ -10,7 +10,7 @@ import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger'
 
 import { AppModule } from './app/app.module';
 import { ConfigEnvironment } from '@project/shared/core';
-import { UserConfigEnum } from '@project/user/config';
+import { UserConfigEnum } from 'libs/user/user-config/src';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
