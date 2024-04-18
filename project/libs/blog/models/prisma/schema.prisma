@@ -12,3 +12,26 @@ datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
+
+model User {
+  id           String   @id @default(uuid())
+  email        String   @unique
+  firstName    String   @db.VarChar(30) @map("fisrt_name")
+  lastName     String   @db.VarChar(30) @map("last_name")
+  avatar       String   @db.VarChar(255)
+  createdAt    DateTime @default(now()) @map("created_at")
+  passwordHash String   @map("password_hash")
+
+  @@map("users")
+}
+model Post {
+  id String @id @default(uuid())
+  type String @db.VarChar(255)
+  tags String
+  createdAt DateTime @default(now()) @map("created_at")
+  isPublished Boolean @map("is_published")
+  isRepost Boolean @map("is_repost")
+  authorId String @map("author_id")
+  originAuthorId String @map("origin_author_id")
+  originPostId String @map("origin_post_id")
+}

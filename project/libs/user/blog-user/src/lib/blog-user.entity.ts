@@ -2,9 +2,9 @@ import { AuthUserInterface, Entity, StorableEntity } from '@project/shared/core'
 
 export class BlogUserEntity extends Entity implements StorableEntity<AuthUserInterface> {
   public email: string;
-  public name: string;
+  public firstName: string;
+  public lastName: string;
   public avatar: string;
-  public date: string;
   public passwordHash: string;
 
   constructor(user?: AuthUserInterface) {
@@ -19,9 +19,9 @@ export class BlogUserEntity extends Entity implements StorableEntity<AuthUserInt
 
     this.id = user.id ?? '';
     this.email = user.email;
-    this.name = user.name;
+    this.firstName = user.firstName;
+    this.lastName = user.lastName;
     this.avatar = user.avatar ?? '';
-    this.date = user.date;
     this.passwordHash = user.passwordHash;
   }
 
@@ -33,9 +33,9 @@ export class BlogUserEntity extends Entity implements StorableEntity<AuthUserInt
     return {
       id: this.id,
       email: this.email,
-      name: this.name,
+      firstName: this.firstName,
+      lastName: this.lastName,
       avatar: this.avatar,
-      date: this.date,
       passwordHash: this.passwordHash
     };
   }
