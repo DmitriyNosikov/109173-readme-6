@@ -11,6 +11,7 @@
 
 generator client {
   provider = "prisma-client-js"
+  output = "../../../../node_modules/.prisma/client"
 }
 
 datasource db {
@@ -67,18 +68,23 @@ model TextPost {
   text      String
 
   @@index([title])
+  @@map("text_posts")
 }
 
 model LinkPost {
   id          String @id @default(uuid())
   linkURL     String @map("link_url")
   description String @db.VarChar(300)
+
+  @@map("link_posts")
 }
 
 model QuotePost {
   id        String @id @default(uuid())
   authorId  String @map("author_id")
   text      String @db.VarChar(300)
+
+  @@map("quote_posts")
 }
 
 model VideoPost {
@@ -87,11 +93,14 @@ model VideoPost {
   videoURL  String @map("video_url")
 
   @@index([title])
+  @@map("video_posts")
 }
 
 model PhotoPost {
   id        String @id @default(uuid())
   photoURL  String @map("photo_url")
+
+  @@map("photo_posts")
 }
 
 //////////////////// TAGS ////////////////////

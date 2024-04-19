@@ -24,7 +24,7 @@ PATCH  {{baseUrl}}/users/{{userId}}
 Content-Type: application/json
 
 {
-  "name": "Tony Stark"
+  "firstName": "Tonyyyyy"
 }
 ###
 

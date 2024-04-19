@@ -16,11 +16,18 @@ export class UserRDO {
   email: string;
 
   @ApiProperty({
-    description: 'User name',
-    example: 'Tony Stark'
+    description: 'User first name',
+    example: 'Tony'
   })
   @Expose()
-  name: string;
+  firstName: string;
+
+  @ApiProperty({
+    description: 'User last name',
+    example: 'Stark'
+  })
+  @Expose()
+  lastName: string;
 
   @ApiProperty({
     description: 'User avatar',
