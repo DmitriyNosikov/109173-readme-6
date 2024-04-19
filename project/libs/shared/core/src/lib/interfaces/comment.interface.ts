@@ -2,9 +2,10 @@ import { BasePostInterface } from './post/base-post.interface';
 import { UserInterface } from './user/user.interface';
 
 export interface CommentInterface {
-  id: string;
-  text: string;
+  id?: string;
   postId: BasePostInterface['id'];
   authorId: UserInterface['id'];
-  date: string;
+  text: string;
+  createdAt: string;
+  updatedAt: string;
 }
