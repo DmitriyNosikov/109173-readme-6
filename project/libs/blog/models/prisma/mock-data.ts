@@ -167,3 +167,51 @@ export function getPostsRelations() {
     },
   ];
 }
+
+export function getTags() {
+  return [
+    {
+      id: FIRST_TAG_ID,
+      posts: {
+        connect: [{ id: FIRST_POST_UUID }]
+      },
+      title: "News"
+    },
+    {
+      id: SECOND_TAG_ID,
+      posts: {
+        connect: [{ id: FIRST_POST_UUID }]
+      },
+      title: "HOT"
+    }
+  ];
+}
+
+// TODO: Непонятно, как правильно описать в моках
+// связи лайков, комментов и постов. Надо узнать и переписать
+// правильно
+export function getPostsComments() {
+  return [
+    {
+      id: FIRST_COMMENT_ID,
+      postId: SECOND_POST_UUID,
+      authorId: FIRST_USER_UUID,
+      text: "Some interesting comment for current post ... Five stars!"
+    }
+  ];
+}
+
+export function getPostsLikes() {
+  return [
+    {
+      id: FIRST_LIKE_ID,
+      postId: FIRST_POST_UUID,
+      authorId: SECOND_USER_UUID
+    },
+    {
+      id: SECOND_LIKE_ID,
+      postId: SECOND_POST_UUID,
+      authorId: FIRST_USER_UUID
+    }
+  ];
+}

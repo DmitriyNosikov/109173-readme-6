@@ -1,5 +1,5 @@
 import { PrismaClient } from '@prisma/client'
-import { getBasePosts, getLinkPosts, getPostsRelations, getTextPosts, getVideoPosts } from './mock-data';
+import { getBasePosts, getLinkPosts, getPostsComments, getPostsLikes, getPostsRelations, getTextPosts, getVideoPosts } from './mock-data';
 
 async function seedDB(prismaClient: PrismaClient) {
   // BASE POSTS
@@ -23,6 +23,31 @@ async function seedDB(prismaClient: PrismaClient) {
         authorId: basePost.authorId,
         originAuthorId: basePost.originAuthorId,
         originPostId: basePost.originPostId,
+      }
+    });
+  }
+
+  // LIKES
+  const mockPostsLikes = getPostsLikes()
+  for(const postsLike of mockPostsLikes) {
+    await prismaClient.postsLike.create({
+      data: {
+        id: postsLike.id,
+        postId: postsLike.postId,
+        authorId: postsLike.authorId
+      }
+    });
+  }
+
+  // COMMENTS
+  const mockPostsComments = getPostsComments()
+  for(const postsComment of mockPostsComments) {
+    await prismaClient.postsLike.create({
+      data: {
+        id: postsComment.id,
+        postId: postsComment.postId,
+        authorId: postsComment.authorId,
+        text: postsComment.text
       }
     });
   }
