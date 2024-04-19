@@ -53,8 +53,8 @@ export function getBasePosts() {
       likes: {
         connect: [{ id: FIRST_LIKE_ID }]
       },
-      isPublished: "true",
-      isRepost: "false",
+      isPublished: true,
+      isRepost: false,
       authorId: FIRST_USER_UUID,
       originAuthorId: "",
       originPostId: "",
@@ -68,8 +68,8 @@ export function getBasePosts() {
       likes: {
         connect: [{ id: SECOND_LIKE_ID }]
       },
-      isPublished: "true",
-      isRepost: "false",
+      isPublished: true,
+      isRepost: false,
       authorId: FIRST_USER_UUID,
       originAuthorId: "",
       originPostId: "",
@@ -77,8 +77,8 @@ export function getBasePosts() {
     {
       id: THIRD_POST_UUID,
       type: PostType.LINK,
-      isPublished: "true",
-      isRepost: "false",
+      isPublished: true,
+      isRepost: false,
       authorId: SECOND_USER_UUID,
       originAuthorId: "",
       originPostId: "",
@@ -86,8 +86,8 @@ export function getBasePosts() {
     {
       id: FORTH_POST_UUID,
       type: PostType.LINK,
-      isPublished: "false",
-      isRepost: "false",
+      isPublished: false,
+      isRepost: false,
       authorId: SECOND_USER_UUID,
       originAuthorId: "",
       originPostId: "",

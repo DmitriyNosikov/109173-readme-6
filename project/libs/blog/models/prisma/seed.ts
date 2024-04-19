@@ -6,20 +6,21 @@ async function seedDB(prismaClient: PrismaClient) {
   const mockBasePosts = getBasePosts();
   for(const basePost of mockBasePosts) {
     await prismaClient.post.upsert({
-      where: { id: basePost.id },
-      update: {},
+      where: { id: basePost.id }, // Если находим пост с таким id - ничего не делаем
+      update: {}, // Ничего не обновляем
       create: {
         id: basePost.id,
         type: basePost.type,
-        tags: basePost.tags ? {
-          create: basePost.tags
-        }: undefined,
-        comments: basePost.comments ? {
-          create: basePost.comments
-        }: undefined,
-        likes: basePost.likes ? {
-          create: basePost.likes
-        }: undefined,
+        // ---> TODO: Поправить, почему-то не работает
+        // tags: basePost.tags ? {
+        //   create: basePost.tags
+        // }: undefined,
+        // comments: basePost.comments ? {
+        //   create: basePost.comments
+        // }: undefined,
+        // likes: basePost.likes ? {
+        //   create: basePost.likes
+        // }: undefined,
         isPublished: basePost.isPublished,
         isRepost: basePost.isRepost,
         authorId: basePost.authorId,
@@ -32,8 +33,9 @@ async function seedDB(prismaClient: PrismaClient) {
   // LIKES
   const mockPostsLikes = getPostsLikes()
   for(const postsLike of mockPostsLikes) {
-    await prismaClient.postsLike.upsert({
+    await prismaClient.postLike.upsert({
       where: { id: postsLike.id },
+      update: {},
       create: {
         id: postsLike.id,
         postId: postsLike.postId,
@@ -45,8 +47,9 @@ async function seedDB(prismaClient: PrismaClient) {
   // COMMENTS
   const mockPostsComments = getPostsComments()
   for(const postsComment of mockPostsComments) {
-    await prismaClient.postsLike.upsert({
+    await prismaClient.postComment.upsert({
       where: { id: postsComment.id },
+      update: {},
       create: {
         id: postsComment.id,
         postId: postsComment.postId,
@@ -61,6 +64,7 @@ async function seedDB(prismaClient: PrismaClient) {
   for(const textPost of mockTextPosts) {
     await prismaClient.textPost.upsert({
       where: { id: textPost.id },
+      update: {},
       create: {
         id: textPost.id,
         announce: textPost.announce,
@@ -75,6 +79,7 @@ async function seedDB(prismaClient: PrismaClient) {
   for(const linkPost of mockLinkPosts) {
     await prismaClient.linkPost.upsert({
       where: { id: linkPost.id },
+      update: {},
       create: {
         id: linkPost.id,
         linkURL: linkPost.linkURL,
@@ -88,6 +93,7 @@ async function seedDB(prismaClient: PrismaClient) {
   for(const videoPost of mockVideoPosts) {
     await prismaClient.videoPost.upsert({
       where: { id: videoPost.id },
+      update: {},
       create: {
         id: videoPost.id,
         title: videoPost.title,
@@ -98,14 +104,15 @@ async function seedDB(prismaClient: PrismaClient) {
 
   // POSTS RELATIONS
   const mockPostsRelations = getPostsRelations();
-  for(const postsRelation of mockPostsRelations) {
-    await prismaClient.postsRelation.upsert({
-      where: { id: postsRelation.id },
+  for(const relation of mockPostsRelations) {
+    await prismaClient.postRelation.upsert({
+      where: { id: relation.id },
+      update: {},
       create: {
-        id: postsRelation.id,
-        postId: postsRelation.postId,
-        PostType: postsRelation.PostType,
-        extraFieldsId: postsRelation.extraFieldsId
+        id: relation.id,
+        postId: relation.postId,
+        postType: relation.PostType,
+        extraFieldsId: relation.extraFieldsId
       }
     });
   }
