@@ -50,7 +50,6 @@ export function getBasePosts() {
           { id: SECOND_TAG_ID },
         ]
       },
-      comments: [],
       likes: {
         connect: [{ id: FIRST_LIKE_ID }]
       },
@@ -63,7 +62,6 @@ export function getBasePosts() {
     {
       id: SECOND_POST_UUID,
       type: PostType.LINK,
-      tags: [],
       comments: {
         connect: [{ id: FIRST_COMMENT_ID }]
       },
@@ -79,9 +77,6 @@ export function getBasePosts() {
     {
       id: THIRD_POST_UUID,
       type: PostType.LINK,
-      tags: [],
-      comments: [],
-      likes: [],
       isPublished: "true",
       isRepost: "false",
       authorId: SECOND_USER_UUID,
@@ -91,9 +86,6 @@ export function getBasePosts() {
     {
       id: FORTH_POST_UUID,
       type: PostType.LINK,
-      tags: [],
-      comments: [],
-      likes: [],
       isPublished: "false",
       isRepost: "false",
       authorId: SECOND_USER_UUID,

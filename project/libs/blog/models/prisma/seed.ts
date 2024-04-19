@@ -5,8 +5,10 @@ async function seedDB(prismaClient: PrismaClient) {
   // BASE POSTS
   const mockBasePosts = getBasePosts();
   for(const basePost of mockBasePosts) {
-    await prismaClient.post.create({
-      data: {
+    await prismaClient.post.upsert({
+      where: { id: basePost.id },
+      update: {},
+      create: {
         id: basePost.id,
         type: basePost.type,
         tags: basePost.tags ? {
@@ -30,8 +32,9 @@ async function seedDB(prismaClient: PrismaClient) {
   // LIKES
   const mockPostsLikes = getPostsLikes()
   for(const postsLike of mockPostsLikes) {
-    await prismaClient.postsLike.create({
-      data: {
+    await prismaClient.postsLike.upsert({
+      where: { id: postsLike.id },
+      create: {
         id: postsLike.id,
         postId: postsLike.postId,
         authorId: postsLike.authorId
@@ -42,8 +45,9 @@ async function seedDB(prismaClient: PrismaClient) {
   // COMMENTS
   const mockPostsComments = getPostsComments()
   for(const postsComment of mockPostsComments) {
-    await prismaClient.postsLike.create({
-      data: {
+    await prismaClient.postsLike.upsert({
+      where: { id: postsComment.id },
+      create: {
         id: postsComment.id,
         postId: postsComment.postId,
         authorId: postsComment.authorId,
@@ -55,8 +59,9 @@ async function seedDB(prismaClient: PrismaClient) {
   // TEXT POSTS
   const mockTextPosts = getTextPosts();
   for(const textPost of mockTextPosts) {
-    await prismaClient.textPost.create({
-      data: {
+    await prismaClient.textPost.upsert({
+      where: { id: textPost.id },
+      create: {
         id: textPost.id,
         announce: textPost.announce,
         title: textPost.title,
@@ -68,8 +73,9 @@ async function seedDB(prismaClient: PrismaClient) {
   // LINK POSTS
   const mockLinkPosts = getLinkPosts();
   for(const linkPost of mockLinkPosts) {
-    await prismaClient.linkPost.create({
-      data: {
+    await prismaClient.linkPost.upsert({
+      where: { id: linkPost.id },
+      create: {
         id: linkPost.id,
         linkURL: linkPost.linkURL,
         description: linkPost.description
@@ -80,8 +86,9 @@ async function seedDB(prismaClient: PrismaClient) {
   // VIDEO POSTS
   const mockVideoPosts = getVideoPosts();
   for(const videoPost of mockVideoPosts) {
-    await prismaClient.videoPost.create({
-      data: {
+    await prismaClient.videoPost.upsert({
+      where: { id: videoPost.id },
+      create: {
         id: videoPost.id,
         title: videoPost.title,
         videoURL: videoPost.videoURL
@@ -92,8 +99,9 @@ async function seedDB(prismaClient: PrismaClient) {
   // POSTS RELATIONS
   const mockPostsRelations = getPostsRelations();
   for(const postsRelation of mockPostsRelations) {
-    await prismaClient.postsRelation.create({
-      data: {
+    await prismaClient.postsRelation.upsert({
+      where: { id: postsRelation.id },
+      create: {
         id: postsRelation.id,
         postId: postsRelation.postId,
         PostType: postsRelation.PostType,
