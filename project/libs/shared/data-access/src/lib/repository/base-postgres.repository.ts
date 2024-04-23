@@ -1,31 +1,38 @@
-import { Entity, EntityFactory, StorableEntity } from '@project/shared/core';
-import { Model  } from 'mongoose';
+import { PrismaClientService } from '@project/blog/models';
+import { Entity, StorableEntity, EntityFactory } from '@project/shared/core';
 import { Repository } from './repository.interface';
-import { NotImplementedException } from '@nestjs/common';
 
-export class BaseMongoDbRepository<T extends Entity & StorableEntity<ReturnType<T['toPOJO']>>> implements Repository<T> {
+export abstract class BasePostgresRepository<
+T extends Entity & StorableEntity<ReturnType<T['toPOJO']>>,
+DocumentType = ReturnType<T['toPOJO']>
+> implements Repository<T> {
+
   constructor(
-    protected readonly entityFactory: EntityFactory<T>,
-    protected readonly model: Model<DocumentType>
+    protected entityFactory: EntityFactory<T>,
+    protected readonly dbClient: PrismaClientService,
   ) {}
 
-  protected createEntityFromDocument(document: unknown): T | null  {
+  protected createEntityFromDocument(document: DocumentType): T | null {
+    if (! document) {
+      return null;
+    }
+
     return this.entityFactory.create(document as ReturnType<T['toPOJO']>);
   }
 
-  async findById(entityId: T['id']): Promise<T> {
-    throw new NotImplementedException();
+  public async findById(id: T['id']): Promise<T> {
+    throw new Error('Not implemented');
   }
 
-  async create(entity: T): Promise<T> {
-    throw new NotImplementedException();
+  public async create(entity: T): Promise<void> {
+    throw new Error('Not implemented');
   }
 
-  async updateById(entityId: T['id'], updatedFields: Partial<T>): Promise<T> {
-    throw new NotImplementedException();
+  public async updateById(entityId: T['id'], updatedFields: Partial<T>): Promise<T | void> {
+    throw new Error('Not implemented');
   }
 
-  async deleteById(entityId: T['id']): Promise<void> {
-    throw new NotImplementedException();
+  public async deleteById(id: T['id']): Promise<void> {
+    throw new Error('Not implemented');
   }
 }
