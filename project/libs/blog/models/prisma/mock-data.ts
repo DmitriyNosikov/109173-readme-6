@@ -44,15 +44,17 @@ export function getBasePosts() {
     {
       id: FIRST_POST_UUID,
       type: PostType.TEXT,
-      tags: {
-        connect: [
-          { id: FIRST_TAG_ID },
-          { id: SECOND_TAG_ID },
-        ]
-      },
-      likes: {
-        connect: [{ id: FIRST_LIKE_ID }]
-      },
+      // т.к. данные поля связаны с постом, они добавляются
+      // динамически при добавлении поста, и нам, по сути, нужно передать
+      // только содержимое, id самих тегов, а также id связного поля postid
+      // призма должна праставить сама
+      tags: [
+        { title: "News" },
+        { title: "HOT" }
+      ],
+      likes: [
+        { authorId: SECOND_USER_UUID }
+      ],
       isPublished: true,
       isRepost: false,
       authorId: FIRST_USER_UUID,
@@ -62,12 +64,15 @@ export function getBasePosts() {
     {
       id: SECOND_POST_UUID,
       type: PostType.LINK,
-      comments: {
-        connect: [{ id: FIRST_COMMENT_ID }]
-      },
-      likes: {
-        connect: [{ id: SECOND_LIKE_ID }]
-      },
+      comments: [
+        {
+          authorId: FIRST_USER_UUID,
+          text: "Some interesting comment for current post ... Five stars!"
+        }
+      ],
+      likes: [
+        { authorId: FIRST_USER_UUID }
+      ],
       isPublished: true,
       isRepost: false,
       authorId: FIRST_USER_UUID,
@@ -85,7 +90,7 @@ export function getBasePosts() {
     },
     {
       id: FORTH_POST_UUID,
-      type: PostType.LINK,
+      type: PostType.VIDEO,
       isPublished: false,
       isRepost: false,
       authorId: SECOND_USER_UUID,
@@ -157,53 +162,5 @@ export function getPostsRelations() {
       PostType: PostType.VIDEO,
       extraFieldsId: FIRST_VIDEO_POST_UUID
     },
-  ];
-}
-
-export function getTags() {
-  return [
-    {
-      id: FIRST_TAG_ID,
-      posts: {
-        connect: [{ id: FIRST_POST_UUID }]
-      },
-      title: "News"
-    },
-    {
-      id: SECOND_TAG_ID,
-      posts: {
-        connect: [{ id: FIRST_POST_UUID }]
-      },
-      title: "HOT"
-    }
-  ];
-}
-
-// TODO: Непонятно, как правильно описать в моках
-// связи лайков, комментов и постов. Надо узнать и переписать
-// правильно
-export function getPostsComments() {
-  return [
-    {
-      id: FIRST_COMMENT_ID,
-      postId: SECOND_POST_UUID,
-      authorId: FIRST_USER_UUID,
-      text: "Some interesting comment for current post ... Five stars!"
-    }
-  ];
-}
-
-export function getPostsLikes() {
-  return [
-    {
-      id: FIRST_LIKE_ID,
-      postId: FIRST_POST_UUID,
-      authorId: SECOND_USER_UUID
-    },
-    {
-      id: SECOND_LIKE_ID,
-      postId: SECOND_POST_UUID,
-      authorId: FIRST_USER_UUID
-    }
   ];
 }

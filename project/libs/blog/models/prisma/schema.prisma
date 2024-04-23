@@ -117,7 +117,7 @@ model PostTag {
 //////////////////// COMMENTS ////////////////////
 model PostComment {
   id        String   @id @default(uuid())
-  postId    String   @unique @map("postId")
+  postId    String   @map("postId")
   authorId  String   @map("author_id")
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
@@ -132,7 +132,7 @@ model PostComment {
 //////////////////// LIKES ////////////////////
 model PostLike {
   id        String  @id @default(uuid())
-  postId    String  @unique @map("postId")
+  postId    String  @map("postId")
   authorId  String  @map("author_id")
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")

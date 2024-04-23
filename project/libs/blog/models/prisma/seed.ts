@@ -1,60 +1,32 @@
 import { PrismaClient } from '@prisma/client'
-import { getBasePosts, getLinkPosts, getPostsComments, getPostsLikes, getPostsRelations, getTextPosts, getVideoPosts } from './mock-data';
+import { getBasePosts, getLinkPosts, getPostsRelations, getTextPosts, getVideoPosts } from './mock-data';
 
 async function seedDB(prismaClient: PrismaClient) {
   // BASE POSTS
   const mockBasePosts = getBasePosts();
   for(const basePost of mockBasePosts) {
-    await prismaClient.post.upsert({
-      where: { id: basePost.id }, // Если находим пост с таким id - ничего не делаем
-      update: {}, // Ничего не обновляем
-      create: {
+    await prismaClient.post.create({
+      data: {
         id: basePost.id,
         type: basePost.type,
-        // ---> TODO: Поправить, почему-то не работает
-        // tags: basePost.tags ? {
-        //   create: basePost.tags
-        // }: undefined,
-        // comments: basePost.comments ? {
-        //   create: basePost.comments
-        // }: undefined,
-        // likes: basePost.likes ? {
-        //   create: basePost.likes
-        // }: undefined,
+
+        tags: basePost.tags ? {
+          create: basePost.tags
+        } : undefined,
+
+        comments: {
+          create: basePost.comments
+        },
+
+        likes: basePost.likes ? {
+          create: basePost.likes
+        }: undefined,
+
         isPublished: basePost.isPublished,
         isRepost: basePost.isRepost,
         authorId: basePost.authorId,
         originAuthorId: basePost.originAuthorId,
         originPostId: basePost.originPostId,
-      }
-    });
-  }
-
-  // LIKES
-  const mockPostsLikes = getPostsLikes()
-  for(const postsLike of mockPostsLikes) {
-    await prismaClient.postLike.upsert({
-      where: { id: postsLike.id },
-      update: {},
-      create: {
-        id: postsLike.id,
-        postId: postsLike.postId,
-        authorId: postsLike.authorId
-      }
-    });
-  }
-
-  // COMMENTS
-  const mockPostsComments = getPostsComments()
-  for(const postsComment of mockPostsComments) {
-    await prismaClient.postComment.upsert({
-      where: { id: postsComment.id },
-      update: {},
-      create: {
-        id: postsComment.id,
-        postId: postsComment.postId,
-        authorId: postsComment.authorId,
-        text: postsComment.text
       }
     });
   }
