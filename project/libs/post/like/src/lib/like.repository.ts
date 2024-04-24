@@ -23,9 +23,6 @@ export class LikeRepository extends BasePostgresRepository<LikeEntity, LikeInter
        }
     });
 
-    console.log('DOCUMENT: ', document);
-    console.log('ENTITY: ', entity);
-
     entity.id = document.id;
 
     return entity;

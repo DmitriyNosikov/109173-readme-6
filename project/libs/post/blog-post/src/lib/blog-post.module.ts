@@ -52,6 +52,6 @@ import { PostVideoFactory } from './factories/post-video.factory';
     AllPostRelationFactory,
     AllPostRelationRepository
   ],
-  exports: []
+  exports: [BlogPostService]
 })
 export class BlogPostModule {}
