@@ -8,13 +8,12 @@ import { PostVideoInterface } from './post-video.interface';
 import { TagInterface } from '../tag.interface';
 import { CommentInterface } from '../comment.interface';
 import { LikeInterface } from '../like.interface';
+import { CreatedUpdatedDatesInterface } from '../created-updated-dates.interface';
 
 export type ExtraFields = PostLinkInterface | PostTextInterface | PostQuoteInterface | PostPhotoInterface | PostVideoInterface;
 
-export interface BasePostInterface {
+export interface BasePostInterface extends CreatedUpdatedDatesInterface{
   id?: string;
-  createdAt?: string;
-  updatedAt?: string;
   publishedAt?: string;
 
   type: PostTypeEnum;

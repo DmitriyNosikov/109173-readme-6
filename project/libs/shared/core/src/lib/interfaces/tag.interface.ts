@@ -1,7 +1,6 @@
-export interface TagInterface {
-  id?: string;
-  createdAt?: string;
-  updatedAt?: string;
+import { CreatedUpdatedDatesInterface } from './created-updated-dates.interface';
 
+export interface TagInterface extends CreatedUpdatedDatesInterface {
+  id?: string;
   title: string;
 }

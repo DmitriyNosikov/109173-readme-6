@@ -2,7 +2,7 @@ import { ApiProperty } from '@nestjs/swagger'
 import { PostWithTextDTO } from './post-with-text.dto';
 import { PostWithTitleDTO } from './post-with-title.dto';
 
-export class PostTextDTO implements PostWithTitleDTO, PostWithTextDTO {
+export class CreatePostTextDTO implements PostWithTitleDTO, PostWithTextDTO {
   @ApiProperty({
     description: 'Text title',
     example: 'Some text title',

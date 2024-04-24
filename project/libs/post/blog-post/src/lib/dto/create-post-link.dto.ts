@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger'
-export class PostLinkDTO {
+export class CreatePostLinkDTO {
   @ApiProperty({
     description: 'Valid link URL',
     example: 'https://up.htmlacademy.ru/profession/fullstack/6/nodejs-2/6/project/readme',

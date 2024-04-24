@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { BadRequestException } from '@nestjs/common';
 
-import { BasePostDTO } from './dto/blog-post.dto';
+import { CreateBasePostDTO } from './dto/create-blog-post.dto';
 import { BlogPostRepositoryDeterminant } from './repositories/blog-post-determinant.repository';
 
 import { BasePostFactory } from './factories/base-post.factory';
@@ -27,7 +27,7 @@ export class BlogPostService {
     private readonly allPostRelationFactory: AllPostRelationFactory,
     private readonly allPostRelationRepository: AllPostRelationRepository
   ) {}
-  async create(dto: BasePostDTO): Promise<AllPostRelationEntity> {
+  async create(dto: CreateBasePostDTO): Promise<AllPostRelationEntity> {
     if(!this.checkPostType(dto.type)) {
       return;
     }

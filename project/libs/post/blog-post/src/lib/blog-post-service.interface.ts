@@ -1,5 +1,5 @@
 import { BasePostEntity } from './entities/base-post.entity';
-import { ExtraFieldsDTO } from './dto/blog-post.dto';
+import { ExtraFieldsDTO } from './dto/create-blog-post.dto';
 import { SortTypeEnum, SortDirectionEnum } from '@project/shared/core'
 export interface BlogPostServiceInterface {
   create(dto: ExtraFieldsDTO): Promise<BasePostEntity>;

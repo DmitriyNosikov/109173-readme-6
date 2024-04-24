@@ -64,10 +64,10 @@ export class BasePostRepository extends BasePostgresRepository<BasePostEntity, B
     return null;
   }
 
-  public async updateById(
-    entityId: string,
-    updatedFields: Partial<BasePostEntity>
-  ): Promise<void | BasePostEntity> {}
+  // public async updateById(
+  //   entityId: string,
+  //   updatedFields: Partial<BasePostEntity>
+  // ): Promise<void | BasePostEntity> {}
 
-  public deleteById(id: string): Promise<void> {}
+  // public deleteById(id: string): Promise<void> {}
 }

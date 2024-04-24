@@ -1,6 +1,6 @@
 import { ApiResponse } from '@nestjs/swagger'
 import { Controller, Get, Post, Body, Param, Patch, Delete, HttpStatus } from '@nestjs/common';
-import { BasePostDTO } from './dto/blog-post.dto'
+import { CreateBasePostDTO } from './dto/create-blog-post.dto'
 import { BlogPostService } from './blog-post.service';
 import { BlogPostMessage } from './blog-post.constant';
 
@@ -21,7 +21,7 @@ export class BlogPostController {
     description: BlogPostMessage.ERROR.UNAUTHORIZED
   })
   @Post()
-  public async create(@Body() dto: BasePostDTO): Promise<void> {
+  public async create(@Body() dto: CreateBasePostDTO): Promise<void> {
     const allPostRelation = await this.blogPostService.create(dto);
 
     console.log('RELATED POST: ', allPostRelation);
@@ -42,7 +42,7 @@ export class BlogPostController {
     description: BlogPostMessage.SUCCESS.UPDATED
   })
   @Patch(':postId')
-  public async update(@Param('postId') postId: string, @Body() updatedFields: Partial<BasePostDTO>) {
+  public async update(@Param('postId') postId: string, @Body() updatedFields: Partial<CreateBasePostDTO>) {
     console.log('POST ID:', postId);
     console.log('UPDATED FIELDS:', updatedFields);
     throw new Error('Method not implemented yet');

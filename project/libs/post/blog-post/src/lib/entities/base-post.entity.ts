@@ -9,11 +9,10 @@ import {
   CommentInterface,
   LikeInterface
 } from '@project/shared/core'
-import { getdate } from '@project/shared/helpers'
 
 export class BasePostEntity extends Entity implements BasePostInterface, StorableEntity<BasePostInterface> {
-  public createdAt?: string;
-  public updatedAt?: string;
+  public createdAt?: Date;
+  public updatedAt?: Date;
   public publishedAt?: string;
 
   public type: PostTypeEnum;
@@ -38,9 +37,9 @@ export class BasePostEntity extends Entity implements BasePostInterface, Storabl
     }
 
     this.id = post.id ?? '';
-    this.createdAt = String(post.createdAt ?? getdate());
-    this.updatedAt = String(post.updatedAt);
-    this.publishedAt = String(post.publishedAt);
+    this.createdAt = post.createdAt;
+    this.updatedAt = post.updatedAt;
+    this.publishedAt = post.publishedAt;
 
     this.type = post.type;
     this.tags = post.tags ?? null;

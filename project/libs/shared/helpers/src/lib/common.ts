@@ -17,7 +17,7 @@ export function omitUndefined(value: Record<string, unknown>) {
   return Object.fromEntries(filteredEntries);
 }
 
-export function getdate(): string {
+export function getDate(): string {
   return new Date().toISOString();
 }
 

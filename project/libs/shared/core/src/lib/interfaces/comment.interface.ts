@@ -1,12 +1,8 @@
-import { BasePostInterface } from './post/base-post.interface';
+import { CreatedUpdatedDatesInterface } from './created-updated-dates.interface';
 import { UserInterface } from './user/user.interface';
 
-export interface CommentInterface {
+export interface CommentInterface extends CreatedUpdatedDatesInterface {
   id?: string;
-  createdAt?: string;
-  updatedAt?: string;
-
-  postId: BasePostInterface['id'];
   authorId: UserInterface['id'];
   text: string;
 }
