@@ -15,6 +15,7 @@ export { PostPhotoInterface } from './lib/interfaces/post/post-photo.interface'
 export { PostVideoInterface } from './lib/interfaces/post/post-video.interface'
 export { ExtraFields } from './lib/interfaces/post/base-post.interface'
 
+export { TagInterface } from './lib/interfaces/tag.interface'
 export { CommentInterface } from './lib/interfaces/comment.interface'
 export { LikeInterface } from './lib/interfaces/like.interface'
 export { StorableEntity } from './lib/interfaces/storable-entity.interface'

@@ -27,28 +27,8 @@ enum PostType {
   video
   photo
 }
-model Post {
-  id              String   @id @default(uuid())
-  type            PostType
-  tags            PostTag[]
-  comments        PostComment[]
-  likes           PostLike[]
-  createdAt       DateTime @default(now()) @map("created_at")
-  updatedAt       DateTime @updatedAt @map("updated_at")
-  isPublished     Boolean  @map("is_published")
-  isRepost        Boolean  @map("is_repost")
-  authorId        String   @map("author_id")
-  originAuthorId  String   @map("origin_author_id")
-  originPostId    String   @map("origin_post_id")
 
-  // --- Отношения
-  // Связь с таблицей отношений постов и экстра-полей
-  postRelation PostRelation?
-
-
-  @@map("posts")
-}
-
+//////////////////// POSTS & EXTRA-FIELDS RELATIONS ////////////////////
 model PostRelation {
   id              String @id @default(uuid())
   postId          String @unique @db.VarChar(255) @map("post_id")
@@ -59,6 +39,69 @@ model PostRelation {
   post Post @relation(fields: [postId], references: [id]) // Связываем с таблицей Post через внутреннее поле postId
 
   @@map("posts_relations")
+}
+
+model Post {
+  id              String   @id @default(uuid())
+  createdAt       DateTime @default(now()) @map("created_at")
+  updatedAt       DateTime @updatedAt @map("updated_at")
+  publishedAt     DateTime @default(now()) @map("published_at")
+
+  type            PostType
+  tags            PostTag[]
+  comments        PostComment[]
+  likes           PostLike[]
+  isPublished     Boolean  @map("is_published")
+  isRepost        Boolean  @map("is_repost")
+  authorId        String   @map("author_id")
+  originAuthorId  String   @map("origin_author_id")
+  originPostId    String   @map("origin_post_id")
+
+  // --- Отношения
+  // Связь с таблицей отношений постов и экстра-полей
+  postRelation PostRelation[]
+
+  @@map("posts")
+}
+
+//////////////////// TAGS ////////////////////
+model PostTag {
+  id        String    @id @default(uuid())
+  posts     Post[]
+  createdAt DateTime  @default(now()) @map("created_at")
+  updatedAt DateTime  @updatedAt @map("updated_at")
+  title     String    @unique() @db.VarChar(10)
+
+  @@map("posts_tags")
+}
+
+//////////////////// COMMENTS ////////////////////
+model PostComment {
+  id        String   @id @default(uuid())
+  postId    String   @map("postId")
+  authorId  String   @map("author_id")
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+  text      String   @db.VarChar(300)
+
+  // --- Отношения
+  post Post @relation(fields: [postId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+
+  @@map("posts_comments")
+}
+
+//////////////////// LIKES ////////////////////
+model PostLike {
+  id        String  @id @default(uuid())
+  postId    String  @map("postId")
+  authorId  String  @map("author_id")
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  // --- Отношения
+  post Post @relation(fields: [postId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+
+  @@map("posts_likes")
 }
 
 model TextPost {
@@ -101,44 +144,4 @@ model PhotoPost {
   photoURL  String @map("photo_url")
 
   @@map("photo_posts")
-}
-
-//////////////////// TAGS ////////////////////
-model PostTag {
-  id        String    @id @default(uuid())
-  posts     Post[]
-  createdAt DateTime  @default(now()) @map("created_at")
-  updatedAt DateTime  @updatedAt @map("updated_at")
-  title     String    @db.VarChar(10)
-
-  @@map("posts_tags")
-}
-
-//////////////////// COMMENTS ////////////////////
-model PostComment {
-  id        String   @id @default(uuid())
-  postId    String   @map("postId")
-  authorId  String   @map("author_id")
-  createdAt DateTime @default(now()) @map("created_at")
-  updatedAt DateTime @updatedAt @map("updated_at")
-  text      String   @db.VarChar(300)
-
-  // --- Отношения
-  post Post @relation(fields: [postId], references: [id], onDelete: Cascade, onUpdate: Cascade)
-
-  @@map("posts_comments")
-}
-
-//////////////////// LIKES ////////////////////
-model PostLike {
-  id        String  @id @default(uuid())
-  postId    String  @map("postId")
-  authorId  String  @map("author_id")
-  createdAt DateTime @default(now()) @map("created_at")
-  updatedAt DateTime @updatedAt @map("updated_at")
-
-  // --- Отношения
-  post Post @relation(fields: [postId], references: [id], onDelete: Cascade, onUpdate: Cascade)
-
-  @@map("posts_likes")
 }

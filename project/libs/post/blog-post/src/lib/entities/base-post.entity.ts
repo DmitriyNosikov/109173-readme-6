@@ -4,15 +4,22 @@ import {
   StorableEntity,
   BasePostInterface,
   ExtraFields,
-  UserInterface
+  UserInterface,
+  TagInterface,
+  CommentInterface,
+  LikeInterface
 } from '@project/shared/core'
 import { getdate } from '@project/shared/helpers'
 
 export class BasePostEntity extends Entity implements BasePostInterface, StorableEntity<BasePostInterface> {
+  public createdAt?: string;
+  public updatedAt?: string;
+  public publishedAt?: string;
+
   public type: PostTypeEnum;
-  public tags: string[];
-  public publishedAt: string;
-  public createdAt: string;
+  public tags?: TagInterface[] | null;
+  public comments?: CommentInterface[] | null;
+  public likes?: LikeInterface[] | null;
   public isPublished: boolean;
   public isRepost: boolean;
   public authorId: UserInterface['id'];
@@ -31,10 +38,14 @@ export class BasePostEntity extends Entity implements BasePostInterface, Storabl
     }
 
     this.id = post.id ?? '';
+    this.createdAt = String(post.createdAt ?? getdate());
+    this.updatedAt = String(post.updatedAt);
+    this.publishedAt = String(post.publishedAt);
+
     this.type = post.type;
-    this.tags = post.tags;
-    this.publishedAt = post.publishedAt ?? getdate();
-    this.createdAt = post.createdAt ?? getdate();
+    this.tags = post.tags ?? null;
+    this.comments = post.comments ?? null;
+    this.likes = post.likes ?? null;
     this.isPublished = post.isPublished ?? false;
     this.isRepost = post.isRepost ?? false;
     this.authorId = post.authorId ?? '';
@@ -46,10 +57,14 @@ export class BasePostEntity extends Entity implements BasePostInterface, Storabl
   public toPOJO(): BasePostInterface {
     return {
       id: this.id,
+      createdAt: this.createdAt,
+      updatedAt: this.updatedAt,
+      publishedAt: this.publishedAt,
+
       type: this.type,
       tags: this.tags,
-      publishedAt: this.publishedAt,
-      createdAt: this.createdAt,
+      comments: this.comments,
+      likes: this.likes,
       isPublished: this.isPublished,
       isRepost: this.isRepost,
       authorId: this.authorId,

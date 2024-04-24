@@ -3,8 +3,8 @@ import { Entity, StorableEntity, EntityFactory } from '@project/shared/core';
 import { Repository } from './repository.interface';
 
 export abstract class BasePostgresRepository<
-T extends Entity & StorableEntity<ReturnType<T['toPOJO']>>,
-DocumentType = ReturnType<T['toPOJO']>
+  T extends Entity & StorableEntity<ReturnType<T['toPOJO']>>,
+  DocumentType = ReturnType<T['toPOJO']>
 > implements Repository<T> {
 
   constructor(
@@ -20,11 +20,11 @@ DocumentType = ReturnType<T['toPOJO']>
     return this.entityFactory.create(document as ReturnType<T['toPOJO']>);
   }
 
-  public async findById(id: T['id']): Promise<T> {
+  public async findById(id: T['id']): Promise<T | null> {
     throw new Error('Not implemented');
   }
 
-  public async create(entity: T): Promise<void> {
+  public async create(entity: T): Promise<T> {
     throw new Error('Not implemented');
   }
 

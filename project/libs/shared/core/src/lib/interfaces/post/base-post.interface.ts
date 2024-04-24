@@ -5,15 +5,22 @@ import { PostTextInterface } from './post-text.interface';
 import { PostQuoteInterface } from './post-quote.interface';
 import { PostPhotoInterface } from './post-photo.interface';
 import { PostVideoInterface } from './post-video.interface';
+import { TagInterface } from '../tag.interface';
+import { CommentInterface } from '../comment.interface';
+import { LikeInterface } from '../like.interface';
 
 export type ExtraFields = PostLinkInterface | PostTextInterface | PostQuoteInterface | PostPhotoInterface | PostVideoInterface;
 
 export interface BasePostInterface {
   id?: string;
+  createdAt?: string;
+  updatedAt?: string;
+  publishedAt?: string;
+
   type: PostTypeEnum;
-  tags: string[];
-  publishedAt: string;
-  createdAt: string;
+  tags?: TagInterface[] | null;
+  comments?: CommentInterface[] | null,
+  likes?: LikeInterface[] | null,
   isPublished: boolean;
   isRepost: boolean;
   authorId: UserInterface['id'];
