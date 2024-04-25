@@ -2,6 +2,18 @@ import { plainToClass, ClassConstructor, ClassTransformOptions } from 'class-tra
 
 type PlainObject<T> = Partial<Record<keyof T, unknown>>;
 
+export function fillDTO<T, O>(
+  DtoClass: ClassConstructor<T>,
+  plainObject: O,
+  options?: ClassTransformOptions,
+): T;
+
+export function fillDTO<T, O extends []>(
+  DtoClass: ClassConstructor<T>,
+  plainObject: 0,
+  options?: ClassTransformOptions,
+): T[];
+
 export function fillDTO<T, O extends PlainObject<T> | PlainObject<T>[]> (
   DTOClass: ClassConstructor<T>,
   plainObject: O,

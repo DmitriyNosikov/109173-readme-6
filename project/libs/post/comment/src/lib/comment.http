@@ -6,21 +6,27 @@ GET https://jsonplaceholder.typicode.com/todos/1 HTTP/1.1
 Content-Type: application/json
 ###
 
-# Toggle Like
-POST {{baseUrl}}/posts/25a05639-5a27-41bc-b28a-894f8b5babd5/likes HTTP/1.1
+# Create comment for post
+POST {{baseUrl}}/posts/25a05639-5a27-41bc-b28a-894f8b5babd5/comments HTTP/1.1
 Content-Type: application/json
 
 {
-  "authorId": "662253e794534cbee6562f7d"
+  "authorId": "662253e794534cbee6562f7d",
+  "text": "Test comment"
 }
 ###
 
-# Get Likes by post id
-GET {{baseUrl}}/posts/25a05639-5a27-41bc-b28a-894f8b5babd5/likes HTTP/1.1
+# Update comment
+PATCH  {{baseUrl}}/posts/25a05639-5a27-41bc-b28a-894f8b5babd5/comments/b2f358c0-863d-45ab-b8f1-7d3c7d699e0d HTTP/1.1
 Content-Type: application/json
+
+{
+  "authorId": "662253e794534cbee6562f7d",
+  "text": "Test comment2"
+}
 ###
 
-# Get Likes by author id
-GET {{baseUrl}}/posts/25a05639-5a27-41bc-b28a-894f8b5babd5/likes/662253e794534cbee6562f7d HTTP/1.1
+# Delete comment
+DELETE  {{baseUrl}}/posts/25a05639-5a27-41bc-b28a-894f8b5babd5/comments/b2f358c0-863d-45ab-b8f1-7d3c7d699e0d HTTP/1.1
 Content-Type: application/json
 ###

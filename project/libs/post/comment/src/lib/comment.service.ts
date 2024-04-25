@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable } from '@nestjs/common'
+import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common'
 import { CommentRepository } from './comment.repository';
 import { CommentFactory } from './comment.factory';
 import { CreateCommentDTO } from './dto/create-comment.dto';
@@ -17,7 +17,6 @@ export class CommentService {
 
   async create(postId: string, dto: CreateCommentDTO) {
     // <--- TODO: Перед созданием комментария проверятьЖ
-    // - Авторизацию пользователя
     // - Существование поста
     const commentEntity = this.commentFactory.create({ postId, ...dto });
     const comment = await this.commentRepository.create(commentEntity);
@@ -26,8 +25,12 @@ export class CommentService {
   }
 
   async update(commentId: string, updatedFields: Partial<CommentEntity>) {
-    // <--- TODO: Перед обновлением комментария проверятьЖ
-    // - Существование комментария
+    const isCommentExists = await this.commentRepository.findById(commentId);
+
+    if(!isCommentExists) {
+      throw new NotFoundException(`Comment with ID ${commentId} not found`);
+    }
+
     updatedFields = omitUndefined(updatedFields);
 
     if(Object.keys(updatedFields).length <= 0) {
@@ -39,9 +42,33 @@ export class CommentService {
     return updatedComment;
   }
 
+  async getCommentsByPostId(postId: string): Promise<CommentEntity[] | null> {
+    const comments = await this.commentRepository.findByPostId(postId);
+
+    if(!comments) {
+      return null;
+    }
+
+    return comments;
+  }
+
+
+  async getCommentsByAuthorId(authorId: string): Promise<CommentEntity[] | null> {
+    const comments = await this.commentRepository.findByAuthorId(authorId);
+
+    if(!comments) {
+      return null;
+    }
+
+    return comments;
+  }
+
   async delete(commentId: string): Promise<void> {
-    // <--- TODO: Перед обновлением комментария проверятьЖ
-    // - Существование комментария
+    const isCommentExists = await this.commentRepository.findById(commentId);
+
+    if(!isCommentExists) {
+      throw new NotFoundException(`Comment with ID ${commentId} not found`);
+    }
 
     await this.commentRepository.deleteById(commentId);
   }
