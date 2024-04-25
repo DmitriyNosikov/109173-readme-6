@@ -10,4 +10,10 @@ export class CreateLikeRDO {
 
   @Expose()
   authorId: UserInterface['id'];
+
+  @Expose()
+  createdAt: Date;
+
+  @Expose()
+  updatedAt: Date;
 }

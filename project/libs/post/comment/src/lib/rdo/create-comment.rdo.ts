@@ -10,4 +10,10 @@ export class CreateCommentRDO {
 
   @Expose()
   text: string;
+
+  @Expose()
+  createdAt: Date;
+
+  @Expose()
+  updatedAt: Date;
 }

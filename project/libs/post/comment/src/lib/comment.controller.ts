@@ -31,7 +31,6 @@ export class CommentController {
 
   @Patch(':commentId')
   async update(@Param('commentId') commentId: string, @Body() updatedFields: Partial<CommentEntity>): Promise<CreateCommentRDO> {
-    console.log('Comment id: ', commentId, ' updated fields: ', updatedFields);
     const updatedComment = await this.commentService.update(commentId, updatedFields);
 
     if(!updatedComment) {

@@ -35,4 +35,10 @@ export class UserRDO {
   })
   @Expose()
   avatar?: string;
+
+  @Expose()
+  createdAt: Date;
+
+  @Expose()
+  updatedAt: Date;
 }
