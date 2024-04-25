@@ -32,15 +32,18 @@ export class BlogPostService {
       return;
     }
 
+    const basePostFields = this.getBasePostFields(dto);
+    console.log('POST DTO: ', dto, basePostFields);
+
     // // Сохраняем в БД основу для поста
-    const basePostEntity = this.basePostFactory.create(dto); // Создаем Entity базового поста
+    const basePostEntity = this.basePostFactory.create(basePostFields); // Создаем Entity базового поста
     const basePost = await this.basePostRepository.create(basePostEntity); // Сохраняем в БД
 
     // Сохраняем дополнительные поля базового поста
     // (которыми как раз отличаются типизированные посты)
     const extraFields = {
       type: dto.type,
-      ...basePostEntity.extraFields
+      ...dto.extraFields
     };
     const blogPostEntity = this.blogPostFactory.create(extraFields)
     const blogPostRepository = this.blogPostRepositoryFactory.getRepository(dto.type);
@@ -71,6 +74,18 @@ export class BlogPostService {
     }
 
     return true;
+  }
+
+  private getBasePostFields(dto: CreateBasePostDTO) {
+    return {
+      type: dto.type,
+      tags: dto.tags,
+      isPublished: dto.isPublished,
+      isRepost: dto.isRepost,
+      authorId: dto.authorId,
+      originAuthorId: dto.originAuthorId,
+      originPostId: dto.originPostId,
+    };
   }
 
   // update(postId: string, updatedFields: Partial<BlogPostEntity>) {

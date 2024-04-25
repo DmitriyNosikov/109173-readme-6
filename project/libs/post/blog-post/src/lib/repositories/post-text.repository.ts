@@ -14,4 +14,16 @@ export class PostTextRepository extends BasePostgresRepository<PostTextEntity, P
   ){
     super(entityFactory, dbClient);
   }
+
+  public async create(entity: PostTextEntity): Promise<PostTextEntity> {
+    const textPostPlainObject = entity.toPOJO();
+
+    const postText = await this.dbClient.textPost.create({
+      data: { ...textPostPlainObject }
+    });
+
+    entity.id = postText.id;
+
+    return entity;
+  }
 }

@@ -12,6 +12,7 @@ export class AllPostRelationEntity extends Entity implements AllPostRelationInte
       return;
     }
 
+    this.id = postRelation.id ?? undefined;
     this.postId = postRelation.postId;
     this.postType = postRelation.postType;
     this.extraFieldsId = postRelation.extraFieldsId;
@@ -19,6 +20,7 @@ export class AllPostRelationEntity extends Entity implements AllPostRelationInte
 
   toPOJO(): AllPostRelationInterface {
     return {
+      id: this.id,
       postId: this.postId,
       postType: this.postType,
       extraFieldsId: this.extraFieldsId

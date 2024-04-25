@@ -3,9 +3,7 @@ import {
   PostTypeEnum,
   StorableEntity,
   BasePostInterface,
-  ExtraFields,
   UserInterface,
-  TagInterface,
   CommentInterface,
   LikeInterface
 } from '@project/shared/core'
@@ -16,15 +14,14 @@ export class BasePostEntity extends Entity implements BasePostInterface, Storabl
   public publishedAt?: string;
 
   public type: PostTypeEnum;
-  public tags?: TagInterface[] | null;
-  public comments?: CommentInterface[] | null;
-  public likes?: LikeInterface[] | null;
+  public tags?: string[] | null;
+  public comments?: CommentInterface[] | undefined;
+  public likes?: LikeInterface[] | undefined;
   public isPublished: boolean;
   public isRepost: boolean;
   public authorId: UserInterface['id'];
-  public originAuthorId: UserInterface['id'] | null;
-  public originPostId: BasePostInterface['id'] | null;
-  public extraFields: ExtraFields;
+  public originAuthorId: UserInterface['id'] | undefined;
+  public originPostId: BasePostInterface['id'] | undefined;
 
   constructor(post?: BasePostInterface) {
     super();
@@ -36,21 +33,20 @@ export class BasePostEntity extends Entity implements BasePostInterface, Storabl
       return;
     }
 
-    this.id = post.id ?? '';
+    this.id = post.id ?? undefined;
     this.createdAt = post.createdAt;
     this.updatedAt = post.updatedAt;
     this.publishedAt = post.publishedAt;
 
     this.type = post.type;
-    this.tags = post.tags ?? null;
-    this.comments = post.comments ?? null;
-    this.likes = post.likes ?? null;
+    this.tags = post.tags ?? undefined;
+    this.comments = post.comments ?? undefined;
+    this.likes = post.likes ?? undefined;
     this.isPublished = post.isPublished ?? false;
     this.isRepost = post.isRepost ?? false;
     this.authorId = post.authorId ?? '';
     this.originAuthorId = post.originAuthorId ?? '';
     this.originPostId = post.originPostId ?? '';
-    this.extraFields = post.extraFields;
   }
 
   public toPOJO(): BasePostInterface {
@@ -68,8 +64,7 @@ export class BasePostEntity extends Entity implements BasePostInterface, Storabl
       isRepost: this.isRepost,
       authorId: this.authorId,
       originAuthorId: this.originAuthorId,
-      originPostId: this.originPostId,
-      extraFields: this.extraFields,
+      originPostId: this.originPostId
     };
   }
 }

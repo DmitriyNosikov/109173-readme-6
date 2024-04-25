@@ -16,26 +16,32 @@ export class BasePostRepository extends BasePostgresRepository<BasePostEntity, B
   }
 
   public async create(entity: BasePostEntity): Promise<BasePostEntity> {
-    const entityPlainObject = entity.toPOJO();
-    const record = await this.dbClient.post.create({
+    let postTags = undefined;
+
+    if(entity.tags && entity.tags.length > 0) {
+      postTags = entity.tags.map((tag) => ({ id: tag}));
+    }
+
+    const post = await this.dbClient.post.create({
       data: {
-        ...entityPlainObject,
+        ...entity,
 
-        tags: entityPlainObject.tags ? {
-          create: entityPlainObject.tags
-        } : undefined,
-
-        comments: {
-          create: entityPlainObject.comments
+        // Соединяем пост с существующими тегами
+        // (TODO: если тега нет - надо создавать, но это, скорее всего, в APIGateway)
+        tags: {
+          connect: postTags
         },
 
-        likes: entityPlainObject.likes ? {
-          create: entityPlainObject.likes
-        }: undefined,
+        // По идее, лайков и комментариев не может быть у нового поста
+        // (на текущий момент так)
+        comments: undefined,
+        likes: undefined,
       },
     });
 
-    entity.id = record.id;
+    console.log('POST RECORD: ', post);
+
+    entity.id = post.id;
 
     return entity;
   }

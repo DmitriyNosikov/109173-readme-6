@@ -1,11 +1,11 @@
 import { ApiProperty } from '@nestjs/swagger'
-import { BasePostInterface, ExtraFields, LikeInterface, PostType, PostTypeEnum, UserInterface } from '@project/shared/core';
+import { BasePostInterface, LikeInterface, PostType, PostTypeEnum, UserInterface } from '@project/shared/core';
 import { CreatePostLinkDTO } from './create-post-link.dto';
 import { CreatePostTextDTO } from './create-post-text.dto';
 import { CreatePostQuoteDTO } from './create-post-quote.dto';
 import { CreatePostPhotoDTO } from './create-post-photo.dto';
 import { CreatePostVideoDTO } from './create-post-video.dto';
-import { TagInterface, CommentInterface } from '@project/shared/core'
+import { CommentInterface } from '@project/shared/core'
 
 export type ExtraFieldsDTO = CreateBasePostDTO | CreatePostLinkDTO | CreatePostTextDTO | CreatePostQuoteDTO | CreatePostPhotoDTO | CreatePostVideoDTO;
 
@@ -21,12 +21,12 @@ export class CreateBasePostDTO {
   @ApiProperty({
     type: [String],
     description: 'Post tags',
-    example: '[ { id: "438734-gdjf9g843-gsmi43", title: "News"  } ]',
+    example: '[ "438734-gdjf9g843-gsmi43", "438734-gdjf9g843-gsmi43" ]',
     minLength: 3,
     maxLength: 10,
     maxProperties: 8
   })
-  public tags: TagInterface[] | null;
+  public tags: string[] | null;
 
   @ApiProperty({
     type: [String],
@@ -47,24 +47,6 @@ export class CreateBasePostDTO {
     maxProperties: 8
   })
   public likes: LikeInterface[] | null;
-
-  @ApiProperty({
-    description: 'Post created date in ISO String format',
-    example: '2024-04-09T13:25:53+0000',
-  })
-  public createdAt: Date;
-
-  @ApiProperty({
-    description: 'Post updated date in ISO String format',
-    example: '2024-04-09T13:25:53+0000',
-  })
-  public updatedAt: Date;
-
-  @ApiProperty({
-    description: 'Post publish date in ISO String format',
-    example: '2024-04-09T13:25:53+0000',
-  })
-  public publishedAt: string;
 
   @ApiProperty({
     description: 'Is post published flag',
@@ -104,5 +86,5 @@ export class CreateBasePostDTO {
     description: 'Extra-fields, specific for each post type (text, link, quote etc.)',
     example: '{ "announce": "Some announce text", "title": "Article title", "text": "Long story short text" }'
   })
-  public extraFields: ExtraFields;
+  public extraFields: ExtraFieldsDTO;
 }

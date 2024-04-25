@@ -13,7 +13,6 @@ export { PostQuoteInterface } from './lib/interfaces/post/post-quote.interface'
 export { PostLinkInterface } from './lib/interfaces/post/post-link.interface'
 export { PostPhotoInterface } from './lib/interfaces/post/post-photo.interface'
 export { PostVideoInterface } from './lib/interfaces/post/post-video.interface'
-export { ExtraFields } from './lib/interfaces/post/base-post.interface'
 
 export { TagInterface } from './lib/interfaces/tag.interface'
 export { CommentInterface } from './lib/interfaces/comment.interface'
