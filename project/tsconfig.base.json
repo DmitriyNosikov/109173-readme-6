@@ -15,8 +15,8 @@
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
     "paths": {
-      "@project/blog/models": ["libs/blog/models/src/index.ts"],
       "@project/blog-post": ["libs/post/blog-post/src/index.ts"],
+      "@project/blog/models": ["libs/blog/models/src/index.ts"],
       "@project/post/comment": ["libs/post/comment/src/index.ts"],
       "@project/post/like": ["libs/post/like/src/index.ts"],
       "@project/post/post-config": ["libs/post/post-config/src/index.ts"],
@@ -27,6 +27,7 @@
       "@project/shared/hasher": ["libs/shared/hasher/src/index.ts"],
       "@project/shared/helpers": ["libs/shared/helpers/src/index.ts"],
       "@project/subscription": ["libs/user/subscription/src/index.ts"],
+      "@project/tag": ["libs/post/tag/src/index.ts"],
       "@project/user/authentication": ["libs/user/authentication/src/index.ts"],
       "@project/user/blog-user": ["libs/user/blog-user/src/index.ts"],
       "@project/user/password": ["libs/user/password/src/index.ts"],

@@ -82,6 +82,12 @@ export function getBasePosts() {
     {
       id: THIRD_POST_UUID,
       type: PostType.LINK,
+      // Пробуем присоединить к посту заранее созданный тег
+      // tags: {
+      //   connect: [
+      //     { id: "1351e140-6272-4cba-9712-6967386f3594" }
+      //   ]
+      // },
       isPublished: true,
       isRepost: false,
       authorId: SECOND_USER_UUID,

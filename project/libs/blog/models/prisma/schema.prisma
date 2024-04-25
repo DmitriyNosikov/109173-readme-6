@@ -48,9 +48,6 @@ model Post {
   publishedAt     DateTime @default(now()) @map("published_at")
 
   type            PostType
-  tags            PostTag[]
-  comments        PostComment[]
-  likes           PostLike[]
   isPublished     Boolean  @map("is_published")
   isRepost        Boolean  @map("is_repost")
   authorId        String   @map("author_id")
@@ -58,6 +55,10 @@ model Post {
   originPostId    String   @map("origin_post_id")
 
   // --- Отношения
+  tags            PostTag[]
+  comments        PostComment[]
+  likes           PostLike[]
+
   // Связь с таблицей отношений постов и экстра-полей
   postRelation PostRelation[]
 

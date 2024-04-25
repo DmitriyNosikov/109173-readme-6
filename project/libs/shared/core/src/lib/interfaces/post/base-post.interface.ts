@@ -17,13 +17,14 @@ export interface BasePostInterface extends CreatedUpdatedDatesInterface{
   publishedAt?: string;
 
   type: PostTypeEnum;
-  tags?: TagInterface[] | null;
-  comments?: CommentInterface[] | null,
-  likes?: LikeInterface[] | null,
   isPublished: boolean;
   isRepost: boolean;
   authorId: UserInterface['id'];
   originAuthorId: UserInterface['id'] | null;
   originPostId: BasePostInterface['id'] | null;
   extraFields: ExtraFields
+
+  tags?: TagInterface[] | null;
+  comments?: CommentInterface[] | null,
+  likes?: LikeInterface[] | null,
 }
