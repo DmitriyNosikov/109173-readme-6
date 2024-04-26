@@ -1,13 +1,13 @@
 import { ApiProperty } from '@nestjs/swagger'
 import { BasePostInterface, LikeInterface, PostType, PostTypeEnum, UserInterface } from '@project/shared/core';
-import { CreatePostLinkDTO } from './create-post-link.dto';
-import { CreatePostTextDTO } from './create-post-text.dto';
-import { CreatePostQuoteDTO } from './create-post-quote.dto';
-import { CreatePostPhotoDTO } from './create-post-photo.dto';
-import { CreatePostVideoDTO } from './create-post-video.dto';
+import { CreateLinkPostDTO } from './create-link-post.dto';
+import { CreateTextPostDTO } from './create-text-post.dto';
+import { CreateQuotePostDTO } from './create-quote-post.dto';
+import { CreatePhotoPostDTO } from './create-photo-post.dto';
+import { CreateVideoPostDTO } from './create-video-post.dto';
 import { CommentInterface } from '@project/shared/core'
 
-export type ExtraFieldsDTO = CreateBasePostDTO | CreatePostLinkDTO | CreatePostTextDTO | CreatePostQuoteDTO | CreatePostPhotoDTO | CreatePostVideoDTO;
+export type ExtraFieldsDTO = CreateBasePostDTO | CreateLinkPostDTO | CreateTextPostDTO | CreateQuotePostDTO | CreatePhotoPostDTO | CreateVideoPostDTO;
 
 export class CreateBasePostDTO {
   @ApiProperty({

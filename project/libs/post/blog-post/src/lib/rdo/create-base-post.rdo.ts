@@ -1,14 +1,14 @@
 import { Expose } from 'class-transformer';
 import { BasePostInterface, PostTypeEnum, UserInterface } from '@project/shared/core';
 
-import { CreatePostLinkRDO } from './create-post-link.rdo';
-import { CreatePostTextRDO } from './create-post-text.rdo';
-import { CreatePostQuoteRDO } from './create-post-quote.rdo';
-import { CreatePostPhotoRDO } from './create-post-photo.rdo';
-import { CreatePostVideoRDO } from './create-post-video.rdo';
-import { CreateAllPostRelationRDO } from './create-all-post-relation.rdo';
+import { CreateLinkPostRDO } from './create-link-post.rdo';
+import { CreateTextPostRDO } from './create-text-post.rdo';
+import { CreateQuotePostRDO } from './create-quote-post.rdo';
+import { CreatePhotoPostRDO } from './create-photo-post.rdo';
+import { CreateVideoPostRDO } from './create-video-post.rdo';
+import { CreatePostToExtraFieldsRDO } from './create-post-to-extra-fields.rdo';
 
-export type ExtraFieldsRDO = CreateBasePostRDO | CreatePostLinkRDO | CreatePostTextRDO | CreatePostQuoteRDO | CreatePostPhotoRDO | CreatePostVideoRDO;
+export type ExtraFieldsRDO = CreateBasePostRDO | CreateLinkPostRDO | CreateTextPostRDO | CreateQuotePostRDO | CreatePhotoPostRDO | CreateVideoPostRDO;
 
 export class CreateBasePostRDO {
   @Expose()
@@ -49,10 +49,10 @@ export class CreateBasePostRDO {
   public originPostId: BasePostInterface['id'] | null;
 }
 
-export class CreatedBasePostRDO {
+export class CreatedBlogPostRDO {
   @Expose()
   public post: CreateBasePostRDO;
 
   @Expose()
-  public postToExtraFields: CreateAllPostRelationRDO
+  public postToExtraFields: CreatePostToExtraFieldsRDO
 }

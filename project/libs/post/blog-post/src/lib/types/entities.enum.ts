@@ -1,16 +1,16 @@
 import { PostType } from '@project/shared/core';
-import { PostTextEntity } from '../entities/post-text.entity';
-import { PostLinkEntity } from '../entities/post-link.entity';
-import { PostQuoteEntity } from '../entities/post-quote.entity';
-import { PostPhotoEntity } from '../entities/post-photo.entity';
-import { PostVideoEntity } from '../entities/post-video.entity';
+import { TextPostEntity } from '../entities/text-post.entity';
+import { LinkPostEntity } from '../entities/link-post.entity';
+import { QuotePostEntity } from '../entities/quote-post.entity';
+import { PhotoPostEntity } from '../entities/photo-post.entity';
+import { VideoPostEntity } from '../entities/video-post.entity';
 
 export const EntityType = {
-  [PostType.TEXT]: PostTextEntity,
-  [PostType.LINK]: PostLinkEntity,
-  [PostType.QUOTE]: PostQuoteEntity,
-  [PostType.PHOTO]: PostPhotoEntity,
-  [PostType.VIDEO]: PostVideoEntity,
+  [PostType.TEXT]: TextPostEntity,
+  [PostType.LINK]: LinkPostEntity,
+  [PostType.QUOTE]: QuotePostEntity,
+  [PostType.PHOTO]: PhotoPostEntity,
+  [PostType.VIDEO]: VideoPostEntity,
 } as const;
 
-export type PostEntities = PostTextEntity | PostLinkEntity | PostQuoteEntity | PostPhotoEntity | PostVideoEntity;
+export type PostEntities = TextPostEntity | LinkPostEntity | QuotePostEntity | PhotoPostEntity | VideoPostEntity;

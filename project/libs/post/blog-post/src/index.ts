@@ -7,7 +7,7 @@ export { BasePostRepository } from './lib/repositories/base-post.repository'
 
 export { BlogPostRepositoryDeterminant } from './lib/repositories/blog-post-determinant.repository'
 
-export { AllPostRelationRepository } from './lib/repositories/all-post-relation.repository'
+export { PostToExtraFieldsRepository } from './lib/repositories/post-to-extra-fields.repository'
 
 export { RepositoryType } from './lib/types/repositories.enum'
 export { FactoryType } from './lib/types/factories.enum'

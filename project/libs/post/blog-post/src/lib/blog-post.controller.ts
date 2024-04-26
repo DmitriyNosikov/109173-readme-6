@@ -2,12 +2,12 @@ import { ApiResponse } from '@nestjs/swagger'
 import { Controller, Get, Post, Body, Param, Patch, Delete, HttpStatus } from '@nestjs/common';
 
 import { CreateBasePostDTO } from './dto/create-blog-post.dto'
-import { CreateBasePostRDO, CreatedBasePostRDO } from './rdo/create-base-post.rdo';
+import { CreateBasePostRDO, CreatedBlogPostRDO } from './rdo/create-base-post.rdo';
 import { fillDTO } from '@project/shared/helpers';
 
 import { BlogPostService } from './blog-post.service';
 import { BlogPostMessage } from './blog-post.constant';
-import { CreateAllPostRelationRDO } from './rdo/create-all-post-relation.rdo';
+import { CreatePostToExtraFieldsRDO } from './rdo/create-post-to-extra-fields.rdo';
 
 
 @Controller('posts')
@@ -26,12 +26,12 @@ export class BlogPostController {
     description: BlogPostMessage.ERROR.UNAUTHORIZED
   })
   @Post()
-  public async create(@Body() dto: CreateBasePostDTO): Promise<CreatedBasePostRDO | void> {
+  public async create(@Body() dto: CreateBasePostDTO): Promise<CreatedBlogPostRDO | void> {
     const createdPost = await this.blogPostService.create(dto);
 
     return {
       post: fillDTO(CreateBasePostRDO, createdPost.post),
-      postToExtraFields: fillDTO(CreateAllPostRelationRDO, createdPost.postToExtraFields)
+      postToExtraFields: fillDTO(CreatePostToExtraFieldsRDO, createdPost.postToExtraFields)
     };
   }
 

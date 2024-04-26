@@ -4,15 +4,15 @@ export { Entity } from "./lib/base/entity"
 export { AuthUserInterface } from "./lib/interfaces/user/auth-user.interface"
 export { UserInterface } from "./lib/interfaces/user/user.interface"
 
-export { AllPostRelationInterface } from './lib/interfaces/post/all-post-relation.interface'
+export { PostToExtraFieldsInterface } from './lib/interfaces/post/post-to-extra-fields.interface'
 
 export { PostType, PostTypeEnum } from './lib/types/post/post-type.enum'
 export { BasePostInterface } from './lib/interfaces/post/base-post.interface'
-export { PostTextInterface } from './lib/interfaces/post/post-text.interface'
-export { PostQuoteInterface } from './lib/interfaces/post/post-quote.interface'
-export { PostLinkInterface } from './lib/interfaces/post/post-link.interface'
-export { PostPhotoInterface } from './lib/interfaces/post/post-photo.interface'
-export { PostVideoInterface } from './lib/interfaces/post/post-video.interface'
+export { TextPostInterface } from './lib/interfaces/post/text-post.interface'
+export { QuotePostInterface } from './lib/interfaces/post/quote-post.interface'
+export { LinkPostInterface } from './lib/interfaces/post/link-post.interface'
+export { PhotoPostInterface } from './lib/interfaces/post/photo-post.interface'
+export { VideoPostInterface } from './lib/interfaces/post/video-post.interface'
 
 export { TagInterface } from './lib/interfaces/tag.interface'
 export { CommentInterface } from './lib/interfaces/comment.interface'

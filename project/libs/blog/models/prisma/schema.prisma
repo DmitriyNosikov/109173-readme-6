@@ -29,7 +29,7 @@ enum PostType {
 }
 
 //////////////////// POSTS & EXTRA-FIELDS RELATIONS ////////////////////
-model PostRelation {
+model PostToExtraFields {
   id              String @id @default(uuid())
   createdAt       DateTime @default(now()) @map("created_at")
   updatedAt       DateTime @updatedAt @map("updated_at")
@@ -40,7 +40,7 @@ model PostRelation {
   // --- Отношения
   post Post @relation(fields: [postId], references: [id]) // Связываем с таблицей Post через внутреннее поле postId
 
-  @@map("posts_relations")
+  @@map("posts_to_extra_fields")
 }
 
 model Post {
@@ -62,7 +62,7 @@ model Post {
   likes           PostLike[]
 
   // Связь с таблицей отношений постов и экстра-полей
-  postRelation PostRelation[]
+  extraFields PostToExtraFields[]
 
   @@map("posts")
 }

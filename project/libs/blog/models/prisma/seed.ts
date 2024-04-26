@@ -77,7 +77,7 @@ async function seedDB(prismaClient: PrismaClient) {
   // POSTS RELATIONS
   const mockPostsRelations = getPostsRelations();
   for(const relation of mockPostsRelations) {
-    await prismaClient.postRelation.upsert({
+    await prismaClient.postToExtraFields.upsert({
       where: { id: relation.id },
       update: {},
       create: {

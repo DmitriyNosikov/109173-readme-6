@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { BadRequestException } from '@nestjs/common';
 
 import { CreateBasePostDTO } from './dto/create-blog-post.dto';
-import { CreatedBasePostRDO } from './rdo/create-base-post.rdo';
+import { CreatedBlogPostRDO } from './rdo/create-base-post.rdo';
 import { BlogPostRepositoryDeterminant } from './repositories/blog-post-determinant.repository';
 
 import { BasePostFactory } from './factories/base-post.factory';
@@ -10,9 +10,10 @@ import { BasePostRepository } from './repositories/base-post.repository';
 
 import { BlogPostFactory } from './factories/blog-post.factory';
 
-import { AllPostRelationEntity } from './entities/all-post-relation.entity';
-import { AllPostRelationFactory } from './factories/all-post-relation.factory';
-import { AllPostRelationRepository } from './repositories/all-post-relation.repository';
+import { PostToExtraFieldsEntity } from './entities/post-to-extra-fields.entity';
+import { PostToExtraFieldsFactory } from './factories/post-to-extra-fields';
+import { PostToExtraFieldsRepository } from './repositories/post-to-extra-fields.repository';
+
 import { PostTypeEnum } from '@project/shared/core';
 import { BlogPostMessage } from './blog-post.constant';
 import { BasePostEntity } from './entities/base-post.entity';
@@ -22,7 +23,7 @@ import { BasePostEntity } from './entities/base-post.entity';
 export class BlogPostService {
   private basePost: BasePostEntity;
   private extraFieldsPost; // <-- TODO: поправить типы
-  private relationPost: AllPostRelationEntity;
+  private relationPost: PostToExtraFieldsEntity;
 
   constructor(
     private readonly basePostRepository: BasePostRepository,
@@ -31,10 +32,10 @@ export class BlogPostService {
     private readonly blogPostFactory: BlogPostFactory,
     private readonly blogPostRepositoryFactory: BlogPostRepositoryDeterminant,
 
-    private readonly allPostRelationFactory: AllPostRelationFactory,
-    private readonly allPostRelationRepository: AllPostRelationRepository
+    private readonly allPostRelationFactory: PostToExtraFieldsFactory,
+    private readonly allPostRelationRepository: PostToExtraFieldsRepository
   ) {}
-  public async create(dto: CreateBasePostDTO): Promise<CreatedBasePostRDO> {
+  public async create(dto: CreateBasePostDTO): Promise<CreatedBlogPostRDO> {
     if(!this.checkPostType(dto.type)) {
       return;
     }
@@ -45,9 +46,9 @@ export class BlogPostService {
     await this.createExtraFieldsPost(dto);
 
     // Cохраняем все части нашего боста (базовая + дополнительная) в связующую таблицу
-    await this.createPostRelation();
+    await this.createPostToExtraFields();
 
-    const result: CreatedBasePostRDO = {
+    const result: CreatedBlogPostRDO = {
       post: this.basePost,
       postToExtraFields: this.relationPost
     };
@@ -83,15 +84,15 @@ export class BlogPostService {
     this.extraFieldsPost = await extraFieldsRepository.create(extraFieldsEntity);
   }
 
-  private async createPostRelation(): Promise<void> {
+  private async createPostToExtraFields(): Promise<void> {
     const allPostRelationFields = {
       postId: this.basePost.id,
       postType: this.basePost.type,
       extraFieldsId: this.extraFieldsPost.id
     };
-    const allPostRelationEntity: AllPostRelationEntity = this.allPostRelationFactory.create(allPostRelationFields);
+    const postToExtraFieldsEntity: PostToExtraFieldsEntity = this.allPostRelationFactory.create(allPostRelationFields);
 
-    this.relationPost = await this.allPostRelationRepository.create(allPostRelationEntity);
+    this.relationPost = await this.allPostRelationRepository.create(postToExtraFieldsEntity);
   }
 
   private getBasePostFields(dto: CreateBasePostDTO) {

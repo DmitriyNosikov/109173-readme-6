@@ -9,19 +9,19 @@ import { BasePostFactory } from './factories/base-post.factory';
 import { BlogPostFactory } from './factories/blog-post.factory';
 import { BlogPostRepositoryDeterminant } from './repositories/blog-post-determinant.repository';
 
-import { PostTextRepository } from './repositories/post-text.repository';
-import { PostLinkRepository } from './repositories/post-link.repository';
-import { PostQuoteRepository } from './repositories/post-quote.repository';
-import { PostPhotoRepository } from './repositories/post-photo.repository';
-import { PostVideoRepository } from './repositories/post-video.repository';
+import { TextPostRepository } from './repositories/text-post.repository';
+import { LinkPostRepository } from './repositories/link-post.repository';
+import { QuotePostRepository } from './repositories/quote-post.repository';
+import { PhotoPostRepository } from './repositories/photo-post.repository';
+import { VideoPostRepository } from './repositories/video-post.repository';
 
-import { AllPostRelationFactory } from './factories/all-post-relation.factory';
-import { AllPostRelationRepository } from './repositories/all-post-relation.repository';
-import { PostTextFactory } from './factories/post-text.factory';
-import { PostLinkFactory } from './factories/post-link.factory';
-import { PostQuoteFactory } from './factories/post-quote.factory';
-import { PostPhotoFactory } from './factories/post-photo.factory';
-import { PostVideoFactory } from './factories/post-video.factory';
+import { PostToExtraFieldsFactory } from './factories/post-to-extra-fields';
+import { PostToExtraFieldsRepository } from './repositories/post-to-extra-fields.repository';
+import { TextPostFactory } from './factories/text-post.factory';
+import { LinkPostFactory } from './factories/link-post.factory';
+import { QuotePostFactory } from './factories/quote-post.factory';
+import { PhotoPostFactory } from './factories/photo-post.factory';
+import { VideoPostFactory } from './factories/video-post.factory';
 
 @Module({
   imports: [PrismaClientModule],
@@ -34,23 +34,23 @@ import { PostVideoFactory } from './factories/post-video.factory';
     BlogPostService,
     BlogPostRepositoryDeterminant,
 
-    PostTextFactory,
-    PostTextRepository,
+    TextPostFactory,
+    TextPostRepository,
 
-    PostLinkFactory,
-    PostLinkRepository,
+    LinkPostFactory,
+    LinkPostRepository,
 
-    PostQuoteFactory,
-    PostQuoteRepository,
+    QuotePostFactory,
+    QuotePostRepository,
 
-    PostPhotoFactory,
-    PostPhotoRepository,
+    PhotoPostFactory,
+    PhotoPostRepository,
 
-    PostVideoFactory,
-    PostVideoRepository,
+    VideoPostFactory,
+    VideoPostRepository,
 
-    AllPostRelationFactory,
-    AllPostRelationRepository
+    PostToExtraFieldsFactory,
+    PostToExtraFieldsRepository
   ],
   exports: [BlogPostService]
 })

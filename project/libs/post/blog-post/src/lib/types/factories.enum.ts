@@ -1,16 +1,16 @@
 import { PostType } from '@project/shared/core';
-import { PostTextFactory } from '../factories/post-text.factory';
-import { PostLinkFactory } from '../factories/post-link.factory';
-import { PostQuoteFactory } from '../factories/post-quote.factory';
-import { PostPhotoFactory } from '../factories/post-photo.factory';
-import { PostVideoFactory } from '../factories/post-video.factory';
+import { TextPostFactory } from '../factories/text-post.factory';
+import { LinkPostFactory } from '../factories/link-post.factory';
+import { QuotePostFactory } from '../factories/quote-post.factory';
+import { PhotoPostFactory } from '../factories/photo-post.factory';
+import { VideoPostFactory } from '../factories/video-post.factory';
 
 export const FactoryType = {
-  [PostType.TEXT]: PostTextFactory,
-  [PostType.LINK]: PostLinkFactory,
-  [PostType.QUOTE]: PostQuoteFactory,
-  [PostType.PHOTO]: PostPhotoFactory,
-  [PostType.VIDEO]: PostVideoFactory,
+  [PostType.TEXT]: TextPostFactory,
+  [PostType.LINK]: LinkPostFactory,
+  [PostType.QUOTE]: QuotePostFactory,
+  [PostType.PHOTO]: PhotoPostFactory,
+  [PostType.VIDEO]: VideoPostFactory,
 } as const;
 
 export type PostFactoryTypes = (typeof FactoryType)[keyof typeof FactoryType];
