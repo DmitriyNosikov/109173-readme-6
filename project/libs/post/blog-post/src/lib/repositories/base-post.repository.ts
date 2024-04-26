@@ -28,9 +28,13 @@ export class BasePostRepository extends BasePostgresRepository<BasePostEntity, B
 
         // Соединяем пост с существующими тегами
         // (TODO: если тега нет - надо создавать, но это, скорее всего, в APIGateway)
-        tags: {
+        // + можно при создании поста вобще передавать теги словами. Затем искать по
+        // табличке с тегами - если есть - возвращать айдишники и коннектить к посту, нет -
+        // создавать и коннектить
+        // ^^^ Все это - ответственност TagService
+        tags: postTags ? {
           connect: postTags
-        },
+        } : undefined,
 
         // По идее, лайков и комментариев не может быть у нового поста
         // (на текущий момент так)
@@ -56,7 +60,7 @@ export class BasePostRepository extends BasePostgresRepository<BasePostEntity, B
         tags: true,
         comments: true,
         likes: true,
-        postRelation: true
+        extraFields: true
       }
     });
 
