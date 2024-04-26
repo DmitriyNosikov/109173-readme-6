@@ -12,10 +12,10 @@ Content-Type: application/json
 
 {
   "type": "text",
-  "tags": ["f3e5c12a-c09b-4834-ae50-1c3b27cd8d72"],
+  "tags": ["3dd59389-d3c9-4203-8e20-d7f29431cdaa"],
   "isPublished": true,
   "isRepost": false,
-  "authorId": "6dd03634-9785-49b8-a403-9ab61bb5656e",
+  "authorId": "6dd03634978549b8",
   "originAuthorId": "",
   "originPostId": "",
   "extraFields": {

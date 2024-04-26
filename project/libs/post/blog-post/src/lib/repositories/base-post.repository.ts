@@ -39,9 +39,10 @@ export class BasePostRepository extends BasePostgresRepository<BasePostEntity, B
       },
     });
 
-    console.log('POST RECORD: ', post);
-
     entity.id = post.id;
+    entity.createdAt = post.createdAt;
+    entity.updatedAt = post.updatedAt;
+    entity.publishedAt = post.publishedAt;
 
     return entity;
   }
@@ -62,8 +63,6 @@ export class BasePostRepository extends BasePostgresRepository<BasePostEntity, B
     if(!document) {
       throw new NotFoundException(`Document with id ${entityId} not found`);
     }
-
-    console.log('Found post: ', document);
 
     // this.createEntityFromDocument(document);
 

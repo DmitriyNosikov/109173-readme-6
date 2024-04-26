@@ -9,11 +9,13 @@ export class PostPhotoEntity extends Entity implements PostPhotoInterface, Stora
       return;
     }
 
+    this.id = extraFields.id ?? undefined;
     this.photoURL = extraFields.photoURL;
   }
 
   public toPOJO(): PostPhotoInterface {
     return {
+      id: this.id,
       photoURL: this.photoURL
     };
   }

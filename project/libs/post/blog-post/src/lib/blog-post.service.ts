@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { BadRequestException } from '@nestjs/common';
 
 import { CreateBasePostDTO } from './dto/create-blog-post.dto';
+import { CreatedBasePostRDO } from './rdo/create-base-post.rdo';
 import { BlogPostRepositoryDeterminant } from './repositories/blog-post-determinant.repository';
 
 import { BasePostFactory } from './factories/base-post.factory';
@@ -14,9 +15,15 @@ import { AllPostRelationFactory } from './factories/all-post-relation.factory';
 import { AllPostRelationRepository } from './repositories/all-post-relation.repository';
 import { PostTypeEnum } from '@project/shared/core';
 import { BlogPostMessage } from './blog-post.constant';
+import { BasePostEntity } from './entities/base-post.entity';
+
 
 @Injectable()
 export class BlogPostService {
+  private basePost: BasePostEntity;
+  private extraFieldsPost; // <-- TODO: поправить типы
+  private relationPost: AllPostRelationEntity;
+
   constructor(
     private readonly basePostRepository: BasePostRepository,
     private readonly basePostFactory: BasePostFactory,
@@ -27,46 +34,28 @@ export class BlogPostService {
     private readonly allPostRelationFactory: AllPostRelationFactory,
     private readonly allPostRelationRepository: AllPostRelationRepository
   ) {}
-  async create(dto: CreateBasePostDTO): Promise<AllPostRelationEntity> {
+  public async create(dto: CreateBasePostDTO): Promise<CreatedBasePostRDO> {
     if(!this.checkPostType(dto.type)) {
       return;
     }
+    // Сохраняем в БД основу для поста
+    await this.createBasePost(dto);
 
-    const basePostFields = this.getBasePostFields(dto);
-    console.log('POST DTO: ', dto, basePostFields);
+    // Сохраняем дополнительные поля базового поста (которыми как раз отличаются типизированные посты)
+    await this.createExtraFieldsPost(dto);
 
-    // // Сохраняем в БД основу для поста
-    const basePostEntity = this.basePostFactory.create(basePostFields); // Создаем Entity базового поста
-    const basePost = await this.basePostRepository.create(basePostEntity); // Сохраняем в БД
+    // Cохраняем все части нашего боста (базовая + дополнительная) в связующую таблицу
+    await this.createPostRelation();
 
-    // Сохраняем дополнительные поля базового поста
-    // (которыми как раз отличаются типизированные посты)
-    const extraFields = {
-      type: dto.type,
-      ...dto.extraFields
+    const result: CreatedBasePostRDO = {
+      post: this.basePost,
+      postToExtraFields: this.relationPost
     };
-    const blogPostEntity = this.blogPostFactory.create(extraFields)
-    const blogPostRepository = this.blogPostRepositoryFactory.getRepository(dto.type);
-    const blogPost = await blogPostRepository.create(blogPostEntity);
 
-    // Cохраняем все части нашего боста (базовая + дополнительная)
-    // в связующую таблицу
-    const allPostRelationFields = {
-      postId: basePost.id,
-      postType: basePost.type,
-      extraFieldsId: blogPostEntity.id
-    };
-    const allPostRelationEntity: AllPostRelationEntity = this.allPostRelationFactory.create(allPostRelationFields);
-    const relationPost = await this.allPostRelationRepository.create(allPostRelationEntity);
-
-    console.log('BASE POST: ', basePost);
-    console.log('BLOG POST: ', blogPost);
-    console.log('RELATION POST: ', relationPost);
-
-    return allPostRelationEntity;
+    return result;
   }
 
-  checkPostType(postType: PostTypeEnum) {
+  public checkPostType(postType: PostTypeEnum) {
     const postRepository = this.blogPostRepositoryFactory.getRepository(postType);
 
     if(!postRepository) {
@@ -74,6 +63,35 @@ export class BlogPostService {
     }
 
     return true;
+  }
+
+  private async createBasePost(dto: CreateBasePostDTO): Promise<void> {
+    const basePostFields = this.getBasePostFields(dto);
+    const basePostEntity = this.basePostFactory.create(basePostFields); // Создаем Entity базового поста
+
+    this.basePost = await this.basePostRepository.create(basePostEntity); // Сохраняем в БД
+  }
+
+  private async createExtraFieldsPost(dto: CreateBasePostDTO): Promise<void> {
+    const extraFields = {
+      type: dto.type,
+      ...dto.extraFields
+    };
+    const extraFieldsEntity = this.blogPostFactory.create(extraFields)
+    const extraFieldsRepository = this.blogPostRepositoryFactory.getRepository(dto.type);
+
+    this.extraFieldsPost = await extraFieldsRepository.create(extraFieldsEntity);
+  }
+
+  private async createPostRelation(): Promise<void> {
+    const allPostRelationFields = {
+      postId: this.basePost.id,
+      postType: this.basePost.type,
+      extraFieldsId: this.extraFieldsPost.id
+    };
+    const allPostRelationEntity: AllPostRelationEntity = this.allPostRelationFactory.create(allPostRelationFields);
+
+    this.relationPost = await this.allPostRelationRepository.create(allPostRelationEntity);
   }
 
   private getBasePostFields(dto: CreateBasePostDTO) {

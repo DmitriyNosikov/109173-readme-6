@@ -12,7 +12,7 @@ export class PostTextEntity extends Entity implements PostTextInterface, Storabl
       return;
     }
 
-    this.id =  extraFields.id ?? '';
+    this.id =  extraFields.id ?? undefined;
     this.title = extraFields.title;
     this.announce = extraFields.announce;
     this.text = extraFields.text;

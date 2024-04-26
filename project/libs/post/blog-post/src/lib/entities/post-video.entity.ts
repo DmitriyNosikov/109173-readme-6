@@ -10,12 +10,14 @@ export class PostVideoEntity extends Entity implements PostVideoInterface, Stora
       return;
     }
 
+    this.id = extraFields.id ?? undefined;
     this.title = extraFields.title;
     this.videoURL = extraFields.videoURL;
   }
 
   public toPOJO(): PostVideoInterface {
     return {
+      id: this.id,
       title: this.title,
       videoURL: this.videoURL,
     };

@@ -9,9 +9,9 @@ import {
 } from '@project/shared/core'
 
 export class BasePostEntity extends Entity implements BasePostInterface, StorableEntity<BasePostInterface> {
-  public createdAt?: Date;
-  public updatedAt?: Date;
-  public publishedAt?: string;
+  public createdAt: Date;
+  public updatedAt: Date;
+  public publishedAt: Date;
 
   public type: PostTypeEnum;
   public tags?: string[] | null;

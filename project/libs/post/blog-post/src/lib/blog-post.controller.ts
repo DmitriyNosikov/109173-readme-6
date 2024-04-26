@@ -1,8 +1,13 @@
 import { ApiResponse } from '@nestjs/swagger'
 import { Controller, Get, Post, Body, Param, Patch, Delete, HttpStatus } from '@nestjs/common';
+
 import { CreateBasePostDTO } from './dto/create-blog-post.dto'
+import { CreateBasePostRDO, CreatedBasePostRDO } from './rdo/create-base-post.rdo';
+import { fillDTO } from '@project/shared/helpers';
+
 import { BlogPostService } from './blog-post.service';
 import { BlogPostMessage } from './blog-post.constant';
+import { CreateAllPostRelationRDO } from './rdo/create-all-post-relation.rdo';
 
 
 @Controller('posts')
@@ -21,10 +26,13 @@ export class BlogPostController {
     description: BlogPostMessage.ERROR.UNAUTHORIZED
   })
   @Post()
-  public async create(@Body() dto: CreateBasePostDTO): Promise<void> {
-    const allPostRelation = await this.blogPostService.create(dto);
+  public async create(@Body() dto: CreateBasePostDTO): Promise<CreatedBasePostRDO | void> {
+    const createdPost = await this.blogPostService.create(dto);
 
-    console.log('RELATED POST: ', allPostRelation);
+    return {
+      post: fillDTO(CreateBasePostRDO, createdPost.post),
+      postToExtraFields: fillDTO(CreateAllPostRelationRDO, createdPost.postToExtraFields)
+    };
   }
 
   @ApiResponse({

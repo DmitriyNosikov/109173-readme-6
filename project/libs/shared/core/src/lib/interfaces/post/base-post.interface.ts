@@ -7,7 +7,7 @@ import { CreatedUpdatedDatesInterface } from '../created-updated-dates.interface
 
 export interface BasePostInterface extends CreatedUpdatedDatesInterface{
   id?: string;
-  publishedAt?: string;
+  publishedAt?: Date;
 
   type: PostTypeEnum;
   isPublished: boolean;

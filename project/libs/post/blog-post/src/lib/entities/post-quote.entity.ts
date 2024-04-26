@@ -11,12 +11,14 @@ export class PostQuoteEntity extends Entity implements PostQuoteInterface, Stora
       return;
     }
 
+    this.id = extraFields.id ?? undefined;
     this.authorId = extraFields.authorId;
     this.text = extraFields.text;
   }
 
   public toPOJO(): PostQuoteInterface {
     return {
+      id: this.id,
       authorId: this.authorId,
       text: this.text,
     };

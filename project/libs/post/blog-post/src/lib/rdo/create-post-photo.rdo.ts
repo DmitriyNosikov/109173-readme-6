@@ -1,8 +1,8 @@
 import { Expose } from 'class-transformer';
 
-export class CreateTagRDO {
+export class CreatePostPhotoRDO {
   @Expose()
-  id: string;
+  public id: string;
 
   @Expose()
   createdAt: Date;
@@ -11,5 +11,5 @@ export class CreateTagRDO {
   updatedAt: Date;
 
   @Expose()
-  title: string;
+  public photoURL: string;
 }

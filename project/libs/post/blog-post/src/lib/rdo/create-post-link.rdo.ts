@@ -1,9 +1,8 @@
-import { UserInterface } from '@project/shared/core';
 import { Expose } from 'class-transformer';
 
-export class CreateCommentRDO {
+export class CreatePostLinkRDO {
   @Expose()
-  id: string;
+  public id: string;
 
   @Expose()
   createdAt: Date;
@@ -12,8 +11,8 @@ export class CreateCommentRDO {
   updatedAt: Date;
 
   @Expose()
-  authorId: UserInterface['id'];
+  public linkURL: string;
 
   @Expose()
-  text: string;
+  public description: string;
 }

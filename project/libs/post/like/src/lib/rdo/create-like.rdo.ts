@@ -6,14 +6,15 @@ export class CreateLikeRDO {
   id: string;
 
   @Expose()
+  createdAt: Date;
+
+  @Expose()
+  updatedAt: Date;
+
+  @Expose()
   postId: BasePostInterface['id'];
 
   @Expose()
   authorId: UserInterface['id'];
 
-  @Expose()
-  createdAt: Date;
-
-  @Expose()
-  updatedAt: Date;
 }

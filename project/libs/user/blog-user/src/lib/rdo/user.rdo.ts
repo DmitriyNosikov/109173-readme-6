@@ -6,7 +6,21 @@ export class UserRDO {
     example: 'g83h4y0943-nv934819843-jv934h8t-n923g48n9438',
   })
   @Expose()
-  id: string;
+  public id: string;
+
+  @ApiProperty({
+    description: 'Created at date',
+    example: '2024-04-26 13:02:24.847'
+  })
+  @Expose()
+  createdAt: Date;
+
+  @ApiProperty({
+    description: 'Updated at date',
+    example: '2024-04-26 13:02:24.847'
+  })
+  @Expose()
+  updatedAt: Date;
 
   @ApiProperty({
     description: 'User email',
@@ -35,10 +49,4 @@ export class UserRDO {
   })
   @Expose()
   avatar?: string;
-
-  @Expose()
-  createdAt: Date;
-
-  @Expose()
-  updatedAt: Date;
 }

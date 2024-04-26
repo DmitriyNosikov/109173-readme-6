@@ -11,12 +11,14 @@ export class PostLinkEntity extends Entity implements PostLinkInterface, Storabl
       return;
     }
 
+    this.id = extraFields.id ?? undefined;
     this.linkURL = extraFields.linkURL;
     this.description = extraFields.description;
   }
 
   public toPOJO(): PostLinkInterface {
     return {
+      id: this.id,
       linkURL: this.linkURL,
       description: this.description
     };
