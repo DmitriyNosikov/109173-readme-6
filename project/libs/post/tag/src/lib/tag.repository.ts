@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { BasePostgresRepository } from '@project/shared/data-access'
 import { PrismaClientService } from '@project/blog/models';
 
@@ -15,16 +15,23 @@ export class TagRepository extends BasePostgresRepository<TagEntity, TagInterfac
     super(entityFactory, dbClient);
   }
 
-  public async create(entity: TagEntity): Promise<TagEntity> {
-    const document = await this.dbClient.postTag.create({
-        data: {
-          title: entity.title
-        }
-      });
+  public async findByIdOrName(id: string = undefined, name: string = undefined): Promise<TagEntity | void> {
+    const document = await this.dbClient.postTag.findFirst({
+      where: {
+        OR: [
+          { id },
+          { name }
+        ]
+      }
+    });
 
-    entity.id = document.id;
+    if(!document) {
+      throw new NotFoundException(`Tag with ID ${id} or name ${name} not found`);
+    }
 
-    return entity;
+    const tag = this.createEntityFromDocument(document);
+
+    return tag;
   }
 
   public async findById(id: string): Promise<TagEntity> {
@@ -33,6 +40,26 @@ export class TagRepository extends BasePostgresRepository<TagEntity, TagInterfac
     });
 
     return this.createEntityFromDocument(document);
+  }
+
+  public async findByName(name: string): Promise<TagEntity> {
+    const document = await this.dbClient.postTag.findFirst({
+      where: { name }
+    });
+
+    return this.createEntityFromDocument(document);
+  }
+
+  public async create(entity: TagEntity): Promise<TagEntity> {
+    const document = await this.dbClient.postTag.create({
+        data: {
+          name: entity.name
+        }
+      });
+
+    entity.id = document.id;
+
+    return entity;
   }
 
   public async updateById(entityId: string, updatedFields: Partial<TagEntity>): Promise<void | TagEntity> {

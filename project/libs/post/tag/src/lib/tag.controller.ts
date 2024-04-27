@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Param, Patch, Post } from '@nestjs/common'
+import { Body, Controller, Delete, Get, Param, Patch, Post } from '@nestjs/common'
 import { TagService } from './tag.service';
 import { CreateTagDTO } from './dto/create-tag.dto';
 import { fillDTO } from '@project/shared/helpers';
@@ -19,8 +19,22 @@ export class TagController {
     return fillDTO(CreateTagRDO, tag.toPOJO());
   }
 
+  @Get('/get-by-Id/:tagId')
+  public async getTagById(@Param('tagId') tagId: string) {
+    const tag = await this.tagService.getById(tagId);
+
+    return fillDTO(CreateTagRDO, tag);
+  }
+
+  @Get('/get-by-tag-name/:tagName')
+  public async getTagByName(@Param('tagName') tagName: string): Promise<CreateTagRDO> {
+    const tag = await this.tagService.getByName(tagName);
+
+    return fillDTO(CreateTagRDO, tag);
+  }
+
   @Patch(':tagId')
-  async update(@Param('tagId') tagId: string, @Body() updatedFields: Partial<TagEntity>): Promise<CreateTagDTO> {
+  public async update(@Param('tagId') tagId: string, @Body() updatedFields: Partial<TagEntity>): Promise<CreateTagDTO> {
     const updatedTag = await this.tagService.update(tagId, updatedFields);
 
     if(!updatedTag) {
@@ -31,7 +45,7 @@ export class TagController {
   }
 
   @Delete(':tagId')
-  async delete(@Param('tagId') tagId: string): Promise<void> {
+  public async delete(@Param('tagId') tagId: string): Promise<void> {
     await this.tagService.delete(tagId);
   }
 }

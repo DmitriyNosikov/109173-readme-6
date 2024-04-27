@@ -1,5 +1,5 @@
 import { PrismaClient } from '@prisma/client'
-import { getBasePosts, getLinkPosts, getPostsRelations, getTextPosts, getVideoPosts } from './mock-data';
+import { getBasePosts, getLinkPosts, getPostToExtraFields, getTextPosts, getVideoPosts } from './mock-data';
 
 async function seedDB(prismaClient: PrismaClient) {
   // BASE POSTS
@@ -11,7 +11,7 @@ async function seedDB(prismaClient: PrismaClient) {
         type: basePost.type,
 
         tags: basePost.tags ? {
-          create: basePost.tags
+          create: basePost.tags.map((tag) => ({ name: tag.name.toLowerCase() }))
         } : undefined,
 
         comments: {
@@ -75,7 +75,7 @@ async function seedDB(prismaClient: PrismaClient) {
   }
 
   // POSTS RELATIONS
-  const mockPostsRelations = getPostsRelations();
+  const mockPostsRelations = getPostToExtraFields();
   for(const relation of mockPostsRelations) {
     await prismaClient.postToExtraFields.upsert({
       where: { id: relation.id },

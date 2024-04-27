@@ -49,8 +49,8 @@ export function getBasePosts() {
       // только содержимое, id самих тегов, а также id связного поля postid
       // призма должна праставить сама
       tags: [
-        { title: "News" },
-        { title: "HOT" }
+        { name: "news" },
+        { name: "HOT" } // Вариант для проверки приведения тегов к нижнему регистру
       ],
       likes: [
         { authorId: SECOND_USER_UUID }
@@ -136,7 +136,7 @@ export function getVideoPosts() {
   ];
 }
 
-export function getPostsRelations() {
+export function getPostToExtraFields() {
   return [
     {
       id: FIRST_RELATION_UUID,

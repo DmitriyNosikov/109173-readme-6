@@ -4,7 +4,7 @@ export class TagEntity extends Entity implements TagInterface{
   public createdAt?: Date;
   public updatedAt?: Date;
 
-  public title: string;
+  public name: string;
 
   constructor(tag: TagInterface) {
     super();
@@ -14,7 +14,7 @@ export class TagEntity extends Entity implements TagInterface{
 
   public populate(tag: TagInterface) {
     this.id = tag.id;
-    this.title = tag.title;
+    this.name = tag.name.toLowerCase();
     this.createdAt = tag.createdAt;
     this.updatedAt = tag.updatedAt;
   }
@@ -22,7 +22,7 @@ export class TagEntity extends Entity implements TagInterface{
   public toPOJO() {
     return {
       id: this.id,
-      title: this.title,
+      name: this.name,
       createdAt: this.createdAt,
       updatedAt: this.updatedAt
     };

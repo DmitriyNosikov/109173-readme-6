@@ -11,5 +11,5 @@ export class CreateTagRDO {
   updatedAt: Date;
 
   @Expose()
-  title: string;
+  name: string;
 }

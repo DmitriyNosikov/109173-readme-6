@@ -73,7 +73,7 @@ model PostTag {
   posts     Post[]
   createdAt DateTime  @default(now()) @map("created_at")
   updatedAt DateTime  @updatedAt @map("updated_at")
-  title     String    @unique() @db.VarChar(10)
+  name     String    @unique() @db.VarChar(10)
 
   @@map("posts_tags")
 }
