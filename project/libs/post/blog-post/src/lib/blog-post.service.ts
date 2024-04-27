@@ -17,6 +17,7 @@ import { PostToExtraFieldsRepository } from './repositories/post-to-extra-fields
 import { PostTypeEnum } from '@project/shared/core';
 import { BlogPostMessage } from './blog-post.constant';
 import { BasePostEntity } from './entities/base-post.entity';
+import { TagService } from '@project/tag';
 
 
 @Injectable()
@@ -33,7 +34,9 @@ export class BlogPostService {
     private readonly blogPostRepositoryFactory: BlogPostRepositoryDeterminant,
 
     private readonly allPostRelationFactory: PostToExtraFieldsFactory,
-    private readonly allPostRelationRepository: PostToExtraFieldsRepository
+    private readonly allPostRelationRepository: PostToExtraFieldsRepository,
+
+    private readonly tagService: TagService
   ) {}
   public async create(dto: CreateBasePostDTO): Promise<CreatedBlogPostRDO> {
     if(!this.checkPostType(dto.type)) {
@@ -56,7 +59,13 @@ export class BlogPostService {
     return result;
   }
 
-  public checkPostType(postType: PostTypeEnum) {
+  public async findById(postId: string) {
+    const post = await this.basePostRepository.findById(postId);
+
+    console.log('FOUND POST: ', post);
+  }
+
+  private checkPostType(postType: PostTypeEnum) {
     const postRepository = this.blogPostRepositoryFactory.getRepository(postType);
 
     if(!postRepository) {
@@ -94,6 +103,8 @@ export class BlogPostService {
 
     this.relationPost = await this.allPostRelationRepository.create(postToExtraFieldsEntity);
   }
+
+  // private getOrSaveTags(tagNames: string[]) {}
 
   private getBasePostFields(dto: CreateBasePostDTO) {
     return {

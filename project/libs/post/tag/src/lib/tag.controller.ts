@@ -26,9 +26,16 @@ export class TagController {
     return fillDTO(CreateTagRDO, tag);
   }
 
-  @Get('/get-by-tag-name/:tagName')
+  @Get('/get-by-name/:tagName')
   public async getTagByName(@Param('tagName') tagName: string): Promise<CreateTagRDO> {
     const tag = await this.tagService.getByName(tagName);
+
+    return fillDTO(CreateTagRDO, tag);
+  }
+
+  @Get('/get-by-names/')
+  public async getTagsByNamse(@Body('tagNames') tagNames: string[]): Promise<CreateTagRDO> {
+    const tag = await this.tagService.getByNames(tagNames);
 
     return fillDTO(CreateTagRDO, tag);
   }

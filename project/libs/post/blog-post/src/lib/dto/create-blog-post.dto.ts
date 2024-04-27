@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger'
-import { BasePostInterface, LikeInterface, PostType, PostTypeEnum, UserInterface } from '@project/shared/core';
+import { BasePostInterface, LikeInterface, PostType, PostTypeEnum, TagInterface, UserInterface } from '@project/shared/core';
 import { CreateLinkPostDTO } from './create-link-post.dto';
 import { CreateTextPostDTO } from './create-text-post.dto';
 import { CreateQuotePostDTO } from './create-quote-post.dto';
@@ -20,12 +20,13 @@ export class CreateBasePostDTO {
 
   @ApiProperty({
     type: [String],
-    description: 'Post tags',
-    example: '[ "438734-gdjf9g843-gsmi43", "438734-gdjf9g843-gsmi43" ]',
+    description: 'Post tags (names)',
+    example: '[ "tag1", "tag2", "tag3" ]',
     minLength: 3,
     maxLength: 10,
     maxProperties: 8
   })
+
   public tags: string[] | null;
 
   @ApiProperty({

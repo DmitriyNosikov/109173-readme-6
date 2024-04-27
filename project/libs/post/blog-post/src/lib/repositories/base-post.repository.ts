@@ -31,7 +31,7 @@ export class BasePostRepository extends BasePostgresRepository<BasePostEntity, B
         // + можно при создании поста вобще передавать теги словами. Затем искать по
         // табличке с тегами - если есть - возвращать айдишники и коннектить к посту, нет -
         // создавать и коннектить
-        // ^^^ Все это - ответственност TagService
+        // ^^^ Все это - ответственность TagService
         tags: postTags ? {
           connect: postTags
         } : undefined,
@@ -68,7 +68,7 @@ export class BasePostRepository extends BasePostgresRepository<BasePostEntity, B
       throw new NotFoundException(`Document with id ${entityId} not found`);
     }
 
-    // this.createEntityFromDocument(document);
+    // const post = this.createEntityFromDocument(document);
 
     return null;
   }

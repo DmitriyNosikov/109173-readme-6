@@ -23,8 +23,10 @@ import { QuotePostFactory } from './factories/quote-post.factory';
 import { PhotoPostFactory } from './factories/photo-post.factory';
 import { VideoPostFactory } from './factories/video-post.factory';
 
+import { TagModule}  from '@project/tag'
+
 @Module({
-  imports: [PrismaClientModule],
+  imports: [PrismaClientModule, TagModule],
   controllers: [BlogPostController],
   providers: [
     BasePostRepository,

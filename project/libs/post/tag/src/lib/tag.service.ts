@@ -30,6 +30,34 @@ export class TagService {
     return tag;
   }
 
+  public async getByNames(tagNames: string[]): Promise<TagEntity[] | void> {
+    tagNames = tagNames.map((tagName) => tagName.toLowerCase());
+
+    const notFoundTags = [];
+    const tags = await this.tagRepository.findByNames(tagNames);
+
+    if(!tags) {
+      return;
+    }
+
+    // Если нашли не все теги
+    if(tags.length < tagNames.length) {
+      const foundTags = tags.map((tag) => tag.name);
+
+      tagNames.forEach((tag) => {
+        if(!foundTags.includes(tag)) {
+          notFoundTags.push(tag);
+        }
+      });
+
+      if(notFoundTags.length > 0) {
+        console.log('Not found tags: ', notFoundTags.join(', '));
+      }
+    }
+
+    return tags;
+  }
+
   public async create(dto: CreateTagDTO) {
     const isTagExists = await this.tagRepository.findByName(dto.name.toLowerCase())
 

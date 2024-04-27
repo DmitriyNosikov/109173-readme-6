@@ -37,6 +37,15 @@ Content-Type: application/json
 ###
 
 # Get tag by name
-GET {{baseUrl}}/tags/get-by-tag-name/other HTTP/1.1
+GET {{baseUrl}}/tags/get-by-name/other HTTP/1.1
 Content-Type: application/json
+###
+
+# Get tags by names
+GET {{baseUrl}}/tags/get-by-names/ HTTP/1.1
+Content-Type: application/json
+
+{
+  "tagNames": ["news", "test", "undefined", "hot"]
+}
 ###

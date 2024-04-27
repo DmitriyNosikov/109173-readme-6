@@ -4,7 +4,6 @@ import { CommentInterface } from '../comment.interface';
 import { LikeInterface } from '../like.interface';
 import { CreatedUpdatedDatesInterface } from '../created-updated-dates.interface';
 
-
 export interface BasePostInterface extends CreatedUpdatedDatesInterface{
   id?: string;
   publishedAt?: Date;
