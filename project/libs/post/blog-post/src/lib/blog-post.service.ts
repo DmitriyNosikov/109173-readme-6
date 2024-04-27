@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { BadRequestException } from '@nestjs/common';
 
 import { CreateBasePostDTO } from './dto/create-blog-post.dto';
@@ -18,6 +18,7 @@ import { PostTypeEnum } from '@project/shared/core';
 import { BlogPostMessage } from './blog-post.constant';
 import { BasePostEntity } from './entities/base-post.entity';
 import { TagService } from '@project/tag';
+import { firstValueFrom } from 'rxjs';
 
 
 @Injectable()
@@ -62,7 +63,11 @@ export class BlogPostService {
   public async findById(postId: string) {
     const post = await this.basePostRepository.findById(postId);
 
-    console.log('FOUND POST: ', post);
+    if(!post) {
+      throw new NotFoundException(`Post with ID ${postId} not found`);
+    }
+
+    return post;
   }
 
   private checkPostType(postType: PostTypeEnum) {
@@ -77,6 +82,13 @@ export class BlogPostService {
 
   private async createBasePost(dto: CreateBasePostDTO): Promise<void> {
     const basePostFields = this.getBasePostFields(dto);
+
+    // Проверяем наличие переданных тегов, если нет - создаем
+    //  и получаем их айдишники
+    const basePosttags = await this.tagService.getOrCreate(basePostFields.tags);
+    const tagsIDs = basePosttags.map((tag) => tag.id);
+    basePostFields.tags = tagsIDs;
+
     const basePostEntity = this.basePostFactory.create(basePostFields); // Создаем Entity базового поста
 
     this.basePost = await this.basePostRepository.create(basePostEntity); // Сохраняем в БД
@@ -103,8 +115,6 @@ export class BlogPostService {
 
     this.relationPost = await this.allPostRelationRepository.create(postToExtraFieldsEntity);
   }
-
-  // private getOrSaveTags(tagNames: string[]) {}
 
   private getBasePostFields(dto: CreateBasePostDTO) {
     return {

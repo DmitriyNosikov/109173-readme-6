@@ -5,7 +5,8 @@ import {
   BasePostInterface,
   UserInterface,
   CommentInterface,
-  LikeInterface
+  LikeInterface,
+  TagInterface
 } from '@project/shared/core'
 
 export class BasePostEntity extends Entity implements BasePostInterface, StorableEntity<BasePostInterface> {
@@ -14,7 +15,7 @@ export class BasePostEntity extends Entity implements BasePostInterface, Storabl
   public publishedAt: Date;
 
   public type: PostTypeEnum;
-  public tags?: string[] | null;
+  public tags?: string[] | TagInterface[] | null;
   public comments?: CommentInterface[] | undefined;
   public likes?: LikeInterface[] | undefined;
   public isPublished: boolean;

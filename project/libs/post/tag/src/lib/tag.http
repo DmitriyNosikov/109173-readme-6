@@ -49,3 +49,12 @@ Content-Type: application/json
   "tagNames": ["news", "test", "undefined", "hot"]
 }
 ###
+
+# Get tags by names or create
+GET {{baseUrl}}/tags/get-or-create/ HTTP/1.1
+Content-Type: application/json
+
+{
+  "tagNames": ["news", "test", "undefined", "hot"]
+}
+###

@@ -3,6 +3,7 @@ import { PostTypeEnum } from '../../types/post/post-type.enum';
 import { CommentInterface } from '../comment.interface';
 import { LikeInterface } from '../like.interface';
 import { CreatedUpdatedDatesInterface } from '../created-updated-dates.interface';
+import { TagInterface } from '../tag.interface';
 
 export interface BasePostInterface extends CreatedUpdatedDatesInterface{
   id?: string;
@@ -15,7 +16,7 @@ export interface BasePostInterface extends CreatedUpdatedDatesInterface{
   originAuthorId: UserInterface['id'] | null;
   originPostId: BasePostInterface['id'] | null;
 
-  tags?: string[] | null;
+  tags?: string[] | TagInterface[] | null;
   comments?: CommentInterface[] | null,
   likes?: LikeInterface[] | null,
 }

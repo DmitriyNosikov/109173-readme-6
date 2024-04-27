@@ -13,7 +13,7 @@ Content-Type: application/json
 
 {
   "type": "text",
-  "tags": ["3dd59389-d3c9-4203-8e20-d7f29431cdaa"],
+  "tags": ["test1", "test2", "news"],
   "isPublished": true,
   "isRepost": false,
   "authorId": "6dd03634978549b8",
@@ -25,3 +25,9 @@ Content-Type: application/json
     "text": "Long story short text"
   }
 }
+###
+
+# Find post by id
+GET {{baseUrl}}/posts/d7252b99-7cfe-44d6-a397-882f6444885f HTTP/1.1
+Content-Type: application/json
+###

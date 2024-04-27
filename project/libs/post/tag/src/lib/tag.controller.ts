@@ -34,11 +34,19 @@ export class TagController {
   }
 
   @Get('/get-by-names/')
-  public async getTagsByNamse(@Body('tagNames') tagNames: string[]): Promise<CreateTagRDO> {
-    const tag = await this.tagService.getByNames(tagNames);
+  public async getTagsByNames(@Body('tagNames') tagNames: string[]): Promise<CreateTagRDO> {
+    const tags = await this.tagService.getByNames(tagNames);
 
-    return fillDTO(CreateTagRDO, tag);
+    return fillDTO(CreateTagRDO, tags);
   }
+
+  @Get('/get-or-create/')
+  public async getOrCreate(@Body('tagNames') tagNames: string[]): Promise<CreateTagRDO> {
+    const tags = await this.tagService.getOrCreate(tagNames);
+
+    return fillDTO(CreateTagRDO, tags);
+  }
+
 
   @Patch(':tagId')
   public async update(@Param('tagId') tagId: string, @Body() updatedFields: Partial<TagEntity>): Promise<CreateTagDTO> {

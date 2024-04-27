@@ -59,16 +59,23 @@ export class TagService {
   }
 
   public async create(dto: CreateTagDTO) {
-    const isTagExists = await this.tagRepository.findByName(dto.name.toLowerCase())
-
-    if(isTagExists) {
-      throw new ConflictException(`Tag with name ${dto.name} already exists`);
-    }
-
     const tagEntity = this.tagFactory.create(dto);
     const tag = await this.tagRepository.create(tagEntity);
 
     return tag;
+  }
+
+  public async getOrCreate(tagNames: string[]) {
+    const tags = [];
+
+    for(const tagName of tagNames) {
+      const tagEntity = this.tagFactory.create({ name: tagName });
+      const tag = await this.tagRepository.create(tagEntity);
+
+      tags.push(tag);
+    }
+
+    return tags;
   }
 
   public async update(tagId: string, updatedFields: Partial<TagEntity>) {

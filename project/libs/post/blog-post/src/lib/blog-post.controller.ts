@@ -40,9 +40,10 @@ export class BlogPostController {
     description: BlogPostMessage.SUCCESS.FOUND
   })
   @Get(':postId')
-  public async show(@Param('postId') postId: string): Promise<void> {
-    console.log('POST ID:', postId);
-    throw new Error('Method not implemented yet');
+  public async show(@Param('postId') postId: string): Promise<CreateBasePostRDO | void> {
+    const post = await this.blogPostService.findById(postId);
+
+    return fillDTO(CreateBasePostRDO, post);
   }
 
   @ApiResponse({
@@ -75,7 +76,7 @@ export class BlogPostController {
     description: BlogPostMessage.ERROR.NOT_FOUND
   })
   @Post('search')
-  public async searct(@Body() title: string): Promise<void> {
+  public async searct(@Body('title') title: string): Promise<void> {
     console.log('POST TITLE:', title);
     throw new Error('Method not implemented yet');
   }

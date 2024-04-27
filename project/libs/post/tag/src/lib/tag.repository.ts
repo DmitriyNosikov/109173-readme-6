@@ -69,10 +69,14 @@ export class TagRepository extends BasePostgresRepository<TagEntity, TagInterfac
   }
 
   public async create(entity: TagEntity): Promise<TagEntity> {
-    const document = await this.dbClient.postTag.create({
-        data: {
-          name: entity.name
-        }
+    const document = await this.dbClient.postTag.upsert({
+      where: {
+        name: entity.name
+      },
+      update: {},
+      create: {
+        name: entity.name
+      }
       });
 
     entity.id = document.id;

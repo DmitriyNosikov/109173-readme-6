@@ -2,7 +2,7 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { BasePostgresRepository } from '@project/shared/data-access'
 import { PrismaClientService } from '@project/blog/models';
 
-import { BasePostInterface } from '@project/shared/core';
+import { BasePostInterface, TagInterface } from '@project/shared/core';
 import { BasePostEntity } from '../entities/base-post.entity';
 import { BasePostFactory } from '../factories/base-post.factory';
 
@@ -68,9 +68,9 @@ export class BasePostRepository extends BasePostgresRepository<BasePostEntity, B
       throw new NotFoundException(`Document with id ${entityId} not found`);
     }
 
-    // const post = this.createEntityFromDocument(document);
+    const post = this.createEntityFromDocument(document);
 
-    return null;
+    return post;
   }
 
   // public async updateById(
