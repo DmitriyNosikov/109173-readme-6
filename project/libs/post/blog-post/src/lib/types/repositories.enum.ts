@@ -12,5 +12,3 @@ export const RepositoryType = {
   [PostType.PHOTO]: PhotoPostRepository,
   [PostType.VIDEO]: VideoPostRepository,
 } as const;
-
-// type PostRepositoryTypes = (typeof RepositoryType)[keyof typeof RepositoryType];

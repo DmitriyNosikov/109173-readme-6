@@ -20,5 +20,5 @@ export interface BasePostInterface extends CreatedUpdatedDatesInterface{
   tags?: TagInterface[] | undefined;
   comments?: CommentInterface[] | undefined,
   likes?: LikeInterface[] | undefined,
-  extraFields?: PostToExtraFieldsInterface[] | undefined;
+  postToExtraFields?: PostToExtraFieldsInterface[] | undefined;
 }

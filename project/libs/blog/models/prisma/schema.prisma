@@ -62,7 +62,7 @@ model Post {
   likes           PostLike[]
 
   // Связь с таблицей отношений постов и экстра-полей
-  extraFields PostToExtraFields[]
+  postToExtraFields PostToExtraFields[]
 
   @@map("posts")
 }

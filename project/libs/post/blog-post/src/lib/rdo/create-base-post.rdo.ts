@@ -41,5 +41,5 @@ export class CreateBasePostRDO {
 
 export class CreatePostRDO extends CreateBasePostRDO {
   @Expose()
-  public extraFields: CreatePostToExtraFieldsRDO[] | null;
+  public postToExtraFields: CreatePostToExtraFieldsRDO[] | null;
 }

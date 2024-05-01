@@ -41,5 +41,5 @@ export class GetPostRDO {
   public originPostId: BasePostInterface['id'] | null;
 
   @Expose()
-  public extraFields: CreatePostToExtraFieldsRDO
+  public postToExtraFields: CreatePostToExtraFieldsRDO
 }

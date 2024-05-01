@@ -34,7 +34,7 @@ export class BasePostRepository extends BasePostgresRepository<BasePostEntity, B
         // (на текущий момент так)
         comments: undefined,
         likes: undefined,
-        extraFields: undefined
+        postToExtraFields: undefined
       },
     });
 
@@ -55,7 +55,7 @@ export class BasePostRepository extends BasePostgresRepository<BasePostEntity, B
         tags: true,
         comments: true,
         likes: true,
-        extraFields: true
+        postToExtraFields: true
       }
     });
 
@@ -91,7 +91,7 @@ export class BasePostRepository extends BasePostgresRepository<BasePostEntity, B
         // TODO: Поправить в будущем
         comments: undefined,
         likes: undefined,
-        extraFields: undefined
+        postToExtraFields: undefined
       }
     });
 

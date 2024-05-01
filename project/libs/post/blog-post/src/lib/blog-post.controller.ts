@@ -1,7 +1,7 @@
 import { ApiResponse } from '@nestjs/swagger'
 import { Controller, Get, Post, Body, Param, Patch, Delete, HttpStatus } from '@nestjs/common';
 
-import { CreateBasePostDTO } from './dto/create-blog-post.dto'
+import { CreateBasePostDTO } from './dto/create-base-post.dto'
 import { CreatePostRDO } from './rdo/create-base-post.rdo';
 import { fillDTO } from '@project/shared/helpers';
 
@@ -28,6 +28,8 @@ export class BlogPostController {
   @Post()
   public async create(@Body() dto: CreateBasePostDTO): Promise<CreatePostRDO | void> {
     const createdPost = await this.blogPostService.create(dto);
+
+    console.log('CREATED POST: ', createdPost);
 
     return fillDTO(CreatePostRDO, createdPost);
   }
@@ -57,9 +59,9 @@ export class BlogPostController {
   })
   @Patch(':postId')
   public async update(@Param('postId') postId: string, @Body() updatedFields: Partial<CreateBasePostDTO>) {
-    console.log('POST ID:', postId);
-    console.log('UPDATED FIELDS:', updatedFields);
-    throw new Error('Method not implemented yet');
+    const updatedPost = this.blogPostService.update(postId, updatedFields);
+
+    return fillDTO(GetPostRDO, updatedPost);
   }
 
   @ApiResponse({

@@ -25,7 +25,7 @@ export class BasePostEntity extends Entity implements BasePostInterface, Storabl
   public tags?: TagInterface[] | undefined;
   public comments?: CommentInterface[] | undefined;
   public likes?: LikeInterface[] | undefined;
-  public extraFields?: PostToExtraFieldsInterface[] | undefined;
+  public postToExtraFields?: PostToExtraFieldsInterface[] | undefined;
 
   constructor(post?: BasePostInterface) {
     super();
@@ -52,7 +52,7 @@ export class BasePostEntity extends Entity implements BasePostInterface, Storabl
     this.tags = post.tags ?? undefined;
     this.comments = post.comments ?? undefined;
     this.likes = post.likes ?? undefined;
-    this.extraFields = post.extraFields ?? undefined;
+    this.postToExtraFields = post.postToExtraFields ?? undefined;
   }
 
   public toPOJO(): BasePostInterface {
@@ -72,7 +72,7 @@ export class BasePostEntity extends Entity implements BasePostInterface, Storabl
       tags: this.tags,
       comments: this.comments,
       likes: this.likes,
-      extraFields: this.extraFields
+      postToExtraFields: this.postToExtraFields
     };
   }
 }

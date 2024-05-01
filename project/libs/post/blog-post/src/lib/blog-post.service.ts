@@ -1,7 +1,7 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { BadRequestException } from '@nestjs/common';
 
-import { CreateBasePostDTO } from './dto/create-blog-post.dto';
+import { CreateBasePostDTO } from './dto/create-base-post.dto';
 import { BlogPostRepositoryDeterminant } from './repositories/blog-post-determinant.repository';
 
 import { BasePostFactory } from './factories/base-post.factory';
@@ -13,10 +13,11 @@ import { PostToExtraFieldsEntity } from './entities/post-to-extra-fields.entity'
 import { PostToExtraFieldsFactory } from './factories/post-to-extra-fields';
 import { PostToExtraFieldsRepository } from './repositories/post-to-extra-fields.repository';
 
-import { PostTypeEnum } from '@project/shared/core';
+import { PostTypeEnum, TagInterface } from '@project/shared/core';
 import { BlogPostMessage } from './blog-post.constant';
 import { BasePostEntity } from './entities/base-post.entity';
 import { TagService } from '@project/tag';
+import { UpdateBasePostDTO } from './dto/update-base-post.dto';
 
 
 @Injectable()
@@ -30,7 +31,7 @@ export class BlogPostService {
     private readonly basePostFactory: BasePostFactory,
 
     private readonly blogPostFactory: BlogPostFactory,
-    private readonly blogPostRepositoryFactory: BlogPostRepositoryDeterminant,
+    private readonly blogPostRepositoryDeterminant: BlogPostRepositoryDeterminant, // Фабрика для получения репозитория по типу поста
 
     private readonly postToExtraFieldsFactory: PostToExtraFieldsFactory,
     private readonly postToExtraFieldsRepository: PostToExtraFieldsRepository,
@@ -50,7 +51,7 @@ export class BlogPostService {
     // Cохраняем все части нашего боста (базовая + дополнительная) в связующую таблицу
     await this.createPostToExtraFields();
 
-    this.basePost.extraFields = [this.postToExtraFields.toPOJO()];
+    this.basePost.postToExtraFields = [ this.postToExtraFields.toPOJO() ];
 
     return this.basePost;
   }
@@ -65,6 +66,40 @@ export class BlogPostService {
     return post;
   }
 
+  public async update(postId: string, updatedFields: Partial<UpdateBasePostDTO>) {
+    const basePost: BasePostEntity = await this.basePostRepository.findById(postId);
+
+    if(!basePost) {
+      return;
+    }
+
+    // Пока подразумеваем, что тип поста не меняется
+    // одному посту может соответствовать только один тип ExtraFields
+    // !! хотя заготовка под мульти-пост уже есть как раз благодаря тому, что Post
+    // !! хранит в свойсте PostToExtraFields массив связей
+    if(updatedFields.extraFields) {
+      for(const postToExtraFieldsItem of basePost.postToExtraFields) {
+        const extraFieldsRepository = this.blogPostRepositoryDeterminant.getRepository(postToExtraFieldsItem.postType)
+
+        await extraFieldsRepository.updateById(postToExtraFieldsItem.extraFieldsId, updatedFields.extraFields);
+      }
+
+      delete updatedFields.extraFields;
+    }
+
+    // Обновление тегов (TODO: по хорошему, надо сверять и удалять связи лишние, а новые добавлять)
+    let updatedTags = undefined;
+
+    if(updatedFields.tags) {
+      updatedTags = await this.tagService.getOrCreate(updatedFields.tags);
+    }
+
+    this.basePostRepository.updateById(postId, {
+      ...updatedFields,
+      tags: updatedTags
+    });
+  }
+
   public async delete(postId: string): Promise<void> {
     const post = await this.findById(postId);
 
@@ -72,10 +107,10 @@ export class BlogPostService {
       throw new NotFoundException(`Post with ID ${postId} not found`);
     }
 
-    const extraFieldsRepository = await this.blogPostRepositoryFactory.getRepository(post.type)
+    const extraFieldsRepository = this.blogPostRepositoryDeterminant.getRepository(post.type)
 
     // Удаляем ExtraFields для Post
-    for(const extraFieldsItem of post.extraFields) {
+    for(const extraFieldsItem of post.postToExtraFields) {
       await extraFieldsRepository.deleteById(extraFieldsItem.extraFieldsId);
     }
 
@@ -84,7 +119,7 @@ export class BlogPostService {
   }
 
   private checkPostType(postType: PostTypeEnum) {
-    const postRepository = this.blogPostRepositoryFactory.getRepository(postType);
+    const postRepository = this.blogPostRepositoryDeterminant.getRepository(postType);
 
     if(!postRepository) {
       throw new BadRequestException(BlogPostMessage.ERROR.POST_TYPE);
@@ -111,7 +146,7 @@ export class BlogPostService {
       ...dto.extraFields
     };
     const extraFieldsEntity = this.blogPostFactory.create(extraFields)
-    const extraFieldsRepository = this.blogPostRepositoryFactory.getRepository(dto.type);
+    const extraFieldsRepository = this.blogPostRepositoryDeterminant.getRepository(dto.type);
 
     this.extraFieldsPost = await extraFieldsRepository.create(extraFieldsEntity);
   }
@@ -138,11 +173,6 @@ export class BlogPostService {
       originPostId: dto.originPostId,
     };
   }
-
-  // update(postId: string, updatedFields: Partial<CreateBasePostDTO>) {
-  //   throw new Error('Method not implemented.');
-  // }
-
 
   // show(postId: string): Promise<BlogPostEntity> {
   //   throw new Error('Method not implemented.');
