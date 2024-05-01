@@ -6,7 +6,7 @@ export const MongoConfigEnum = {
   DB_NAME: 'dbName',
   HOST: 'host',
   PORT: 'port',
-  EXPRESS_PORT: 'express_port',
+  EXPRESS_PORT: 'expressPort',
   USER: 'user',
   PASSWORD: 'password',
   AUTH_DATABASE: 'authDatabase',
@@ -39,7 +39,7 @@ export class MongoConfigSchema implements MongoConfigInterface {
   @Max(MAX_PORT)
   @Min(MIN_PORT)
   @IsOptional()
-  public express_port: number = DEFAULT_MONGODB_PORT;
+  public expressPort: number = DEFAULT_MONGODB_PORT;
 
   @IsString({ message: MongoMessage.ERROR.MONGODB_USER_REQUIRED })
   public user: string;

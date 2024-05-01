@@ -8,12 +8,20 @@ export class CreateUserDTO {
   email: string;
 
   @ApiProperty({
-    description: 'User name',
+    description: 'User first name',
     example: 'Tony Stark',
     minimum: 3,
     maximum: 50
   })
-  name: string;
+  firstName: string;
+
+  @ApiProperty({
+    description: 'User last name',
+    example: 'Tony Stark',
+    minimum: 3,
+    maximum: 50
+  })
+  lastName: string;
 
   @ApiProperty({
     description: 'User avatar',

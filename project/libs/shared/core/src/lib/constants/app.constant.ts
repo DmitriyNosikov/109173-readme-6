@@ -11,5 +11,6 @@ export type EnvironmentType = typeof Environment[keyof typeof Environment];
 
 export const ConfigEnvironment = {
   USER: 'user',
+  POST: 'post',
   DB: 'database'
 } as const;

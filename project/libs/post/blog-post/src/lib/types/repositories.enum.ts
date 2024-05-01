@@ -1,16 +1,14 @@
 import { PostType } from '@project/shared/core';
-import { PostTextRepository } from '../repositories/post-text.repository';
-import { PostLinkRepository } from '../repositories/post-link.repository';
-import { PostQuoteRepository } from '../repositories/post-quote.repository';
-import { PostPhotoRepository } from '../repositories/post-photo.repository';
-import { PostVideoRepository } from '../repositories/post-video.repository';
+import { TextPostRepository } from '../repositories/text-post.repository';
+import { LinkPostRepository } from '../repositories/link-post.repository';
+import { QuotePostRepository } from '../repositories/quote-post.repository';
+import { PhotoPostRepository } from '../repositories/photo-post.repository';
+import { VideoPostRepository } from '../repositories/video-post.repository';
 
 export const RepositoryType = {
-  [PostType.TEXT]: PostTextRepository,
-  [PostType.LINK]: PostLinkRepository,
-  [PostType.QUOTE]: PostQuoteRepository,
-  [PostType.PHOTO]: PostPhotoRepository,
-  [PostType.VIDEO]: PostVideoRepository,
+  [PostType.TEXT]: TextPostRepository,
+  [PostType.LINK]: LinkPostRepository,
+  [PostType.QUOTE]: QuotePostRepository,
+  [PostType.PHOTO]: PhotoPostRepository,
+  [PostType.VIDEO]: VideoPostRepository,
 } as const;
-
-// type PostRepositoryTypes = (typeof RepositoryType)[keyof typeof RepositoryType];

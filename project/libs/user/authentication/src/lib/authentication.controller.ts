@@ -1,6 +1,6 @@
 import { ApiResponse} from '@nestjs/swagger';
 import { Body, Controller, Post, HttpStatus } from '@nestjs/common';
-import { CreateUserDTO, LoginUserDTO, UserRDO } from '@project/blog-user';
+import { CreateUserDTO, LoginUserDTO, UserRDO } from '@project/user/blog-user';
 import { AuthenticationService } from './authentication.service';
 import { AuthenticationMessage } from './authentication.constant';
 import { fillDTO } from '@project/shared/helpers';

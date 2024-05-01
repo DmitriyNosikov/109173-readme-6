@@ -1,7 +1,6 @@
 import { ConflictException, Inject, Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common'
-import { BlogUserFactory, BlogUserRepository, CreateUserDTO, LoginUserDTO } from '@project/blog-user';
+import { BlogUserFactory, BlogUserRepository, CreateUserDTO, LoginUserDTO } from '@project/user/blog-user';
 import { HasherInterface } from '@project/shared/hasher';
-import { getdate } from '@project/shared/helpers'
 import { AuthenticationMessage } from './authentication.constant';
 
 type BlogUserEntity = ReturnType<BlogUserFactory['create']>;
@@ -16,7 +15,7 @@ export class AuthenticationService {
   ){}
 
   public async register(dto: CreateUserDTO): Promise<BlogUserEntity> {
-    const { email, name, avatar, password } = dto;
+    const { email, firstName, lastName, avatar, password } = dto;
     const user = await this.blogUserRepository.findByEmail(email);
 
     if(user) { // Если пользователь уже есть в системе - не регистрируем
@@ -25,10 +24,10 @@ export class AuthenticationService {
 
     const blogUser = {
       email,
-      name,
+      firstName,
+      lastName,
       avatar,
-      passwordHash: '',
-      date: getdate()
+      passwordHash: ''
     };
 
     const userEntity = this.blogUserFactory.create(blogUser);

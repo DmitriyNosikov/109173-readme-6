@@ -1,0 +1,26 @@
+@host = 127.0.0.1
+@port = 9000
+@baseUrl = http://{{host}}:{{port}}/api
+#Test Request to JSON Placeholder
+GET https://jsonplaceholder.typicode.com/todos/1 HTTP/1.1
+Content-Type: application/json
+###
+
+# Toggle Like
+POST {{baseUrl}}/posts/25a05639-5a27-41bc-b28a-894f8b5babd5/likes HTTP/1.1
+Content-Type: application/json
+
+{
+  "authorId": "662253e794534cbee6562f7d"
+}
+###
+
+# Get Likes by post id
+GET {{baseUrl}}/posts/25a05639-5a27-41bc-b28a-894f8b5babd5/likes HTTP/1.1
+Content-Type: application/json
+###
+
+# Get Likes by author id
+GET {{baseUrl}}/posts/25a05639-5a27-41bc-b28a-894f8b5babd5/likes/662253e794534cbee6562f7d HTTP/1.1
+Content-Type: application/json
+###

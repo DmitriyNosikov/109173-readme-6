@@ -43,8 +43,8 @@ export class BlogUserController {
     @Param('userId') userId: string,
     @Body() dto: UpdateUserDTO
   ): Promise<UserRDO | UserRDO[]> {
-    const { email, name, avatar } = dto;
-    const updatedUser = await this.blogUserService.updateUser(userId, { email, name, avatar });
+    const { email, firstName, lastName, avatar } = dto;
+    const updatedUser = await this.blogUserService.updateUser(userId, { email, firstName, lastName, avatar });
 
     return fillDTO(UserRDO, updatedUser.toPOJO());
   }

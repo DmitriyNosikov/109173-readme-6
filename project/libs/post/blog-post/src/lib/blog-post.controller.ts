@@ -1,8 +1,13 @@
 import { ApiResponse } from '@nestjs/swagger'
 import { Controller, Get, Post, Body, Param, Patch, Delete, HttpStatus } from '@nestjs/common';
-import { BasePostDTO } from './dto/blog-post.dto'
+
+import { CreateBasePostDTO } from './dto/create-base-post.dto'
+import { CreatePostRDO } from './rdo/create-base-post.rdo';
+import { fillDTO } from '@project/shared/helpers';
+
 import { BlogPostService } from './blog-post.service';
 import { BlogPostMessage } from './blog-post.constant';
+import { GetPostRDO } from './rdo/get-post.rdo';
 
 
 @Controller('posts')
@@ -21,41 +26,56 @@ export class BlogPostController {
     description: BlogPostMessage.ERROR.UNAUTHORIZED
   })
   @Post()
-  public async create(@Body() dto: BasePostDTO): Promise<void> {
-    const allPostRelation = await this.blogPostService.create(dto);
+  public async create(@Body() dto: CreateBasePostDTO): Promise<CreatePostRDO | void> {
+    const createdPost = await this.blogPostService.create(dto);
 
-    console.log('RELATED POST: ', allPostRelation);
+    console.log('CREATED POST: ', createdPost);
+
+    return fillDTO(CreatePostRDO, createdPost);
   }
 
   @ApiResponse({
     status: HttpStatus.OK,
     description: BlogPostMessage.SUCCESS.FOUND
   })
+  @ApiResponse({
+    status: HttpStatus.NOT_FOUND,
+    description: BlogPostMessage.ERROR.NOT_FOUND
+  })
   @Get(':postId')
-  public async show(@Param('postId') postId: string): Promise<void> {
-    console.log('POST ID:', postId);
-    throw new Error('Method not implemented yet');
+  public async show(@Param('postId') postId: string): Promise<GetPostRDO | void> {
+    const post = await this.blogPostService.findById(postId);
+
+    return fillDTO(GetPostRDO, post);
   }
 
   @ApiResponse({
     status: HttpStatus.CREATED,
     description: BlogPostMessage.SUCCESS.UPDATED
   })
+  @ApiResponse({
+    status: HttpStatus.NOT_FOUND,
+    description: BlogPostMessage.ERROR.NOT_FOUND
+  })
   @Patch(':postId')
-  public async update(@Param('postId') postId: string, @Body() updatedFields: Partial<BasePostDTO>) {
-    console.log('POST ID:', postId);
-    console.log('UPDATED FIELDS:', updatedFields);
-    throw new Error('Method not implemented yet');
+  public async update(@Param('postId') postId: string, @Body() updatedFields: Partial<CreateBasePostDTO>) {
+    const updatedPost = this.blogPostService.update(postId, updatedFields);
+
+    return fillDTO(GetPostRDO, updatedPost);
   }
 
   @ApiResponse({
     status: HttpStatus.NO_CONTENT,
     description: BlogPostMessage.SUCCESS.DELETED
   })
+  @ApiResponse({
+    status: HttpStatus.NOT_FOUND,
+    description: BlogPostMessage.ERROR.NOT_FOUND
+  })
   @Delete(':postId')
   public async delete(@Param('postId') postId: string): Promise<void> {
-    console.log('POST ID:', postId);
-    throw new Error('Method not implemented yet');
+    console.log(`Trying to delete post with id ${postId}`);
+    await this.blogPostService.delete(postId);
   }
 
   @ApiResponse({
@@ -67,7 +87,7 @@ export class BlogPostController {
     description: BlogPostMessage.ERROR.NOT_FOUND
   })
   @Post('search')
-  public async searct(@Body() title: string): Promise<void> {
+  public async search(@Body('title') title: string): Promise<void> {
     console.log('POST TITLE:', title);
     throw new Error('Method not implemented yet');
   }

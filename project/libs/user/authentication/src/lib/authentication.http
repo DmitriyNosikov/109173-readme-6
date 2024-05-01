@@ -12,10 +12,20 @@ Content-Type: application/json
 
 {
   "email": "iron-man@starkindustries.it",
-  "name": "Tony Stark",
+  "firstName": "Tony",
+  "lastName": "Stark123",
   "avatar": "/playboy/millioner/philanthropist.jpeg",
   "password": "jarvis-iron-hearth123"
 }
+
+# {
+#   "email": "ilon-mask@tesla.model",
+#   "firstName": "Ilon",
+#   "lastName": "Mask",
+#   "avatar": "/playboy/millioner/philanthropist.jpeg",
+#   "password": "jarvis-iron-hearth123"
+# }
+
 ###
 
 # Login user

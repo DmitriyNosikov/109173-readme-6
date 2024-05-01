@@ -1,23 +1,24 @@
 import { UserInterface } from '../user/user.interface';
 import { PostTypeEnum } from '../../types/post/post-type.enum';
-import { PostLinkInterface } from './post-link.interface';
-import { PostTextInterface } from './post-text.interface';
-import { PostQuoteInterface } from './post-quote.interface';
-import { PostPhotoInterface } from './post-photo.interface';
-import { PostVideoInterface } from './post-video.interface';
+import { CommentInterface } from '../comment.interface';
+import { LikeInterface } from '../like.interface';
+import { CreatedUpdatedDatesInterface } from '../created-updated-dates.interface';
+import { TagInterface } from '../tag.interface';
+import { PostToExtraFieldsInterface } from './post-to-extra-fields.interface';
 
-export type ExtraFields = PostLinkInterface | PostTextInterface | PostQuoteInterface | PostPhotoInterface | PostVideoInterface;
-
-export interface BasePostInterface {
+export interface BasePostInterface extends CreatedUpdatedDatesInterface{
   id?: string;
+  publishedAt?: Date;
+
   type: PostTypeEnum;
-  tags: string[];
-  publishedAt: string;
-  createdAt: string;
   isPublished: boolean;
   isRepost: boolean;
   authorId: UserInterface['id'];
-  originAuthorId: UserInterface['id'] | null;
-  originPostId: BasePostInterface['id'] | null;
-  extraFields: ExtraFields
+  originAuthorId: UserInterface['id'] | undefined;
+  originPostId: BasePostInterface['id'] | undefined;
+
+  tags?: TagInterface[] | undefined;
+  comments?: CommentInterface[] | undefined,
+  likes?: LikeInterface[] | undefined,
+  postToExtraFields?: PostToExtraFieldsInterface[] | undefined;
 }
