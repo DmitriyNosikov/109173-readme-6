@@ -17,13 +17,13 @@ export class PostToExtraFieldsRepository extends BasePostgresRepository<PostToEx
   }
 
   public async create(entity: PostToExtraFieldsEntity) {
-    const postRelation = await this.dbClient.postToExtraFields.create({
+    const postToExtraFields = await this.dbClient.postToExtraFields.create({
       data: { ...entity }
     });
 
-    entity.id = postRelation.id;
-    entity.createdAt = postRelation.createdAt;
-    entity.updatedAt = postRelation.updatedAt;
+    entity.id = postToExtraFields.id;
+    entity.createdAt = postToExtraFields.createdAt;
+    entity.updatedAt = postToExtraFields.updatedAt;
 
     return entity;
   }

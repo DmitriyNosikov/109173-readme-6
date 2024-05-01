@@ -18,14 +18,13 @@ import { PostTypeEnum } from '@project/shared/core';
 import { BlogPostMessage } from './blog-post.constant';
 import { BasePostEntity } from './entities/base-post.entity';
 import { TagService } from '@project/tag';
-import { firstValueFrom } from 'rxjs';
 
 
 @Injectable()
 export class BlogPostService {
   private basePost: BasePostEntity;
   private extraFieldsPost; // <-- TODO: поправить типы
-  private relationPost: PostToExtraFieldsEntity;
+  private postToExtraFieldsRelation: PostToExtraFieldsEntity;
 
   constructor(
     private readonly basePostRepository: BasePostRepository,
@@ -34,8 +33,8 @@ export class BlogPostService {
     private readonly blogPostFactory: BlogPostFactory,
     private readonly blogPostRepositoryFactory: BlogPostRepositoryDeterminant,
 
-    private readonly allPostRelationFactory: PostToExtraFieldsFactory,
-    private readonly allPostRelationRepository: PostToExtraFieldsRepository,
+    private readonly postToExtraFieldsFactory: PostToExtraFieldsFactory,
+    private readonly postToExtraFieldsRepository: PostToExtraFieldsRepository,
 
     private readonly tagService: TagService
   ) {}
@@ -54,7 +53,7 @@ export class BlogPostService {
 
     const result: CreatedBlogPostRDO = {
       post: this.basePost,
-      postToExtraFields: this.relationPost
+      postToExtraFields: this.postToExtraFieldsRelation
     };
 
     return result;
@@ -80,16 +79,14 @@ export class BlogPostService {
     return true;
   }
 
+
   private async createBasePost(dto: CreateBasePostDTO): Promise<void> {
     const basePostFields = this.getBasePostFields(dto);
-
-    // Проверяем наличие переданных тегов, если нет - создаем
-    //  и получаем их айдишники
-    const basePosttags = await this.tagService.getOrCreate(basePostFields.tags);
-    const tagsIDs = basePosttags.map((tag) => tag.id);
-    basePostFields.tags = tagsIDs;
-
-    const basePostEntity = this.basePostFactory.create(basePostFields); // Создаем Entity базового поста
+    const basePostTags = await this.tagService.getOrCreate(basePostFields.tags);
+    const basePostEntity = this.basePostFactory.create({
+      ...basePostFields,
+      tags: basePostTags
+    });
 
     this.basePost = await this.basePostRepository.create(basePostEntity); // Сохраняем в БД
   }
@@ -109,11 +106,11 @@ export class BlogPostService {
     const allPostRelationFields = {
       postId: this.basePost.id,
       postType: this.basePost.type,
-      extraFieldsId: this.extraFieldsPost.id
+      extraFieldsId: this.extraFieldsPost.id,
     };
-    const postToExtraFieldsEntity: PostToExtraFieldsEntity = this.allPostRelationFactory.create(allPostRelationFields);
+    const postToExtraFieldsEntity: PostToExtraFieldsEntity = this.postToExtraFieldsFactory.create(allPostRelationFields);
 
-    this.relationPost = await this.allPostRelationRepository.create(postToExtraFieldsEntity);
+    this.postToExtraFieldsRelation = await this.postToExtraFieldsRepository.create(postToExtraFieldsEntity);
   }
 
   private getBasePostFields(dto: CreateBasePostDTO) {

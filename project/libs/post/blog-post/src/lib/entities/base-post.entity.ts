@@ -6,7 +6,8 @@ import {
   UserInterface,
   CommentInterface,
   LikeInterface,
-  TagInterface
+  TagInterface,
+  PostToExtraFieldsInterface
 } from '@project/shared/core'
 
 export class BasePostEntity extends Entity implements BasePostInterface, StorableEntity<BasePostInterface> {
@@ -15,14 +16,16 @@ export class BasePostEntity extends Entity implements BasePostInterface, Storabl
   public publishedAt: Date;
 
   public type: PostTypeEnum;
-  public tags?: string[] | TagInterface[] | null;
-  public comments?: CommentInterface[] | undefined;
-  public likes?: LikeInterface[] | undefined;
   public isPublished: boolean;
   public isRepost: boolean;
   public authorId: UserInterface['id'];
   public originAuthorId: UserInterface['id'] | undefined;
   public originPostId: BasePostInterface['id'] | undefined;
+
+  public tags?: TagInterface[] | undefined;
+  public comments?: CommentInterface[] | undefined;
+  public likes?: LikeInterface[] | undefined;
+  public extraFields?: PostToExtraFieldsInterface[] | undefined;
 
   constructor(post?: BasePostInterface) {
     super();
@@ -40,14 +43,16 @@ export class BasePostEntity extends Entity implements BasePostInterface, Storabl
     this.publishedAt = post.publishedAt;
 
     this.type = post.type;
-    this.tags = post.tags ?? undefined;
-    this.comments = post.comments ?? undefined;
-    this.likes = post.likes ?? undefined;
     this.isPublished = post.isPublished ?? false;
     this.isRepost = post.isRepost ?? false;
     this.authorId = post.authorId ?? '';
-    this.originAuthorId = post.originAuthorId ?? '';
-    this.originPostId = post.originPostId ?? '';
+    this.originAuthorId = post.originAuthorId ?? undefined;
+    this.originPostId = post.originPostId ?? undefined;
+
+    this.tags = post.tags ?? undefined;
+    this.comments = post.comments ?? undefined;
+    this.likes = post.likes ?? undefined;
+    this.extraFields = post.extraFields ?? undefined;
   }
 
   public toPOJO(): BasePostInterface {
@@ -58,14 +63,16 @@ export class BasePostEntity extends Entity implements BasePostInterface, Storabl
       publishedAt: this.publishedAt,
 
       type: this.type,
-      tags: this.tags,
-      comments: this.comments,
-      likes: this.likes,
       isPublished: this.isPublished,
       isRepost: this.isRepost,
       authorId: this.authorId,
       originAuthorId: this.originAuthorId,
-      originPostId: this.originPostId
+      originPostId: this.originPostId,
+
+      tags: this.tags,
+      comments: this.comments,
+      likes: this.likes,
+      extraFields: this.extraFields
     };
   }
 }

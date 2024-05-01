@@ -4,6 +4,7 @@ import { CommentInterface } from '../comment.interface';
 import { LikeInterface } from '../like.interface';
 import { CreatedUpdatedDatesInterface } from '../created-updated-dates.interface';
 import { TagInterface } from '../tag.interface';
+import { PostToExtraFieldsInterface } from './post-to-extra-fields.interface';
 
 export interface BasePostInterface extends CreatedUpdatedDatesInterface{
   id?: string;
@@ -13,10 +14,11 @@ export interface BasePostInterface extends CreatedUpdatedDatesInterface{
   isPublished: boolean;
   isRepost: boolean;
   authorId: UserInterface['id'];
-  originAuthorId: UserInterface['id'] | null;
-  originPostId: BasePostInterface['id'] | null;
+  originAuthorId: UserInterface['id'] | undefined;
+  originPostId: BasePostInterface['id'] | undefined;
 
-  tags?: string[] | TagInterface[] | null;
-  comments?: CommentInterface[] | null,
-  likes?: LikeInterface[] | null,
+  tags?: TagInterface[] | undefined;
+  comments?: CommentInterface[] | undefined,
+  likes?: LikeInterface[] | undefined,
+  extraFields?: PostToExtraFieldsInterface[] | undefined;
 }

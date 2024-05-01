@@ -8,6 +8,7 @@ import { fillDTO } from '@project/shared/helpers';
 import { BlogPostService } from './blog-post.service';
 import { BlogPostMessage } from './blog-post.constant';
 import { CreatePostToExtraFieldsRDO } from './rdo/create-post-to-extra-fields.rdo';
+import { GetPostRDO } from './rdo/get-post.rdo';
 
 
 @Controller('posts')
@@ -40,10 +41,10 @@ export class BlogPostController {
     description: BlogPostMessage.SUCCESS.FOUND
   })
   @Get(':postId')
-  public async show(@Param('postId') postId: string): Promise<CreateBasePostRDO | void> {
+  public async show(@Param('postId') postId: string): Promise<GetPostRDO | void> {
     const post = await this.blogPostService.findById(postId);
 
-    return fillDTO(CreateBasePostRDO, post);
+    return fillDTO(GetPostRDO, post);
   }
 
   @ApiResponse({

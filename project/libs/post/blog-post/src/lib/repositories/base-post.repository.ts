@@ -19,19 +19,13 @@ export class BasePostRepository extends BasePostgresRepository<BasePostEntity, B
     let postTags = undefined;
 
     if(entity.tags && entity.tags.length > 0) {
-      postTags = entity.tags.map((tag) => ({ id: tag}));
+       postTags = this.convertTagsToObjects(entity.tags);
     }
 
     const post = await this.dbClient.post.create({
       data: {
         ...entity,
 
-        // Соединяем пост с существующими тегами
-        // (TODO: если тега нет - надо создавать, но это, скорее всего, в APIGateway)
-        // + можно при создании поста вобще передавать теги словами. Затем искать по
-        // табличке с тегами - если есть - возвращать айдишники и коннектить к посту, нет -
-        // создавать и коннектить
-        // ^^^ Все это - ответственность TagService
         tags: postTags ? {
           connect: postTags
         } : undefined,
@@ -40,6 +34,7 @@ export class BasePostRepository extends BasePostgresRepository<BasePostEntity, B
         // (на текущий момент так)
         comments: undefined,
         likes: undefined,
+        extraFields: undefined
       },
     });
 
@@ -68,15 +63,49 @@ export class BasePostRepository extends BasePostgresRepository<BasePostEntity, B
       throw new NotFoundException(`Document with id ${entityId} not found`);
     }
 
-    const post = this.createEntityFromDocument(document);
+    console.log('FOUND POST: ', document);
+
+    const post = this.createEntityFromDocument(document as BasePostEntity);
+
+    console.log('FOUND POST (AFTER MODIFY): ', post);
 
     return post;
   }
 
-  // public async updateById(
-  //   entityId: string,
-  //   updatedFields: Partial<BasePostEntity>
-  // ): Promise<void | BasePostEntity> {}
+  public async updateById(
+    entityId: string,
+    updatedFields: Partial<BasePostEntity>
+  ): Promise<void | BasePostEntity> {
+    let postTags = undefined;
+
+    if(updatedFields.tags && updatedFields.tags.length > 0) {
+       postTags = this.convertTagsToObjects(updatedFields.tags);
+    }
+
+    const document = await this.dbClient.post.update({
+      where: { id: entityId },
+      data: {
+        ...updatedFields,
+
+        tags: postTags ? {
+          connect: postTags
+        } : undefined,
+
+        // TODO: Поправить в будущем
+        comments: undefined,
+        likes: undefined,
+        extraFields: undefined
+      }
+    });
+
+    return this.createEntityFromDocument(document);
+  }
 
   // public deleteById(id: string): Promise<void> {}
+
+  private convertTagsToObjects(tags: TagInterface[]) {
+    const tagsObjects = tags.map((tag) => ({ id: tag.id}));
+
+    return tagsObjects;
+  }
 }

@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger'
-import { BasePostInterface, LikeInterface, PostType, PostTypeEnum, TagInterface, UserInterface } from '@project/shared/core';
+import { BasePostInterface, LikeInterface, PostType, PostTypeEnum, UserInterface } from '@project/shared/core';
 import { CreateLinkPostDTO } from './create-link-post.dto';
 import { CreateTextPostDTO } from './create-text-post.dto';
 import { CreateQuotePostDTO } from './create-quote-post.dto';

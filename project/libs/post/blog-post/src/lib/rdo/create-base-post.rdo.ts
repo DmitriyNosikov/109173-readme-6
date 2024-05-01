@@ -23,16 +23,6 @@ export class CreateBasePostRDO {
   @Expose()
   public type: PostTypeEnum;
 
-  // Будем получать в API Gateway (скорее всего)
-  // @Expose()
-  // public tags: string[] | null;
-
-  // @Expose()
-  // public comments: CommentInterface[] | null;
-
-  // @Expose()
-  // public likes: LikeInterface[] | null;
-
   @Expose()
   public isPublished: boolean;
 
