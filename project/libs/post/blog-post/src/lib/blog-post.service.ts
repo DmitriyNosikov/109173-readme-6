@@ -2,7 +2,6 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { BadRequestException } from '@nestjs/common';
 
 import { CreateBasePostDTO } from './dto/create-blog-post.dto';
-import { CreatedBlogPostRDO } from './rdo/create-base-post.rdo';
 import { BlogPostRepositoryDeterminant } from './repositories/blog-post-determinant.repository';
 
 import { BasePostFactory } from './factories/base-post.factory';
@@ -24,7 +23,7 @@ import { TagService } from '@project/tag';
 export class BlogPostService {
   private basePost: BasePostEntity;
   private extraFieldsPost; // <-- TODO: поправить типы
-  private postToExtraFieldsRelation: PostToExtraFieldsEntity;
+  private postToExtraFields: PostToExtraFieldsEntity;
 
   constructor(
     private readonly basePostRepository: BasePostRepository,
@@ -38,7 +37,7 @@ export class BlogPostService {
 
     private readonly tagService: TagService
   ) {}
-  public async create(dto: CreateBasePostDTO): Promise<CreatedBlogPostRDO> {
+  public async create(dto: CreateBasePostDTO): Promise<BasePostEntity> {
     if(!this.checkPostType(dto.type)) {
       return;
     }
@@ -51,12 +50,9 @@ export class BlogPostService {
     // Cохраняем все части нашего боста (базовая + дополнительная) в связующую таблицу
     await this.createPostToExtraFields();
 
-    const result: CreatedBlogPostRDO = {
-      post: this.basePost,
-      postToExtraFields: this.postToExtraFieldsRelation
-    };
+    this.basePost.extraFields = [this.postToExtraFields.toPOJO()];
 
-    return result;
+    return this.basePost;
   }
 
   public async findById(postId: string) {
@@ -67,6 +63,24 @@ export class BlogPostService {
     }
 
     return post;
+  }
+
+  public async delete(postId: string): Promise<void> {
+    const post = await this.findById(postId);
+
+    if(!post) {
+      throw new NotFoundException(`Post with ID ${postId} not found`);
+    }
+
+    const extraFieldsRepository = await this.blogPostRepositoryFactory.getRepository(post.type)
+
+    // Удаляем ExtraFields для Post
+    for(const extraFieldsItem of post.extraFields) {
+      await extraFieldsRepository.deleteById(extraFieldsItem.extraFieldsId);
+    }
+
+    // удаляем пост
+    await this.basePostRepository.deleteById(post.id);
   }
 
   private checkPostType(postType: PostTypeEnum) {
@@ -110,7 +124,7 @@ export class BlogPostService {
     };
     const postToExtraFieldsEntity: PostToExtraFieldsEntity = this.postToExtraFieldsFactory.create(allPostRelationFields);
 
-    this.postToExtraFieldsRelation = await this.postToExtraFieldsRepository.create(postToExtraFieldsEntity);
+    this.postToExtraFields = await this.postToExtraFieldsRepository.create(postToExtraFieldsEntity);
   }
 
   private getBasePostFields(dto: CreateBasePostDTO) {
@@ -125,13 +139,10 @@ export class BlogPostService {
     };
   }
 
-  // update(postId: string, updatedFields: Partial<BlogPostEntity>) {
+  // update(postId: string, updatedFields: Partial<CreateBasePostDTO>) {
   //   throw new Error('Method not implemented.');
   // }
 
-  // delete(): Promise<BlogPostEntity> {
-  //   throw new Error('Method not implemented.');
-  // }
 
   // show(postId: string): Promise<BlogPostEntity> {
   //   throw new Error('Method not implemented.');

@@ -20,10 +20,15 @@ export class TextPostRepository extends BasePostgresRepository<TextPostEntity, T
       data: { ...entity }
     });
 
-    console.log('POST TEXT: ', TextPost);
-
     entity.id = TextPost.id;
 
     return entity;
+  }
+
+  public async deleteById(id: string): Promise<void> {
+    console.log('TEXT ID: ', id);
+    await this.dbClient.textPost.delete({
+      where: { id }
+    });
   }
 }

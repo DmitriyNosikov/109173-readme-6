@@ -3,13 +3,13 @@ import { Expose } from 'class-transformer';
 
 export class CreatePostToExtraFieldsRDO {
   @Expose()
-  public id: string;
+  public id?: string;
 
   @Expose()
-  createdAt: Date;
+  createdAt?: Date;
 
   @Expose()
-  updatedAt: Date;
+  updatedAt?: Date;
 
   @Expose()
   public postId: BasePostInterface['id'];

@@ -39,10 +39,7 @@ export class CreateBasePostRDO {
   public originPostId: BasePostInterface['id'] | null;
 }
 
-export class CreatedBlogPostRDO {
+export class CreatePostRDO extends CreateBasePostRDO {
   @Expose()
-  public post: CreateBasePostRDO;
-
-  @Expose()
-  public postToExtraFields: CreatePostToExtraFieldsRDO
+  public extraFields: CreatePostToExtraFieldsRDO[] | null;
 }

@@ -72,6 +72,7 @@ export class BasePostRepository extends BasePostgresRepository<BasePostEntity, B
     return post;
   }
 
+  // TODO: Пока не реализовано
   public async updateById(
     entityId: string,
     updatedFields: Partial<BasePostEntity>
@@ -101,7 +102,11 @@ export class BasePostRepository extends BasePostgresRepository<BasePostEntity, B
     return this.createEntityFromDocument(document);
   }
 
-  // public deleteById(id: string): Promise<void> {}
+  public async deleteById(postId: string): Promise<void> {
+    await this.dbClient.post.delete({
+      where: { id: postId }
+    });
+  }
 
   private convertTagsToObjects(tags: TagInterface[]) {
     const tagsObjects = tags.map((tag) => ({ id: tag.id}));

@@ -6,7 +6,7 @@
 
 # Environment
 @userId = 6dd03634-9785-49b8-a403-9ab61bb5656e
-@postId = 6c9b872e-2716-45a6-9377-ffdf594eae40
+@postId = 8a9a83cf-13b2-40a7-95c2-221a84f181df
 
 # Create post
 POST {{baseUrl}}/posts HTTP/1.1
@@ -30,5 +30,10 @@ Content-Type: application/json
 
 # Find post by id
 GET {{baseUrl}}/posts/{{postId}} HTTP/1.1
+Content-Type: application/json
+###
+
+# Delete post by id
+DELETE  {{baseUrl}}/posts/{{postId}} HTTP/1.1
 Content-Type: application/json
 ###
