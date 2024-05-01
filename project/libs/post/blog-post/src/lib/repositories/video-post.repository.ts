@@ -14,4 +14,20 @@ export class VideoPostRepository extends BasePostgresRepository<VideoPostEntity,
   ){
     super(entityFactory, dbClient);
   }
+
+  public async create(entity: VideoPostEntity): Promise<VideoPostEntity> {
+    const videoPost = await this.dbClient.videoPost.create({
+      data: { ...entity }
+    });
+
+    entity.id = videoPost.id;
+
+    return entity;
+  }
+
+  public async deleteById(id: string): Promise<void> {
+    await this.dbClient.videoPost.delete({
+      where: { id }
+    });
+  }
 }

@@ -63,11 +63,7 @@ export class BasePostRepository extends BasePostgresRepository<BasePostEntity, B
       throw new NotFoundException(`Document with id ${entityId} not found`);
     }
 
-    console.log('FOUND POST: ', document);
-
     const post = this.createEntityFromDocument(document as BasePostEntity);
-
-    console.log('FOUND POST (AFTER MODIFY): ', post);
 
     return post;
   }

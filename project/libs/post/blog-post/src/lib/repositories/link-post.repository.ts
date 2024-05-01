@@ -14,4 +14,20 @@ export class LinkPostRepository extends BasePostgresRepository<LinkPostEntity, L
   ){
     super(entityFactory, dbClient);
   }
+
+  public async create(entity: LinkPostEntity): Promise<LinkPostEntity> {
+    const linkPost = await this.dbClient.linkPost.create({
+      data: { ...entity }
+    });
+
+    entity.id = linkPost.id;
+
+    return entity;
+  }
+
+  public async deleteById(id: string): Promise<void> {
+    await this.dbClient.linkPost.delete({
+      where: { id }
+    });
+  }
 }

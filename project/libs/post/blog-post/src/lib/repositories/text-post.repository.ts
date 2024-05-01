@@ -16,17 +16,16 @@ export class TextPostRepository extends BasePostgresRepository<TextPostEntity, T
   }
 
   public async create(entity: TextPostEntity): Promise<TextPostEntity> {
-    const TextPost = await this.dbClient.textPost.create({
+    const textPost = await this.dbClient.textPost.create({
       data: { ...entity }
     });
 
-    entity.id = TextPost.id;
+    entity.id = textPost.id;
 
     return entity;
   }
 
   public async deleteById(id: string): Promise<void> {
-    console.log('TEXT ID: ', id);
     await this.dbClient.textPost.delete({
       where: { id }
     });

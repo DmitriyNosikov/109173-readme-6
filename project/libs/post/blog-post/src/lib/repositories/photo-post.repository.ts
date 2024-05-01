@@ -14,4 +14,20 @@ export class PhotoPostRepository extends BasePostgresRepository<PhotoPostEntity,
   ){
     super(entityFactory, dbClient);
   }
+
+  public async create(entity: PhotoPostEntity): Promise<PhotoPostEntity> {
+    const photoPost = await this.dbClient.photoPost.create({
+      data: { ...entity }
+    });
+
+    entity.id = photoPost.id;
+
+    return entity;
+  }
+
+  public async deleteById(id: string): Promise<void> {
+    await this.dbClient.photoPost.delete({
+      where: { id }
+    });
+  }
 }

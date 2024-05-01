@@ -14,4 +14,20 @@ export class QuotePostRepository extends BasePostgresRepository<QuotePostEntity,
   ){
     super(entityFactory, dbClient);
   }
+
+  public async create(entity: QuotePostEntity): Promise<QuotePostEntity> {
+    const quotePost = await this.dbClient.quotePost.create({
+      data: { ...entity }
+    });
+
+    entity.id = quotePost.id;
+
+    return entity;
+  }
+
+  public async deleteById(id: string): Promise<void> {
+    await this.dbClient.quotePost.delete({
+      where: { id }
+    });
+  }
 }
