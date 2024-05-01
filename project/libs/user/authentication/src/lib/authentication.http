@@ -15,7 +15,7 @@ Content-Type: application/json
   "firstName": "Tony",
   "lastName": "Stark123",
   "avatar": "/playboy/millioner/philanthropist.jpeg",
-  "password": "jarvis-iron-hearth123"
+  "password": "jarvis-123"
 }
 
 # {
@@ -34,5 +34,5 @@ Content-Type: application/json
 
 {
   "email": "iron-man@starkindustries.it",
-  "password": "jarvis-iron-hearth1223"
+  "password": "jarvis-123"
 }
