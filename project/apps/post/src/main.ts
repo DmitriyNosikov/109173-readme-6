@@ -24,6 +24,7 @@ async function bootstrap() {
   const globalPrefix = 'api';
 
   app.setGlobalPrefix(globalPrefix);
+  // Подключаем валидацию DTO на основе class-validator
   app.useGlobalPipes(new ValidationPipe({
     transform: true
   }));

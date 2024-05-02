@@ -24,7 +24,7 @@ export class BasePostRepository extends BasePostgresRepository<BasePostEntity, B
        postTags = entity.tags.map((tag) => tag.toPOJO())
     }
 
-    const post = await this.dbClient.post.create({
+    const document = await this.dbClient.post.create({
       data: {
         ...entity,
 
@@ -35,17 +35,18 @@ export class BasePostRepository extends BasePostgresRepository<BasePostEntity, B
         // По идее, лайков и комментариев не может быть у нового поста
         // (на текущий момент так)
         comments: undefined,
-        likes: undefined,
-        postToExtraFields: undefined
+        likes: undefined
       },
+      include: {
+        tags: true,
+        comments: true,
+        likes: true
+      }
     });
 
-    entity.id = post.id;
-    entity.createdAt = post.createdAt;
-    entity.updatedAt = post.updatedAt;
-    entity.publishedAt = post.publishedAt;
+    const post = this.createEntityFromDocument(document);
 
-    return entity;
+    return post;
   }
 
   public async findById(entityId: string): Promise<BasePostEntity | null> {
@@ -56,8 +57,7 @@ export class BasePostRepository extends BasePostgresRepository<BasePostEntity, B
       include: {
         tags: true,
         comments: true,
-        likes: true,
-        postToExtraFields: true
+        likes: true
       }
     });
 
@@ -118,25 +118,23 @@ export class BasePostRepository extends BasePostgresRepository<BasePostEntity, B
     entityId: string,
     updatedFields: Partial<BasePostEntity>
   ): Promise<void | BasePostEntity> {
-    let postTags = undefined;
-
-    if(updatedFields.tags && updatedFields.tags.length > 0) {
-      postTags = updatedFields.tags.map((tag) => tag.toPOJO())
-    }
-
     const document = await this.dbClient.post.update({
       where: { id: entityId },
       data: {
         ...updatedFields,
 
-        tags: postTags ? {
-          connect: postTags
+        tags: (updatedFields.tags && updatedFields.tags.length > 0) ? {
+          connect: updatedFields.tags, // Connect new tags
+          // disconnect: updatedFields.tags, // Remove only passed tags
+        } : {
+          set: [] // Remove all tags
+        },
+
+        comments: updatedFields.comments ? {
+          connect: updatedFields.comments
         } : undefined,
 
         // TODO: ОБъеденить с соответствующими записями
-        comments: {
-          connect: []
-        },
         likes: {
           connect: []
         },

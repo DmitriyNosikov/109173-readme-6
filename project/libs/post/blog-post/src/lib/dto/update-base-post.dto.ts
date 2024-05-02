@@ -16,9 +16,9 @@ export class UpdateBasePostDTO {
   })
   @MinLength(BlogPostValidation.TAG.MIN_LENGTH, { each: true })
   @MaxLength(BlogPostValidation.TAG.MAX_LENGTH, { each: true })
+  @IsString({ each: true })
   @ArrayMaxSize(BlogPostValidation.TAG.MAX_СOUNT)
   @IsArray()
-  @IsString({ each: true })
   @IsOptional()
   public tags: string[] | null;
 

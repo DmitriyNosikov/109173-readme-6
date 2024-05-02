@@ -23,7 +23,6 @@ import { UpdateBasePostDTO } from './dto/update-base-post.dto';
 export class BlogPostService {
   private basePost: BasePostEntity;
   private extraFieldsPost; // <-- TODO: поправить типы
-  private postToExtraFields: PostToExtraFieldsEntity;
 
   constructor(
     private readonly basePostRepository: BasePostRepository,
@@ -50,57 +49,51 @@ export class BlogPostService {
     // Cохраняем все части нашего боста (базовая + дополнительная) в связующую таблицу
     await this.createPostToExtraFields();
 
+    const createdPost  = await this.getPostWithExtraFields(this.basePost.id);
 
-    const postExtraFields = await this.postToExtraFieldsRepository.getExtraFields(this.basePost.id, this.basePost.type);
-
-    return {
-      ...this.basePost.toPOJO(),
-      extraFields: postExtraFields.toPOJO()
-    }
+    return createdPost;
   }
 
   public async findById(postId: string) {
-    const post = await this.basePostRepository.findById(postId);
+    const foundPost = await this.getPostWithExtraFields(postId);
 
-    if(!post) {
-      throw new NotFoundException(`Post with ID ${postId} not found`);
-    }
-
-    return post;
+    return foundPost;
   }
 
   public async update(postId: string, updatedFields: Partial<UpdateBasePostDTO>) {
     const basePost: BasePostEntity = await this.basePostRepository.findById(postId);
 
     if(!basePost) {
-      return;
+      throw new NotFoundException(`Post with ID ${postId} not found`);
     }
 
     // Пока подразумеваем, что тип поста не меняется
     // одному посту может соответствовать только один тип ExtraFields
-    // !! хотя заготовка под мульти-пост уже есть как раз благодаря тому, что Post
-    // !! хранит в свойсте PostToExtraFields массив связей
-    // if(updatedFields.extraFields) {
-    //   for(const postToExtraFieldsItem of basePost.postToExtraFields) {
-    //     const extraFieldsRepository = this.blogPostRepositoryDeterminant.getRepository(postToExtraFieldsItem.postType)
+    // TODO: Нужна проверка на соответствие передаваемых полей типу поста
+    if(updatedFields.extraFields) {
+      const extraFieldsRepository = this.blogPostRepositoryDeterminant.getRepository(basePost.type)
+      const postExtraFields = await this.postToExtraFieldsRepository.getExtraFields(basePost.id, basePost.type);
 
-    //     await extraFieldsRepository.updateById(postToExtraFieldsItem.extraFieldsId, updatedFields.extraFields);
-    //   }
+      await extraFieldsRepository.updateById(postExtraFields.id, updatedFields.extraFields);
 
-    //   delete updatedFields.extraFields;
-    // }
+      delete updatedFields.extraFields;
+    }
 
     // Обновление тегов (TODO: по хорошему, надо сверять и удалять связи лишние, а новые добавлять)
     let updatedTags = undefined;
 
-    if(updatedFields.tags) {
+    if(updatedFields.tags && updatedFields.tags.length > 0) {
       updatedTags = await this.tagService.getOrCreate(updatedFields.tags);
     }
 
-    this.basePostRepository.updateById(postId, {
+    await this.basePostRepository.updateById(postId, {
       ...updatedFields,
       tags: updatedTags
     });
+
+    const updatedPost  = await this.getPostWithExtraFields(postId);
+
+    return updatedPost;
   }
 
   public async delete(postId: string): Promise<void> {
@@ -110,15 +103,29 @@ export class BlogPostService {
       throw new NotFoundException(`Post with ID ${postId} not found`);
     }
 
-    // const extraFieldsRepository = this.blogPostRepositoryDeterminant.getRepository(post.type)
+    const extraFieldsRepository = this.blogPostRepositoryDeterminant.getRepository(post.type)
+    const postExtraFields = await this.postToExtraFieldsRepository.getExtraFields(post.id, post.type);
 
     // Удаляем ExtraFields для Post
-    // for(const extraFieldsItem of post.postToExtraFields) {
-    //   await extraFieldsRepository.deleteById(extraFieldsItem.extraFieldsId);
-    // }
+    await extraFieldsRepository.deleteById(postExtraFields.id)
 
     // удаляем пост
     await this.basePostRepository.deleteById(post.id);
+  }
+
+  private async getPostWithExtraFields(postId: string) {
+    const post = await this.basePostRepository.findById(postId);
+
+    if(!post) {
+      throw new NotFoundException(`Post with ID ${postId} not found`);
+    }
+
+    const postExtraFields = await this.postToExtraFieldsRepository.getExtraFields(post.id, post.type);
+
+    return {
+      ...post.toPOJO(),
+      extraFields: postExtraFields.toPOJO()
+    };
   }
 
   private checkPostType(postType: PostTypeEnum) {
@@ -141,7 +148,8 @@ export class BlogPostService {
       likes: undefined
     });
 
-    this.basePost = await this.basePostRepository.create(basePostEntity); // Сохраняем в БД
+    // Сохраняем в БД
+    this.basePost = await this.basePostRepository.create(basePostEntity);
   }
 
   private async createExtraFieldsPost(dto: CreateBasePostDTO): Promise<void> {
@@ -163,31 +171,6 @@ export class BlogPostService {
     };
     const postToExtraFieldsEntity: PostToExtraFieldsEntity = this.postToExtraFieldsFactory.create(allPostRelationFields);
 
-    this.postToExtraFields = await this.postToExtraFieldsRepository.create(postToExtraFieldsEntity);
+    await this.postToExtraFieldsRepository.create(postToExtraFieldsEntity);
   }
-
-  // show(postId: string): Promise<BlogPostEntity> {
-  //   throw new Error('Method not implemented.');
-  // }
-
-  // getList(): Promise<BlogPostEntity[]> {
-  //   throw new Error('Method not implemented.');
-  // }
-
-  // repost(postId: string, userId: string): Promise<BlogPostEntity> {
-  //   throw new Error('Method not implemented.');
-  // }
-
-  // search(title: string): Promise<BlogPostEntity> {
-  //   throw new Error('Method not implemented.');
-  // }
-
-  // uploadImage(postId: string, data: unknown) {
-  //   throw new Error('Method not implemented.');
-  // }
-
-  // sort(sortType: SortTypeEnum, sortDirection: SortDirectionEnum): Promise<BlogPostEntity> {
-  //   throw new Error('Method not implemented.');
-  // }
-
 }

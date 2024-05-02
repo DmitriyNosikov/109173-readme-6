@@ -3,11 +3,11 @@ import { Controller, Get, Post, Body, Param, Patch, Delete, HttpStatus } from '@
 
 import { CreateBasePostDTO } from './dto/create-base-post.dto'
 import { CreatePostRDO } from './rdo/create-base-post.rdo';
+import { UpdateBasePostDTO } from './dto/update-base-post.dto';
 import { fillDTO } from '@project/shared/helpers';
 
 import { BlogPostService } from './blog-post.service';
 import { BlogPostMessage } from './blog-post.constant';
-import { GetPostRDO } from './rdo/get-post.rdo';
 
 
 @Controller('posts')
@@ -43,10 +43,10 @@ export class BlogPostController {
     description: BlogPostMessage.ERROR.NOT_FOUND
   })
   @Get(':postId')
-  public async show(@Param('postId') postId: string): Promise<GetPostRDO | void> {
+  public async show(@Param('postId') postId: string): Promise<CreatePostRDO | void> {
     const post = await this.blogPostService.findById(postId);
 
-    return fillDTO(GetPostRDO, post);
+    return fillDTO(CreatePostRDO, post);
   }
 
   @ApiResponse({
@@ -58,10 +58,11 @@ export class BlogPostController {
     description: BlogPostMessage.ERROR.NOT_FOUND
   })
   @Patch(':postId')
-  public async update(@Param('postId') postId: string, @Body() updatedFields: Partial<CreateBasePostDTO>) {
+  public async update(@Param('postId') postId: string, @Body() updatedFields: UpdateBasePostDTO) {
+    console.log('POST FIELDS TO UPDATE: ', updatedFields);
     const updatedPost = this.blogPostService.update(postId, updatedFields);
 
-    return fillDTO(GetPostRDO, updatedPost);
+    return fillDTO(CreatePostRDO, updatedPost);
   }
 
   @ApiResponse({
@@ -74,7 +75,6 @@ export class BlogPostController {
   })
   @Delete(':postId')
   public async delete(@Param('postId') postId: string): Promise<void> {
-    console.log(`Trying to delete post with id ${postId}`);
     await this.blogPostService.delete(postId);
   }
 
