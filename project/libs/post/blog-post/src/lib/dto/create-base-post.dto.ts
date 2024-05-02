@@ -6,6 +6,10 @@ import { CreateQuotePostDTO } from './create-quote-post.dto';
 import { CreatePhotoPostDTO } from './create-photo-post.dto';
 import { CreateVideoPostDTO } from './create-video-post.dto';
 import { CommentInterface } from '@project/shared/core'
+import { Type } from 'class-transformer';
+import { ArrayMaxSize, IsArray, IsBoolean, IsIn, IsOptional, IsString, MaxLength, MinLength } from 'class-validator';
+import { postTypeList } from 'libs/shared/core/src/lib/types/post/post-type.enum';
+import { BlogPostValidation } from '../blog-post.constant';
 
 export type ExtraFieldsDTO = CreateBasePostDTO | CreateLinkPostDTO | CreateTextPostDTO | CreateQuotePostDTO | CreatePhotoPostDTO | CreateVideoPostDTO;
 
@@ -16,37 +20,44 @@ export class CreateBasePostDTO {
     example: 'text',
     required: true
   })
+  @IsIn(postTypeList)
+  @IsString()
   public type: PostTypeEnum;
 
   @ApiProperty({
     type: [String],
     description: 'Post tags (names)',
     example: '[ "tag1", "tag2", "tag3" ]',
-    minLength: 3,
-    maxLength: 10,
-    maxProperties: 8
+    minLength: BlogPostValidation.TAG.MIN_LENGTH,
+    maxLength: BlogPostValidation.TAG.MAX_LENGTH,
+    maxProperties: BlogPostValidation.TAG.MAX_СOUNT
   })
-
+  @MinLength(BlogPostValidation.TAG.MIN_LENGTH, { each: true })
+  @MaxLength(BlogPostValidation.TAG.MAX_LENGTH, { each: true })
+  @ArrayMaxSize(BlogPostValidation.TAG.MAX_СOUNT)
+  @IsArray()
+  @IsString({ each: true })
+  @IsOptional()
   public tags: string[] | null;
 
   @ApiProperty({
     type: [String],
     description: 'Post comments',
     example: '[ { id: "438734-gdjf9g843-gsmi43", authorId: "gh8394g8h9efgh39434g", text: "Some comment text" } ]',
-    minLength: 3,
-    maxLength: 10,
-    maxProperties: 8
   })
+  @IsArray()
+  @IsString({ each: true })
+  @IsOptional()
   public comments: CommentInterface[] | null;
 
   @ApiProperty({
     type: [String],
     description: 'Post tags',
     example: '[ { id: "438734-gdjf9g843-gsmi43", authorId: "gh8394g8h9efgh39434g" } ]',
-    minLength: 3,
-    maxLength: 10,
-    maxProperties: 8
   })
+  @IsArray()
+  @IsString({ each: true })
+  @IsOptional()
   public likes: LikeInterface[] | null;
 
   @ApiProperty({
@@ -54,6 +65,7 @@ export class CreateBasePostDTO {
     example: 'true',
     default: false
   })
+  @IsBoolean()
   public isPublished: boolean;
 
   @ApiProperty({
@@ -61,6 +73,7 @@ export class CreateBasePostDTO {
     example: 'false',
     default: false
   })
+  @IsBoolean()
   public isRepost: boolean;
 
   @ApiProperty({
@@ -68,12 +81,15 @@ export class CreateBasePostDTO {
     example: '6dd03634-9785-49b8-a403-9ab61bb5656e',
     required: true
   })
+  @IsString()
   public authorId: UserInterface['id'];
 
   @ApiProperty({
     description: 'Original post author id (when reposted)',
     example: '6dd03634-9785-49b8-a403-9ab61bb5656e',
   })
+  @IsString()
+  @IsBoolean()
   public originAuthorId: UserInterface['id'] | null;
 
 
@@ -81,6 +97,8 @@ export class CreateBasePostDTO {
     description: 'Original post id (when reposted)',
     example: '6dd03634-9785-49b8-a403-9ab61bb5656e',
   })
+  @IsString()
+  @IsBoolean()
   public originPostId: BasePostInterface['id'] | null;
 
   @ApiProperty({

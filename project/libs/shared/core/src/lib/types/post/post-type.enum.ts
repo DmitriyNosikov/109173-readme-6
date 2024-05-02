@@ -7,3 +7,4 @@ export const PostType = {
 } as const;
 
 export type PostTypeEnum = (typeof PostType)[keyof typeof PostType];
+export const postTypeList: PostTypeEnum[] = ['text', 'link', 'quote', 'video', 'photo'];
