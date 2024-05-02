@@ -1,7 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { BlogPostValidation } from '@project/blog-post';
 import { UserInterface } from '@project/shared/core';
 import { IsMongoId, IsNotEmpty, IsString, MaxLength, MinLength } from 'class-validator';
+import { CommentValidation } from '../comment.constant';
 
 export class CreateCommentDTO {
   @ApiProperty({
@@ -16,12 +16,12 @@ export class CreateCommentDTO {
   @ApiProperty({
     description: 'Comment text',
     example: 'Amazing post! I`m so excited about this!',
-    minLength: BlogPostValidation.COMMENT.MIN_LENGTH,
-    maxLength: BlogPostValidation.COMMENT.MAX_LENGTH,
+    minLength: CommentValidation.TEXT.MIN_LENGTH,
+    maxLength: CommentValidation.TEXT.MAX_LENGTH,
     required: true
   })
-  @MinLength(BlogPostValidation.COMMENT.MIN_LENGTH)
-  @MaxLength(BlogPostValidation.COMMENT.MAX_LENGTH)
+  @MinLength(CommentValidation.TEXT.MIN_LENGTH)
+  @MaxLength(CommentValidation.TEXT.MAX_LENGTH)
   @IsString()
   @IsNotEmpty()
   text: string;

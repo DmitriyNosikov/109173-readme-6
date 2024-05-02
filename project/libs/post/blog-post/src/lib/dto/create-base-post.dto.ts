@@ -1,7 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger'
 import { ArrayMaxSize, IsArray, IsBoolean, IsIn, IsMongoId, IsNotEmpty, IsOptional, IsString, MaxLength, MinLength } from 'class-validator';
 
-import { BasePostInterface, LikeInterface, PostType, PostTypeEnum, UserInterface } from '@project/shared/core';
+import { BasePostInterface, PostType, PostTypeEnum, UserInterface } from '@project/shared/core';
 import { BlogPostValidation } from '../blog-post.constant';
 import { postTypeList } from 'libs/shared/core/src/lib/types/post/post-type.enum';
 
@@ -10,7 +10,6 @@ import { CreateTextPostDTO } from './create-text-post.dto';
 import { CreateQuotePostDTO } from './create-quote-post.dto';
 import { CreatePhotoPostDTO } from './create-photo-post.dto';
 import { CreateVideoPostDTO } from './create-video-post.dto';
-import { CommentInterface } from '@project/shared/core'
 
 
 export type ExtraFieldsDTO = CreateBasePostDTO | CreateLinkPostDTO | CreateTextPostDTO | CreateQuotePostDTO | CreatePhotoPostDTO | CreateVideoPostDTO;
@@ -45,23 +44,23 @@ export class CreateBasePostDTO {
 
   @ApiProperty({
     type: [String],
-    description: 'Post comments',
-    example: '[ { id: "438734-gdjf9g843-gsmi43", authorId: "gh8394g8h9efgh39434g", text: "Some comment text" } ]',
+    description: 'Post comments id`s',
+    example: '[ "438734-gdjf9g843-gsmi43", "gsmi43-gdjf9g843-fg435gd" ]',
   })
   @IsArray()
   @IsString({ each: true })
   @IsOptional()
-  public comments: CommentInterface[] | null;
+  public comments: string[] | null;
 
   @ApiProperty({
     type: [String],
-    description: 'Post tags',
-    example: '[ { id: "438734-gdjf9g843-gsmi43", authorId: "gh8394g8h9efgh39434g" } ]',
+    description: 'Post likes id`s',
+    example: '[ "438734-gdjf9g843-gsmi43", "gsmi43-gdjf9g843-fg435gd" ]',
   })
   @IsArray()
   @IsString({ each: true })
   @IsOptional()
-  public likes: LikeInterface[] | null;
+  public likes: string[] | null;
 
   @ApiProperty({
     description: 'Is post published flag',

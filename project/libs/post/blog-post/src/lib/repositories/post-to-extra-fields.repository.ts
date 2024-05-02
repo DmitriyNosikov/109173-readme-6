@@ -5,6 +5,7 @@ import { PostToExtraFieldsInterface, PostTypeEnum } from '@project/shared/core';
 import { PostToExtraFieldsFactory } from '../factories/post-to-extra-fields';
 import { PrismaClientService } from '@project/blog/models';
 import { BlogPostRepositoryDeterminant } from './blog-post-determinant.repository';
+import { PostEntities } from '../types/entities.enum';
 
 // Связущюее звено между Репозиторием базового поста (BlogPostRepository)
 // и всеми остальными репозиториями (PostTextRepository, PostQuoteRepository и т.д.)
@@ -30,7 +31,7 @@ export class PostToExtraFieldsRepository extends BasePostgresRepository<PostToEx
     return entity;
   }
 
-  public async getExtraFields(postId: string, postType: PostTypeEnum) {
+  public async getExtraFields(postId: string, postType: PostTypeEnum): Promise<PostEntities> {
     const postToExtraFields = await this.dbClient.postToExtraFields.findFirst({
       where: {
         AND: { postId, postType }

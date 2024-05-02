@@ -1,9 +1,10 @@
 import { UserInterface } from '../user/user.interface';
 import { PostTypeEnum } from '../../types/post/post-type.enum';
-import { CommentInterface } from '../comment.interface';
 import { LikeInterface } from '../like.interface';
 import { CreatedUpdatedDatesInterface } from '../created-updated-dates.interface';
-import { TagInterface } from '../tag.interface';
+
+import { TagInterface } from '@project/tag';
+import { CommentInterface } from '@project/post/comment';
 
 // import { PostToExtraFieldsInterface } from './post-to-extra-fields.interface';
 // import { TextPostInterface } from './text-post.interface';
@@ -21,13 +22,13 @@ export interface BasePostInterface extends CreatedUpdatedDatesInterface{
   authorId: UserInterface['id'];
   isPublished: boolean;
 
-  isRepost?: boolean;
-  originAuthorId?: UserInterface['id'] | undefined;
-  originPostId?: BasePostInterface['id'] | undefined;
+  isRepost: boolean;
+  originAuthorId: UserInterface['id'] | undefined;
+  originPostId: BasePostInterface['id'] | undefined;
 
-  tags?: TagInterface[] | undefined;
-  comments?: CommentInterface[] | undefined;
-  likes?: LikeInterface[] | undefined;
+  tags: TagInterface[] | undefined;
+  comments: CommentInterface[] | undefined;
+  likes: LikeInterface[] | undefined;
   // extraFields?: ExtraFields | undefined;
   // postToExtraFields?: PostToExtraFieldsInterface[] | undefined;
 }

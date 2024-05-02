@@ -1,6 +1,8 @@
 import { Expose, Type } from 'class-transformer';
-import { BasePostInterface, CommentInterface, LikeInterface, PostTypeEnum, TagInterface, UserInterface } from '@project/shared/core';
+import { BasePostInterface, LikeInterface, PostTypeEnum, UserInterface } from '@project/shared/core';
 import { CreatePostToExtraFieldsRDO } from './create-post-to-extra-fields.rdo';
+import { CreateTagRDO } from 'libs/post/tag/src/lib/rdo/create-tag.rdo';
+import { CreateCommentRDO } from 'libs/post/comment/src/lib/rdo/create-comment.rdo';
 
 export class GetPostRDO {
   @Expose()
@@ -17,10 +19,12 @@ export class GetPostRDO {
 
   // Будем получать в API Gateway (скорее всего)
   @Expose()
-  public tags?: TagInterface[] | null;
+  @Type(() => CreateTagRDO)
+  public tags: CreateTagRDO[] | null;
 
   @Expose()
-  public comments?: CommentInterface[] | null;
+  @Type(() => CreateCommentRDO)
+  public comments: CreateCommentRDO[] | null;
 
   @Expose()
   public likes?: LikeInterface[] | null;

@@ -1,4 +1,5 @@
-import { CommentInterface, EntityFactory } from '@project/shared/core';
+import { EntityFactory } from '@project/shared/core';
+import { CommentInterface } from './comment.interface';
 import { CommentEntity } from './comment.entity';
 
 export class CommentFactory implements EntityFactory<CommentEntity> {

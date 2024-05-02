@@ -3,7 +3,7 @@ import { BasePostgresRepository } from '@project/shared/data-access'
 import { PrismaClientService } from '@project/blog/models';
 
 import { TagEntity } from './tag.entity';
-import { TagInterface } from '@project/shared/core';
+import { TagInterface } from './tag.interface';
 import { TagFactory } from './tag.factory';
 
 @Injectable()
@@ -80,6 +80,8 @@ export class TagRepository extends BasePostgresRepository<TagEntity, TagInterfac
       });
 
     entity.id = document.id;
+    entity.createdAt = document.createdAt;
+    entity.updatedAt = document.updatedAt;
 
     return entity;
   }

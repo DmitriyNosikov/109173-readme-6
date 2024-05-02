@@ -3,7 +3,7 @@ import { BasePostgresRepository } from '@project/shared/data-access'
 import { PrismaClientService } from '@project/blog/models';
 import { Prisma } from '@prisma/client';
 
-import { BasePostInterface, PaginationResult, TagInterface } from '@project/shared/core';
+import { BasePostInterface, PaginationResult } from '@project/shared/core';
 import { BasePostEntity } from '../entities/base-post.entity';
 import { BasePostFactory } from '../factories/base-post.factory';
 import { BlogPostQuery } from '../blog-post.query';
@@ -21,10 +21,8 @@ export class BasePostRepository extends BasePostgresRepository<BasePostEntity, B
     let postTags = undefined;
 
     if(entity.tags && entity.tags.length > 0) {
-       postTags = this.convertTagsToObjects(entity.tags);
+       postTags = entity.tags.map((tag) => tag.toPOJO())
     }
-
-    console.log('ENTITY: ', entity);
 
     const post = await this.dbClient.post.create({
       data: {
@@ -115,7 +113,7 @@ export class BasePostRepository extends BasePostgresRepository<BasePostEntity, B
     }
   }
 
-  // TODO: Пока не реализовано
+  // TODO: Пока не реализовано корректно
   public async updateById(
     entityId: string,
     updatedFields: Partial<BasePostEntity>
@@ -123,7 +121,7 @@ export class BasePostRepository extends BasePostgresRepository<BasePostEntity, B
     let postTags = undefined;
 
     if(updatedFields.tags && updatedFields.tags.length > 0) {
-       postTags = this.convertTagsToObjects(updatedFields.tags);
+      postTags = updatedFields.tags.map((tag) => tag.toPOJO())
     }
 
     const document = await this.dbClient.post.update({
@@ -135,10 +133,18 @@ export class BasePostRepository extends BasePostgresRepository<BasePostEntity, B
           connect: postTags
         } : undefined,
 
-        // TODO: Поправить в будущем
-        comments: undefined,
-        likes: undefined,
-        postToExtraFields: undefined
+        // TODO: ОБъеденить с соответствующими записями
+        comments: {
+          connect: []
+        },
+        likes: {
+          connect: []
+        },
+      },
+      include: {
+        tags: true,
+        comments: true,
+        likes: true
       }
     });
 
@@ -157,11 +163,5 @@ export class BasePostRepository extends BasePostgresRepository<BasePostEntity, B
 
   private calculatePostsPage(totalCount: number, limit: number): number {
     return Math.ceil(totalCount / limit);
-  }
-
-  private convertTagsToObjects(tags: TagInterface[]) {
-    const tagsObjects = tags.map((tag) => ({ id: tag.id}));
-
-    return tagsObjects;
   }
 }

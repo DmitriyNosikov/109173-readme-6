@@ -18,8 +18,6 @@ import { BlogPostMessage } from './blog-post.constant';
 import { BasePostEntity } from './entities/base-post.entity';
 import { TagService } from '@project/tag';
 import { UpdateBasePostDTO } from './dto/update-base-post.dto';
-import { CreatePostRDO } from './rdo/create-base-post.rdo';
-
 
 @Injectable()
 export class BlogPostService {
@@ -39,7 +37,7 @@ export class BlogPostService {
 
     private readonly tagService: TagService
   ) {}
-  public async create(dto: CreateBasePostDTO): Promise<CreatePostRDO> {
+  public async create(dto: CreateBasePostDTO) {
     if(!this.checkPostType(dto.type)) {
       return;
     }
@@ -52,10 +50,13 @@ export class BlogPostService {
     // Cохраняем все части нашего боста (базовая + дополнительная) в связующую таблицу
     await this.createPostToExtraFields();
 
-    const postExtraFields = await this.postToExtraFieldsRepository.getExtraFields(this.basePost.id, this.basePost.type);
-    const extraFields = postExtraFields.toPOJO();
 
-    return { ...this.basePost, extraFields }
+    const postExtraFields = await this.postToExtraFieldsRepository.getExtraFields(this.basePost.id, this.basePost.type);
+
+    return {
+      ...this.basePost.toPOJO(),
+      extraFields: postExtraFields.toPOJO()
+    }
   }
 
   public async findById(postId: string) {
@@ -132,11 +133,12 @@ export class BlogPostService {
 
 
   private async createBasePost(dto: CreateBasePostDTO): Promise<void> {
-    const basePostFields = this.getBasePostFields(dto);
-    const basePostTags = await this.tagService.getOrCreate(basePostFields.tags);
+    const basePostTags = await this.tagService.getOrCreate(dto.tags);
     const basePostEntity = this.basePostFactory.create({
-      ...basePostFields,
-      tags: basePostTags.map((tag) => tag.toPOJO())
+      ...dto,
+      tags: basePostTags,
+      comments: undefined,
+      likes: undefined
     });
 
     this.basePost = await this.basePostRepository.create(basePostEntity); // Сохраняем в БД
@@ -162,18 +164,6 @@ export class BlogPostService {
     const postToExtraFieldsEntity: PostToExtraFieldsEntity = this.postToExtraFieldsFactory.create(allPostRelationFields);
 
     this.postToExtraFields = await this.postToExtraFieldsRepository.create(postToExtraFieldsEntity);
-  }
-
-  private getBasePostFields(dto: CreateBasePostDTO) {
-    return {
-      type: dto.type,
-      tags: dto.tags,
-      isPublished: dto.isPublished,
-      isRepost: dto.isRepost,
-      authorId: dto.authorId,
-      originAuthorId: dto.originAuthorId,
-      originPostId: dto.originPostId,
-    };
   }
 
   // show(postId: string): Promise<BlogPostEntity> {

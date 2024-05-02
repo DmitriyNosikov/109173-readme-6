@@ -1,4 +1,4 @@
-import { BadRequestException, ConflictException, Injectable, NotFoundException } from '@nestjs/common'
+import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common'
 import { omitUndefined } from '@project/shared/helpers';
 
 import { CreateTagDTO } from './dto/create-tag.dto';
@@ -6,7 +6,7 @@ import { TagEntity } from './tag.entity';
 import { TagFactory } from './tag.factory';
 import { TagRepository } from './tag.repository';
 import { TagMessage } from './tag.constant';
-import { TagInterface } from '@project/shared/core';
+import { TagInterface } from './tag.interface';
 
 @Injectable()
 export class TagService {
@@ -66,14 +66,14 @@ export class TagService {
     return tag;
   }
 
-  public async getOrCreate(tagNames: string[]) {
+  public async getOrCreate(tagNames: string[]): Promise<TagInterface[]> {
     const tags = [];
 
     for(const tagName of tagNames) {
       const tagObject = { name: tagName };
       const tag = await this.create(tagObject)
 
-      tags.push(tag);
+      tags.push(tag.toPOJO());
     }
 
     return tags;

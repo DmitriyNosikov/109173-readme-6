@@ -4,7 +4,7 @@ import { Expose } from 'class-transformer';
 
 export class CreateTextPostRDO implements PostWithTitleRDO, PostWithTextRDO {
   @Expose()
-  public id?: string;
+  public id: string;
 
   @Expose()
   public title: string;

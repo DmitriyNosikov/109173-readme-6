@@ -1,8 +1,9 @@
-import { BasePostInterface, CommentInterface, Entity, UserInterface } from '@project/shared/core'
+import { BasePostInterface, Entity, UserInterface } from '@project/shared/core'
+import { CommentInterface } from './comment.interface';
 
 export class CommentEntity extends Entity implements CommentInterface {
-  public createdAt?: Date;
-  public updatedAt?: Date;
+  public createdAt: Date;
+  public updatedAt: Date;
 
   public postId: BasePostInterface['id'];
   public authorId: UserInterface['id'];

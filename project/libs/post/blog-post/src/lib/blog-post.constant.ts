@@ -46,11 +46,7 @@ export const BlogPostValidation = {
   },
   LINK_DESCRIPTION: {
     MAX_LENGTH: 300
-  },
-  COMMENT: {
-    MIN_LENGTH: 10,
-    MAX_LENGTH: 300
-  },
+  }
 };
 
 export const BlogPostMessage: MessagesType = {
