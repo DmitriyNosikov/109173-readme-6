@@ -18,6 +18,7 @@ import { BlogPostMessage } from './blog-post.constant';
 import { BasePostEntity } from './entities/base-post.entity';
 import { TagService } from '@project/tag';
 import { UpdateBasePostDTO } from './dto/update-base-post.dto';
+import { CreatePostRDO } from './rdo/create-base-post.rdo';
 
 
 @Injectable()
@@ -38,7 +39,7 @@ export class BlogPostService {
 
     private readonly tagService: TagService
   ) {}
-  public async create(dto: CreateBasePostDTO): Promise<BasePostEntity> {
+  public async create(dto: CreateBasePostDTO): Promise<CreatePostRDO> {
     if(!this.checkPostType(dto.type)) {
       return;
     }
@@ -51,9 +52,10 @@ export class BlogPostService {
     // Cохраняем все части нашего боста (базовая + дополнительная) в связующую таблицу
     await this.createPostToExtraFields();
 
-    this.basePost.postToExtraFields = [ this.postToExtraFields.toPOJO() ];
+    const postExtraFields = await this.postToExtraFieldsRepository.getExtraFields(this.basePost.id, this.basePost.type);
+    const extraFields = postExtraFields.toPOJO();
 
-    return this.basePost;
+    return { ...this.basePost, extraFields }
   }
 
   public async findById(postId: string) {
@@ -77,15 +79,15 @@ export class BlogPostService {
     // одному посту может соответствовать только один тип ExtraFields
     // !! хотя заготовка под мульти-пост уже есть как раз благодаря тому, что Post
     // !! хранит в свойсте PostToExtraFields массив связей
-    if(updatedFields.extraFields) {
-      for(const postToExtraFieldsItem of basePost.postToExtraFields) {
-        const extraFieldsRepository = this.blogPostRepositoryDeterminant.getRepository(postToExtraFieldsItem.postType)
+    // if(updatedFields.extraFields) {
+    //   for(const postToExtraFieldsItem of basePost.postToExtraFields) {
+    //     const extraFieldsRepository = this.blogPostRepositoryDeterminant.getRepository(postToExtraFieldsItem.postType)
 
-        await extraFieldsRepository.updateById(postToExtraFieldsItem.extraFieldsId, updatedFields.extraFields);
-      }
+    //     await extraFieldsRepository.updateById(postToExtraFieldsItem.extraFieldsId, updatedFields.extraFields);
+    //   }
 
-      delete updatedFields.extraFields;
-    }
+    //   delete updatedFields.extraFields;
+    // }
 
     // Обновление тегов (TODO: по хорошему, надо сверять и удалять связи лишние, а новые добавлять)
     let updatedTags = undefined;
@@ -107,12 +109,12 @@ export class BlogPostService {
       throw new NotFoundException(`Post with ID ${postId} not found`);
     }
 
-    const extraFieldsRepository = this.blogPostRepositoryDeterminant.getRepository(post.type)
+    // const extraFieldsRepository = this.blogPostRepositoryDeterminant.getRepository(post.type)
 
     // Удаляем ExtraFields для Post
-    for(const extraFieldsItem of post.postToExtraFields) {
-      await extraFieldsRepository.deleteById(extraFieldsItem.extraFieldsId);
-    }
+    // for(const extraFieldsItem of post.postToExtraFields) {
+    //   await extraFieldsRepository.deleteById(extraFieldsItem.extraFieldsId);
+    // }
 
     // удаляем пост
     await this.basePostRepository.deleteById(post.id);

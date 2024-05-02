@@ -7,8 +7,9 @@ import {
   CommentInterface,
   LikeInterface,
   TagInterface,
-  PostToExtraFieldsInterface
+  // PostToExtraFieldsInterface
 } from '@project/shared/core'
+// import { ExtraFields } from 'libs/shared/core/src/lib/interfaces/post/base-post.interface';
 
 export class BasePostEntity extends Entity implements BasePostInterface, StorableEntity<BasePostInterface> {
   public createdAt: Date;
@@ -26,7 +27,8 @@ export class BasePostEntity extends Entity implements BasePostInterface, Storabl
   public tags?: TagInterface[] | undefined;
   public comments?: CommentInterface[] | undefined;
   public likes?: LikeInterface[] | undefined;
-  public postToExtraFields?: PostToExtraFieldsInterface[] | undefined;
+  // public extraFields?: ExtraFields | undefined;
+  // public postToExtraFields?: PostToExtraFieldsInterface[] | undefined;
 
   constructor(post?: BasePostInterface) {
     super();
@@ -53,7 +55,7 @@ export class BasePostEntity extends Entity implements BasePostInterface, Storabl
     this.tags = post.tags ?? undefined;
     this.comments = post.comments ?? undefined;
     this.likes = post.likes ?? undefined;
-    this.postToExtraFields = post.postToExtraFields ?? undefined;
+    // this.postToExtraFields = post.postToExtraFields ?? undefined;
   }
 
   public toPOJO(): BasePostInterface {
@@ -73,7 +75,7 @@ export class BasePostEntity extends Entity implements BasePostInterface, Storabl
       tags: this.tags,
       comments: this.comments,
       likes: this.likes,
-      postToExtraFields: this.postToExtraFields
+      // postToExtraFields: this.postToExtraFields
     };
   }
 }

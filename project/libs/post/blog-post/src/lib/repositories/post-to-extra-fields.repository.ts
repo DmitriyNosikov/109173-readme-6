@@ -4,6 +4,7 @@ import { PostToExtraFieldsEntity } from '../entities/post-to-extra-fields.entity
 import { PostToExtraFieldsInterface, PostTypeEnum } from '@project/shared/core';
 import { PostToExtraFieldsFactory } from '../factories/post-to-extra-fields';
 import { PrismaClientService } from '@project/blog/models';
+import { BlogPostRepositoryDeterminant } from './blog-post-determinant.repository';
 
 // Связущюее звено между Репозиторием базового поста (BlogPostRepository)
 // и всеми остальными репозиториями (PostTextRepository, PostQuoteRepository и т.д.)
@@ -11,7 +12,8 @@ import { PrismaClientService } from '@project/blog/models';
 export class PostToExtraFieldsRepository extends BasePostgresRepository<PostToExtraFieldsEntity, PostToExtraFieldsInterface> {
   constructor(
     entityFactory: PostToExtraFieldsFactory,
-    readonly dbClient: PrismaClientService
+    readonly dbClient: PrismaClientService,
+    private readonly blogPostRepositoryDeterminant: BlogPostRepositoryDeterminant
   ) {
     super(entityFactory, dbClient);
   }
@@ -28,12 +30,15 @@ export class PostToExtraFieldsRepository extends BasePostgresRepository<PostToEx
     return entity;
   }
 
-  public findByPostIdAndPostType(postId: string, postType: PostTypeEnum) {
-    console.log(postId, postType);
-    throw new Error('Method not implemented.');
-  }
+  public async getExtraFields(postId: string, postType: PostTypeEnum) {
+    const postToExtraFields = await this.dbClient.postToExtraFields.findFirst({
+      where: {
+        AND: { postId, postType }
+      }
+    });
+    const extraFieldsRepository = await this.blogPostRepositoryDeterminant.getRepository(postType)
+    const extraFields = await extraFieldsRepository.findById(postToExtraFields.extraFieldsId);
 
-  public findById(): Promise<PostToExtraFieldsEntity> {
-    throw new Error('Method not implemented');
+    return extraFields;
   }
 }

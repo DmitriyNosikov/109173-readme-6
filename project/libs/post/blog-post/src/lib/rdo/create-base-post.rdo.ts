@@ -1,24 +1,26 @@
 import { Expose, Type } from 'class-transformer';
-import { BasePostInterface, PostTypeEnum, UserInterface } from '@project/shared/core';
+import { BasePostInterface, CommentInterface, LikeInterface, PostTypeEnum, TagInterface, UserInterface } from '@project/shared/core';
 
-import { CreateLinkPostRDO } from './create-link-post.rdo';
 import { CreateTextPostRDO } from './create-text-post.rdo';
 import { CreateQuotePostRDO } from './create-quote-post.rdo';
+import { CreateLinkPostRDO } from './create-link-post.rdo';
 import { CreatePhotoPostRDO } from './create-photo-post.rdo';
 import { CreateVideoPostRDO } from './create-video-post.rdo';
-import { CreatePostToExtraFieldsRDO } from './create-post-to-extra-fields.rdo';
 
-export type ExtraFieldsRDO = CreateBasePostRDO | CreateLinkPostRDO | CreateTextPostRDO | CreateQuotePostRDO | CreatePhotoPostRDO | CreateVideoPostRDO;
+export type ExtraFieldsRDO = CreateTextPostRDO | CreateQuotePostRDO | CreateLinkPostRDO | CreatePhotoPostRDO | CreateVideoPostRDO;
 
 export class CreateBasePostRDO {
   @Expose()
   public id: string;
 
   @Expose()
-  createdAt: Date;
+  createdAt?: Date;
 
   @Expose()
-  updatedAt: Date;
+  updatedAt?: Date;
+
+  @Expose()
+  publishedAt?: Date;
 
   @Expose()
   public type: PostTypeEnum;
@@ -37,10 +39,18 @@ export class CreateBasePostRDO {
 
   @Expose()
   public originPostId: BasePostInterface['id'] | null;
+
+  @Expose()
+  public tags: TagInterface[] | null;
+
+  @Expose()
+  public likes: LikeInterface[] | null;
+
+  @Expose()
+  public comments: CommentInterface[] | null;
 }
 
 export class CreatePostRDO extends CreateBasePostRDO {
   @Expose()
-  @Type(() => CreatePostToExtraFieldsRDO)
-  public postToExtraFields: CreatePostToExtraFieldsRDO[] | null;
+  public extraFields: ExtraFieldsRDO | null;
 }

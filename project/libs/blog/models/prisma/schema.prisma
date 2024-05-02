@@ -111,6 +111,7 @@ model PostLike {
   @@map("posts_likes")
 }
 
+//////////////////// EXTRA FIELDS ////////////////////
 model TextPost {
   id        String @id @default(uuid())
   announce  String
@@ -121,6 +122,14 @@ model TextPost {
   @@map("text_posts")
 }
 
+model QuotePost {
+  id        String @id @default(uuid())
+  authorId  String @map("author_id")
+  text      String @db.VarChar(300)
+
+  @@map("quote_posts")
+}
+
 model LinkPost {
   id          String @id @default(uuid())
   linkURL     String @map("link_url")
@@ -129,12 +138,11 @@ model LinkPost {
   @@map("link_posts")
 }
 
-model QuotePost {
+model PhotoPost {
   id        String @id @default(uuid())
-  authorId  String @map("author_id")
-  text      String @db.VarChar(300)
+  photoURL  String @map("photo_url")
 
-  @@map("quote_posts")
+  @@map("photo_posts")
 }
 
 model VideoPost {
@@ -144,11 +152,4 @@ model VideoPost {
 
   @@index([title])
   @@map("video_posts")
-}
-
-model PhotoPost {
-  id        String @id @default(uuid())
-  photoURL  String @map("photo_url")
-
-  @@map("photo_posts")
 }

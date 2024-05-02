@@ -67,7 +67,7 @@ export class BasePostRepository extends BasePostgresRepository<BasePostEntity, B
       throw new NotFoundException(`Document with id ${entityId} not found`);
     }
 
-    const post = this.createEntityFromDocument(document as BasePostEntity);
+    const post = this.createEntityFromDocument(document);
 
     return post;
   }
@@ -107,7 +107,7 @@ export class BasePostRepository extends BasePostgresRepository<BasePostEntity, B
     ]);
 
     return {
-      entities: records.map((record) => this.createEntityFromDocument(record as BasePostEntity)),
+      entities: records.map((record) => this.createEntityFromDocument(record)),
       currentPage: query?.page,
       totalPages: this.calculatePostsPage(postCount, take),
       itemsPerPage: take,

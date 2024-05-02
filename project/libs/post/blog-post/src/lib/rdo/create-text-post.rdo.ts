@@ -4,13 +4,7 @@ import { Expose } from 'class-transformer';
 
 export class CreateTextPostRDO implements PostWithTitleRDO, PostWithTextRDO {
   @Expose()
-  public id: string;
-
-  @Expose()
-  createdAt: Date;
-
-  @Expose()
-  updatedAt: Date;
+  public id?: string;
 
   @Expose()
   public title: string;

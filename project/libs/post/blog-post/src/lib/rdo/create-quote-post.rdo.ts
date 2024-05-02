@@ -3,13 +3,7 @@ import { PostWithTextRDO } from './post-with-text.rdo';
 
 export class CreateQuotePostRDO implements PostWithTextRDO {
   @Expose()
-  public id: string;
-
-  @Expose()
-  createdAt: Date;
-
-  @Expose()
-  updatedAt: Date;
+  public id?: string;
 
   @Expose()
   public authorId: string;
