@@ -31,8 +31,9 @@ enum PostType {
 //////////////////// POSTS & EXTRA-FIELDS RELATIONS ////////////////////
 model PostToExtraFields {
   id              String @id @default(uuid())
-  createdAt       DateTime @default(now()) @map("created_at")
-  updatedAt       DateTime @updatedAt @map("updated_at")
+  createdAt       DateTime? @default(now()) @map("created_at")
+  updatedAt       DateTime? @updatedAt @map("updated_at")
+
   postId          String @db.VarChar(255) @map("post_id")
   postType        String @map("post_type") // Таблицу, из которой нужно получить экстра-филды, определяем по типу поста
   extraFieldsId   String @map("extra_fields_id") // Через данное поле будем вручную получать экстра-филды
@@ -45,16 +46,16 @@ model PostToExtraFields {
 
 model Post {
   id              String   @id @default(uuid())
-  createdAt       DateTime @default(now()) @map("created_at")
-  updatedAt       DateTime @updatedAt @map("updated_at")
-  publishedAt     DateTime @default(now()) @map("published_at")
+  createdAt       DateTime? @default(now()) @map("created_at")
+  updatedAt       DateTime? @updatedAt @map("updated_at")
+  publishedAt     DateTime? @default(now()) @map("published_at")
 
   type            PostType
   isPublished     Boolean  @map("is_published")
-  isRepost        Boolean  @map("is_repost")
+  isRepost        Boolean?  @map("is_repost")
   authorId        String   @map("author_id")
-  originAuthorId  String   @map("origin_author_id")
-  originPostId    String   @map("origin_post_id")
+  originAuthorId  String?   @map("origin_author_id")
+  originPostId    String?   @map("origin_post_id")
 
   // --- Отношения
   tags            PostTag[]
@@ -70,8 +71,8 @@ model Post {
 //////////////////// TAGS ////////////////////
 model PostTag {
   id        String    @id @default(uuid())
-  createdAt DateTime  @default(now()) @map("created_at")
-  updatedAt DateTime  @updatedAt @map("updated_at")
+  createdAt DateTime?  @default(now()) @map("created_at")
+  updatedAt DateTime?  @updatedAt @map("updated_at")
   name     String    @unique() @db.VarChar(10)
 
   posts     Post[]
@@ -82,10 +83,11 @@ model PostTag {
 //////////////////// COMMENTS ////////////////////
 model PostComment {
   id        String   @id @default(uuid())
+  createdAt DateTime? @default(now()) @map("created_at")
+  updatedAt DateTime? @updatedAt @map("updated_at")
+
   postId    String   @map("postId")
   authorId  String   @map("author_id")
-  createdAt DateTime @default(now()) @map("created_at")
-  updatedAt DateTime @updatedAt @map("updated_at")
   text      String   @db.VarChar(300)
 
   // --- Отношения
@@ -97,10 +99,11 @@ model PostComment {
 //////////////////// LIKES ////////////////////
 model PostLike {
   id        String  @id @default(uuid())
+  createdAt DateTime? @default(now()) @map("created_at")
+  updatedAt DateTime? @updatedAt @map("updated_at")
+
   postId    String  @map("postId")
   authorId  String  @map("author_id")
-  createdAt DateTime @default(now()) @map("created_at")
-  updatedAt DateTime @updatedAt @map("updated_at")
 
   // --- Отношения
   post Post @relation(fields: [postId], references: [id], onDelete: Cascade, onUpdate: Cascade)
@@ -121,7 +124,7 @@ model TextPost {
 model LinkPost {
   id          String @id @default(uuid())
   linkURL     String @map("link_url")
-  description String @db.VarChar(300)
+  description String? @db.VarChar(300)
 
   @@map("link_posts")
 }

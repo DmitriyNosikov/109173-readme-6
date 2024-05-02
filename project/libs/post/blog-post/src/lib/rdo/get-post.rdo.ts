@@ -1,4 +1,4 @@
-import { Expose } from 'class-transformer';
+import { Expose, Type } from 'class-transformer';
 import { BasePostInterface, CommentInterface, LikeInterface, PostTypeEnum, TagInterface, UserInterface } from '@project/shared/core';
 import { CreatePostToExtraFieldsRDO } from './create-post-to-extra-fields.rdo';
 
@@ -41,5 +41,6 @@ export class GetPostRDO {
   public originPostId: BasePostInterface['id'] | null;
 
   @Expose()
-  public postToExtraFields: CreatePostToExtraFieldsRDO
+  @Type(() => CreatePostToExtraFieldsRDO)
+  public postToExtraFields: CreatePostToExtraFieldsRDO[]
 }

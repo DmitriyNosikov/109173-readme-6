@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger'
-import { IsOptional, IsString, IsUrl, MaxLength } from 'class-validator';
+import { IsNotEmpty, IsOptional, IsString, IsUrl, MaxLength } from 'class-validator';
 import { BlogPostValidation } from '../blog-post.constant';
 export class CreateLinkPostDTO {
   @ApiProperty({
@@ -8,6 +8,7 @@ export class CreateLinkPostDTO {
     required: true
   })
   @IsUrl()
+  @IsNotEmpty()
   public linkURL: string;
 
   @ApiProperty({

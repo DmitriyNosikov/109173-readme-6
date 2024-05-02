@@ -1,10 +1,12 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { BasePostgresRepository } from '@project/shared/data-access'
 import { PrismaClientService } from '@project/blog/models';
+import { Prisma } from '@prisma/client';
 
-import { BasePostInterface, TagInterface } from '@project/shared/core';
+import { BasePostInterface, PaginationResult, TagInterface } from '@project/shared/core';
 import { BasePostEntity } from '../entities/base-post.entity';
 import { BasePostFactory } from '../factories/base-post.factory';
+import { BlogPostQuery } from '../blog-post.query';
 
 @Injectable()
 export class BasePostRepository extends BasePostgresRepository<BasePostEntity, BasePostInterface> {
@@ -21,6 +23,8 @@ export class BasePostRepository extends BasePostgresRepository<BasePostEntity, B
     if(entity.tags && entity.tags.length > 0) {
        postTags = this.convertTagsToObjects(entity.tags);
     }
+
+    console.log('ENTITY: ', entity);
 
     const post = await this.dbClient.post.create({
       data: {
@@ -68,6 +72,49 @@ export class BasePostRepository extends BasePostgresRepository<BasePostEntity, B
     return post;
   }
 
+  public async find(query?: BlogPostQuery): Promise<PaginationResult<BasePostEntity>> {
+    const skip = query?.page && query?.limit ? (query.page - 1) * query.limit : undefined;
+    const take = query?.limit;
+    const where: Prisma.PostWhereInput = {};
+    const orderBy: Prisma.PostOrderByWithRelationInput = {};
+
+    // Поиск по title (WIP - пока не работает, т.к. title в доп. таблицах и пока непонятно, как это реализовать)
+    if (query?.title) {
+      // where.postToExtraFields = {
+      //   some: {
+      //     title: {
+      //       search: query.title
+      //     }
+      //   }
+      // }
+    }
+
+    // Сортировка и направление сортировки
+    if (query?.sortType && query?.sortDirection) {
+      orderBy[query.sortType] = query.sortDirection;
+    }
+
+    const [records, postCount] = await Promise.all([
+      this.dbClient.post.findMany({ where, orderBy, skip, take,
+        include: {
+          tags: true,
+          likes: true,
+          comments: true,
+          postToExtraFields: true
+        },
+      }),
+      this.getPostCount(where),
+    ]);
+
+    return {
+      entities: records.map((record) => this.createEntityFromDocument(record as BasePostEntity)),
+      currentPage: query?.page,
+      totalPages: this.calculatePostsPage(postCount, take),
+      itemsPerPage: take,
+      totalItems: postCount,
+    }
+  }
+
   // TODO: Пока не реализовано
   public async updateById(
     entityId: string,
@@ -102,6 +149,14 @@ export class BasePostRepository extends BasePostgresRepository<BasePostEntity, B
     await this.dbClient.post.delete({
       where: { id: postId }
     });
+  }
+
+  private async getPostCount(where: Prisma.PostWhereInput): Promise<number> {
+    return this.dbClient.post.count({ where });
+  }
+
+  private calculatePostsPage(totalCount: number, limit: number): number {
+    return Math.ceil(totalCount / limit);
   }
 
   private convertTagsToObjects(tags: TagInterface[]) {

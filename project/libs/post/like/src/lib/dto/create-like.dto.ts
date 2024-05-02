@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { UserInterface } from '@project/shared/core';
-import { IsString } from 'class-validator';
+import { IsMongoId, IsString } from 'class-validator';
 
 export class CreateLikeDTO {
   @ApiProperty({
@@ -9,5 +9,6 @@ export class CreateLikeDTO {
     required: true
   })
   @IsString()
+  @IsMongoId()
   public authorId: UserInterface['id'];
 }

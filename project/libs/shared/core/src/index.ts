@@ -23,9 +23,10 @@ export { EntityFactory } from './lib/interfaces/entity-factory.interface'
 // TYPES
 export { PlainObject } from './lib/types/plain-object.type'
 export { MessagesType } from './lib/types/messages.type'
+export { PaginationResult } from './lib/types/pagination-result'
 
 // SORT
-export { SortType, SortDirection, SortTypeEnum, SortDirectionEnum } from './lib/types/post/sort-type.enum'
+export { SortType, SortDirection, SortTypeEnum, SortDirectionEnum } from './lib/types/sort-type.enum'
 
 // CONSTANTS
 export {

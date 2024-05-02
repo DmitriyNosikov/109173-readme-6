@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger'
-import { IsString, MaxLength, MinLength } from 'class-validator';
+import { IsNotEmpty, IsString, MaxLength, MinLength } from 'class-validator';
 import { PostWithTextDTO } from './post-with-text.dto';
 import { PostWithTitleDTO } from './post-with-title.dto';
 import { BlogPostValidation } from '../blog-post.constant';
@@ -15,6 +15,7 @@ export class CreateTextPostDTO implements PostWithTitleDTO, PostWithTextDTO {
   @MinLength(BlogPostValidation.TITLE.MIN_LENGTH)
   @MaxLength(BlogPostValidation.TITLE.MAX_LENGTH)
   @IsString()
+  @IsNotEmpty()
   public title: string;
 
   @ApiProperty({
@@ -27,6 +28,7 @@ export class CreateTextPostDTO implements PostWithTitleDTO, PostWithTextDTO {
   @MinLength(BlogPostValidation.ANNOUNCE.MIN_LENGTH)
   @MaxLength(BlogPostValidation.ANNOUNCE.MAX_LENGTH)
   @IsString()
+  @IsNotEmpty()
   public announce: string;
 
   @ApiProperty({
@@ -39,5 +41,6 @@ export class CreateTextPostDTO implements PostWithTitleDTO, PostWithTextDTO {
   @MinLength(BlogPostValidation.TEXT.MIN_LENGTH)
   @MaxLength(BlogPostValidation.TEXT.MAX_LENGTH)
   @IsString()
+  @IsNotEmpty()
   public text: string;
 }

@@ -11,11 +11,12 @@ export interface BasePostInterface extends CreatedUpdatedDatesInterface{
   publishedAt?: Date;
 
   type: PostTypeEnum;
-  isPublished: boolean;
-  isRepost: boolean;
   authorId: UserInterface['id'];
-  originAuthorId: UserInterface['id'] | undefined;
-  originPostId: BasePostInterface['id'] | undefined;
+  isPublished: boolean;
+
+  isRepost?: boolean;
+  originAuthorId?: UserInterface['id'] | undefined;
+  originPostId?: BasePostInterface['id'] | undefined;
 
   tags?: TagInterface[] | undefined;
   comments?: CommentInterface[] | undefined,

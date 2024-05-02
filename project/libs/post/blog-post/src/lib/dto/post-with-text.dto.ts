@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsString, MaxLength, MinLength } from 'class-validator';
+import { IsNotEmpty, IsString, MaxLength, MinLength } from 'class-validator';
 import { BlogPostValidation } from '../blog-post.constant';
 
 export class PostWithTextDTO {
@@ -13,5 +13,6 @@ export class PostWithTextDTO {
   @MinLength(BlogPostValidation.TEXT.MIN_LENGTH)
   @MaxLength(BlogPostValidation.TEXT.MAX_LENGTH)
   @IsString()
+  @IsNotEmpty()
   public text: string;
 }

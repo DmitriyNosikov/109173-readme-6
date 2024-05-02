@@ -13,14 +13,15 @@ import {
 export class BasePostEntity extends Entity implements BasePostInterface, StorableEntity<BasePostInterface> {
   public createdAt: Date;
   public updatedAt: Date;
-  public publishedAt: Date;
+  public publishedAt?: Date;
 
   public type: PostTypeEnum;
-  public isPublished: boolean;
-  public isRepost: boolean;
   public authorId: UserInterface['id'];
-  public originAuthorId: UserInterface['id'] | undefined;
-  public originPostId: BasePostInterface['id'] | undefined;
+  public isPublished: boolean;
+
+  public isRepost?: boolean;
+  public originAuthorId?: UserInterface['id'] | undefined;
+  public originPostId?: BasePostInterface['id'] | undefined;
 
   public tags?: TagInterface[] | undefined;
   public comments?: CommentInterface[] | undefined;
@@ -40,7 +41,7 @@ export class BasePostEntity extends Entity implements BasePostInterface, Storabl
     this.id = post.id ?? undefined;
     this.createdAt = post.createdAt;
     this.updatedAt = post.updatedAt;
-    this.publishedAt = post.publishedAt;
+    this.publishedAt = post.publishedAt ?? undefined;
 
     this.type = post.type;
     this.isPublished = post.isPublished ?? false;

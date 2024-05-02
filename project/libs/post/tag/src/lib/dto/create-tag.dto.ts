@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsString, MaxLength, MinLength } from 'class-validator';
+import { IsString, MaxLength, MinLength, IsNotEmpty } from 'class-validator';
 // import { BlogPostValidation } from '@project/blog-post' // Почему то не работает
 export class CreateTagDTO {
   @ApiProperty({
@@ -12,5 +12,6 @@ export class CreateTagDTO {
   @MinLength(3)
   @MaxLength(10)
   @IsString()
+  @IsNotEmpty()
   name: string;
 }

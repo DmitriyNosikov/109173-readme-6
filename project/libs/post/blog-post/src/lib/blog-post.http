@@ -17,9 +17,7 @@ Content-Type: application/json
   "tags": ["test1", "test2", "news", "other"],
   "isPublished": true,
   "isRepost": false,
-  "authorId": "6dd03634978549b8",
-  "originAuthorId": "",
-  "originPostId": "",
+  "authorId": "66224f68a3f9a165a1ab5fbd",
   "extraFields": {
     "announce": "Some announce text",
     "title": "Article title",
@@ -37,7 +35,7 @@ Content-Type: application/json
   "tags": ["drift", "clirence"],
   "isPublished": false,
   "isRepost": false,
-  "authorId": "6dd03634978549b8",
+  "authorId": "662253e794534cbee6562f7d",
   "originAuthorId": "",
   "originPostId": "",
   "extraFields": {

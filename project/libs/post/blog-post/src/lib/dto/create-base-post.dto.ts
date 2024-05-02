@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger'
-import { ArrayMaxSize, IsArray, IsBoolean, IsIn, IsOptional, IsString, MaxLength, MinLength } from 'class-validator';
+import { ArrayMaxSize, IsArray, IsBoolean, IsIn, IsMongoId, IsNotEmpty, IsOptional, IsString, MaxLength, MinLength } from 'class-validator';
 
 import { BasePostInterface, LikeInterface, PostType, PostTypeEnum, UserInterface } from '@project/shared/core';
 import { BlogPostValidation } from '../blog-post.constant';
@@ -24,6 +24,7 @@ export class CreateBasePostDTO {
   })
   @IsIn(postTypeList)
   @IsString()
+  @IsNotEmpty()
   public type: PostTypeEnum;
 
   @ApiProperty({
@@ -68,6 +69,7 @@ export class CreateBasePostDTO {
     default: false
   })
   @IsBoolean()
+  @IsNotEmpty()
   public isPublished: boolean;
 
   @ApiProperty({
@@ -76,6 +78,7 @@ export class CreateBasePostDTO {
     default: false
   })
   @IsBoolean()
+  @IsOptional()
   public isRepost: boolean;
 
   @ApiProperty({
@@ -84,6 +87,7 @@ export class CreateBasePostDTO {
     required: true
   })
   @IsString()
+  @IsMongoId()
   public authorId: UserInterface['id'];
 
   @ApiProperty({
@@ -91,6 +95,7 @@ export class CreateBasePostDTO {
     example: '6dd03634-9785-49b8-a403-9ab61bb5656e',
   })
   @IsString()
+  @IsMongoId()
   @IsOptional()
   public originAuthorId: UserInterface['id'] | null;
 
@@ -107,5 +112,6 @@ export class CreateBasePostDTO {
     description: 'Extra-fields, specific for each post type (text, link, quote etc.)',
     example: '{ "announce": "Some announce text", "title": "Article title", "text": "Long story short text" }'
   })
+  @IsNotEmpty()
   public extraFields: ExtraFieldsDTO;
 }

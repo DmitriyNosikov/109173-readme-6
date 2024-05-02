@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger'
-import { IsString, MaxLength, MinLength } from 'class-validator';
+import { IsNotEmpty, IsString, IsUrl, MaxLength, MinLength } from 'class-validator';
 import { PostWithTitleDTO } from './post-with-title.dto';
 import { BlogPostValidation } from '../blog-post.constant';
 
@@ -14,6 +14,7 @@ export class CreateVideoPostDTO implements PostWithTitleDTO {
   @MinLength(BlogPostValidation.TITLE.MIN_LENGTH)
   @MaxLength(BlogPostValidation.TITLE.MAX_LENGTH)
   @IsString()
+  @IsNotEmpty()
   public title: string;
 
   @ApiProperty({
@@ -21,5 +22,7 @@ export class CreateVideoPostDTO implements PostWithTitleDTO {
     example: 'https://www.youtube.com/live/jfKfPfyJRdk?si=IsxOl50arZoSKcOI',
     required: true
   })
+  @IsUrl()
+  @IsNotEmpty()
   public videoURL: string;
 }

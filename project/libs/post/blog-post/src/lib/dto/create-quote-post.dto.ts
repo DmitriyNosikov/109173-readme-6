@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger'
-import { IsString, MaxLength, MinLength } from 'class-validator';
+import { IsMongoId, IsNotEmpty, IsString, MaxLength, MinLength } from 'class-validator';
 import { PostWithTextDTO } from './post-with-text.dto';
 import { BlogPostValidation } from '../blog-post.constant';
 
@@ -14,6 +14,7 @@ export class CreateQuotePostDTO implements PostWithTextDTO {
   @MinLength(BlogPostValidation.QUOTE_AUTHOR.MIN_LENGTH)
   @MaxLength(BlogPostValidation.QUOTE_AUTHOR.MAX_LENGTH)
   @IsString()
+  @IsMongoId()
   public authorId: string;
 
   @ApiProperty({
@@ -26,6 +27,7 @@ export class CreateQuotePostDTO implements PostWithTextDTO {
   @MinLength(BlogPostValidation.QUOTE_TEXT.MIN_LENGTH)
   @MaxLength(BlogPostValidation.QUOTE_TEXT.MAX_LENGTH)
   @IsString()
+  @IsNotEmpty()
   public text: string;
 
 }

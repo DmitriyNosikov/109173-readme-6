@@ -1,8 +1,12 @@
-import { MessagesType } from '@project/shared/core';
+import { MessagesType, SortDirection, SortType } from '@project/shared/core';
 
-export const MAX_POSTS_PER_SEARCH = 20; // Максимальное количество возвращаемых публикаций при поиске
 export const MAX_POSTS_PER_PAGE = 25; // Максимальное количество постов на один запрос
 export const POST_ONLY_PUBLISHED = true; // В список публикаций попадают только посты со статусом "Опубликовано" (isPublished)
+
+export const MAX_SEARCH_POSTS_LIMIT = 20; // Максимальное количество возвращаемых публикаций при поиске
+export const DEFAULT_SORT_TYPE = SortType.CREATED_DATE;
+export const DEFAULT_SORT_DIRECTION = SortDirection.DESC;
+export const DEFAULT_PAGE_COUNT = 1;
 
 export const MAX_COMMENTS_PER_PAGE = 50; // Максимальное количество комментариев на один запрос
 
