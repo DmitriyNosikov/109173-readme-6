@@ -1,16 +1,16 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { BlogPostValidation } from '@project/blog-post'
 import { IsString, MaxLength, MinLength } from 'class-validator';
+// import { BlogPostValidation } from '@project/blog-post' // Почему то не работает
 export class CreateTagDTO {
   @ApiProperty({
     type: [String],
     description: 'Tag name',
     example: 'tag1',
-    minLength: BlogPostValidation.TAG.MIN_LENGTH,
-    maxLength: BlogPostValidation.TAG.MAX_LENGTH,
+    minLength: 3,
+    maxLength: 10,
   })
-  @MinLength(BlogPostValidation.TAG.MIN_LENGTH)
-  @MaxLength(BlogPostValidation.TAG.MAX_LENGTH)
+  @MinLength(3)
+  @MaxLength(10)
   @IsString()
   name: string;
 }

@@ -34,7 +34,7 @@ Content-Type: application/json
 
 {
   "type": "video",
-  "tags": [],
+  "tags": ["drift", "clirence"],
   "isPublished": false,
   "isRepost": false,
   "authorId": "6dd03634978549b8",

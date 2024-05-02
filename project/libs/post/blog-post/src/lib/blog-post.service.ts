@@ -13,7 +13,7 @@ import { PostToExtraFieldsEntity } from './entities/post-to-extra-fields.entity'
 import { PostToExtraFieldsFactory } from './factories/post-to-extra-fields';
 import { PostToExtraFieldsRepository } from './repositories/post-to-extra-fields.repository';
 
-import { PostTypeEnum, TagInterface } from '@project/shared/core';
+import { PostTypeEnum } from '@project/shared/core';
 import { BlogPostMessage } from './blog-post.constant';
 import { BasePostEntity } from './entities/base-post.entity';
 import { TagService } from '@project/tag';
@@ -134,7 +134,7 @@ export class BlogPostService {
     const basePostTags = await this.tagService.getOrCreate(basePostFields.tags);
     const basePostEntity = this.basePostFactory.create({
       ...basePostFields,
-      tags: basePostTags
+      tags: basePostTags.map((tag) => tag.toPOJO())
     });
 
     this.basePost = await this.basePostRepository.create(basePostEntity); // Сохраняем в БД

@@ -1,15 +1,17 @@
 import { ApiProperty } from '@nestjs/swagger'
+import { ArrayMaxSize, IsArray, IsBoolean, IsIn, IsOptional, IsString, MaxLength, MinLength } from 'class-validator';
+
 import { BasePostInterface, LikeInterface, PostType, PostTypeEnum, UserInterface } from '@project/shared/core';
+import { BlogPostValidation } from '../blog-post.constant';
+import { postTypeList } from 'libs/shared/core/src/lib/types/post/post-type.enum';
+
 import { CreateLinkPostDTO } from './create-link-post.dto';
 import { CreateTextPostDTO } from './create-text-post.dto';
 import { CreateQuotePostDTO } from './create-quote-post.dto';
 import { CreatePhotoPostDTO } from './create-photo-post.dto';
 import { CreateVideoPostDTO } from './create-video-post.dto';
 import { CommentInterface } from '@project/shared/core'
-import { Type } from 'class-transformer';
-import { ArrayMaxSize, IsArray, IsBoolean, IsIn, IsOptional, IsString, MaxLength, MinLength } from 'class-validator';
-import { postTypeList } from 'libs/shared/core/src/lib/types/post/post-type.enum';
-import { BlogPostValidation } from '../blog-post.constant';
+
 
 export type ExtraFieldsDTO = CreateBasePostDTO | CreateLinkPostDTO | CreateTextPostDTO | CreateQuotePostDTO | CreatePhotoPostDTO | CreateVideoPostDTO;
 
@@ -89,7 +91,7 @@ export class CreateBasePostDTO {
     example: '6dd03634-9785-49b8-a403-9ab61bb5656e',
   })
   @IsString()
-  @IsBoolean()
+  @IsOptional()
   public originAuthorId: UserInterface['id'] | null;
 
 
@@ -98,7 +100,7 @@ export class CreateBasePostDTO {
     example: '6dd03634-9785-49b8-a403-9ab61bb5656e',
   })
   @IsString()
-  @IsBoolean()
+  @IsOptional()
   public originPostId: BasePostInterface['id'] | null;
 
   @ApiProperty({

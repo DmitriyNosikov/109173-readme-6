@@ -6,6 +6,7 @@ import { TagEntity } from './tag.entity';
 import { TagFactory } from './tag.factory';
 import { TagRepository } from './tag.repository';
 import { TagMessage } from './tag.constant';
+import { TagInterface } from '@project/shared/core';
 
 @Injectable()
 export class TagService {
@@ -69,8 +70,8 @@ export class TagService {
     const tags = [];
 
     for(const tagName of tagNames) {
-      const tagEntity = this.tagFactory.create({ name: tagName });
-      const tag = await this.tagRepository.create(tagEntity);
+      const tagObject = { name: tagName };
+      const tag = await this.create(tagObject)
 
       tags.push(tag);
     }

@@ -1,5 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger'
 import { ArrayMaxSize, IsArray, IsBoolean, IsOptional, IsString, MaxLength, MinLength } from 'class-validator';
+
 import { BasePostInterface, UserInterface } from '@project/shared/core';
 import { ExtraFieldsDTO } from './create-base-post.dto';
 import { BlogPostValidation } from '../blog-post.constant';
