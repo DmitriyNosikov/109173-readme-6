@@ -3,7 +3,7 @@ import { BasePostgresRepository } from '@project/shared/data-access'
 import { PrismaClientService } from '@project/blog/models';
 import { Prisma } from '@prisma/client';
 
-import { BasePostInterface, PaginationResult, SortDirectionEnum, SortTypeEnum } from '@project/shared/core';
+import { BasePostInterface, PaginationResult, SortDirectionEnum, SortType, SortTypeEnum } from '@project/shared/core';
 import { BasePostEntity } from '../entities/base-post.entity';
 import { BasePostFactory } from '../factories/base-post.factory';
 import { BlogPostQuery } from '../blog-post.query';
@@ -41,9 +41,14 @@ export class BasePostRepository extends BasePostgresRepository<BasePostEntity, B
       include: {
         tags: true,
         comments: true,
-        likes: true
+        likes: true,
+        _count: {
+          select: { comments: true, likes: true }
+        }
       }
     });
+
+    console.log('CREATED DOCUMENT: ', document);
 
     const post = this.createEntityFromDocument(document);
 
@@ -56,26 +61,30 @@ export class BasePostRepository extends BasePostgresRepository<BasePostEntity, B
     // const where: Prisma.PostWhereInput = {};
     const orderBy: Prisma.PostOrderByWithRelationInput = {};
 
+    // <--- TODO: Поиск по тегам
+
     // Сортировка и направление сортировки
     if (query?.sortType && query?.sortDirection) {
-      orderBy[query.sortType] = query.sortDirection;
+      const { key, value } = this.getSortKeyValue(query.sortType, query.sortDirection);
+
+      orderBy[key] = value;
     }
 
     // Поиск по title (WIP - пока не работает, т.к. title в доп. таблицах и пока непонятно, как это реализовать)
-    if (query?.title) {
-      // where.postToExtraFields = {
-      //   some: {
-      //     title: {
-      //       search: query.title
-      //     }
-      //   }
-      // }
-    }
+    // if (query?.title) {
+    //   where.postToExtraFields = {
+    //     some: {
+    //       title: {
+    //         search: query.title
+    //       }
+    //     }
+    //   }
+    // }
 
     const [posts, postsCount] = await Promise.all([
       this.dbClient.post.findMany({
         where: {
-          isPublished: true
+          isPublished: true // Показываем только опубликованные посты
         },
         include: {
           tags: true,
@@ -94,7 +103,7 @@ export class BasePostRepository extends BasePostgresRepository<BasePostEntity, B
     return {
       entities: posts.map((post) => this.createEntityFromDocument(post)),
       currentPage:  query?.page,
-      totalPages: Math.ceil(postsCount / take),
+      totalPages: this.calculatePostsPage(postsCount, take),
       totalItems: postsCount,
       itemsPerPage: take,
     }
@@ -160,6 +169,26 @@ export class BasePostRepository extends BasePostgresRepository<BasePostEntity, B
     await this.dbClient.post.delete({
       where: { id: postId }
     });
+  }
+
+  private getSortKeyValue(sortType: SortTypeEnum, sortDirection: SortDirectionEnum) {
+    switch(sortType) {
+      case(SortType.CREATED_AT): {
+        return { key: 'createdAt', value: sortDirection };
+      }
+      case(SortType.POPULAR): { // TODO: ХЗ что за популярность такая
+        return { key: 'createdAt', value: sortDirection }
+      }
+      case(SortType.COMMENTS): {
+        return { key: 'comments', value: { _count: sortDirection } }
+      }
+      case(SortType.LIKES): {
+        return { key: 'likes', value: { _count: sortDirection } }
+      }
+      default: {
+        return { key: DEFAULT_SORT_TYPE, value: DEFAULT_SORT_DIRECTION };
+      }
+    }
   }
 
   private async getPostCount(where: Prisma.PostWhereInput): Promise<number> {

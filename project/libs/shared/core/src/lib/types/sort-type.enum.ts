@@ -1,8 +1,8 @@
 export const SortType = {
   POPULAR: 'popular', // по популярности (количетсву комментариев)
-  CREATED_DATE: 'createdAt',
-  LIKES_COUNT: 'likes-count',
-  COMMENTS_COUNT: 'comments-count' // Возможно, не понадобится, т.к. непонятна сортировка по популярности
+  CREATED_AT: 'createdAt',
+  LIKES: 'likes',
+  COMMENTS: 'comments' // Возможно, не понадобится, т.к. непонятна сортировка по популярности
 } as const;
 
 export const SortDirection = {

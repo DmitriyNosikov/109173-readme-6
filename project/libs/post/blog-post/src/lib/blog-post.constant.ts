@@ -4,7 +4,7 @@ export const MAX_POSTS_PER_PAGE = 25; // Максимальное количес
 export const POST_ONLY_PUBLISHED = true; // В список публикаций попадают только посты со статусом "Опубликовано" (isPublished)
 
 export const MAX_SEARCH_POSTS_LIMIT = 20; // Максимальное количество возвращаемых публикаций при поиске
-export const DEFAULT_SORT_TYPE = SortType.CREATED_DATE;
+export const DEFAULT_SORT_TYPE = SortType.CREATED_AT;
 export const DEFAULT_SORT_DIRECTION = SortDirection.DESC;
 export const DEFAULT_PAGE_COUNT = 1;
 
