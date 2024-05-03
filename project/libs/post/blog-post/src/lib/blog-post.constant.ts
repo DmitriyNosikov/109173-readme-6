@@ -54,8 +54,7 @@ export const BlogPostMessage: MessagesType = {
     POST_TYPE: 'Received invalid post type',
     CANT_UPDATE: 'Can`t update post. Possible reason: Object with fields to update are empty',
     UNAUTHORIZED: 'Post can be created only by authorized user',
-    NOT_FOUND: 'Post not found',
-    DB_EMPTY: 'Posts not found. Possible reason: Database is empty'
+    NOT_FOUND: 'Posts not found. Possible reason: Request is incorrect or Database is empty'
   },
   SUCCESS: {
     FOUND: 'Post found',

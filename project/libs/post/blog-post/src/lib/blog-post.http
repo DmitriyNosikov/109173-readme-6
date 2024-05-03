@@ -18,10 +18,17 @@ GET {{baseUrl}}/posts?limit=3 HTTP/1.1
 Content-Type: application/json
 ###
 
+
+# Get paginated posts list (3 items + tags)
+GET {{baseUrl}}/posts?limit=3&tags[]=hot HTTP/1.1
+Content-Type: application/json
+###
+
 # Get paginated posts list (3 items + sort)
 GET {{baseUrl}}/posts?limit=3&sortType=likes&sortDirection=desc HTTP/1.1
 Content-Type: application/json
 ###
+
 
 
 # Create text-post

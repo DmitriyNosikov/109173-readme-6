@@ -7,7 +7,7 @@ import { BasePostInterface, PaginationResult, SortDirectionEnum, SortType, SortT
 import { BasePostEntity } from '../entities/base-post.entity';
 import { BasePostFactory } from '../factories/base-post.factory';
 import { BlogPostQuery } from '../blog-post.query';
-import { DEFAULT_PAGE_COUNT, DEFAULT_SORT_DIRECTION, DEFAULT_SORT_TYPE, MAX_POSTS_PER_PAGE } from '../blog-post.constant';
+import { DEFAULT_SORT_DIRECTION, DEFAULT_SORT_TYPE, MAX_POSTS_PER_PAGE } from '../blog-post.constant';
 
 @Injectable()
 export class BasePostRepository extends BasePostgresRepository<BasePostEntity, BasePostInterface> {
@@ -58,16 +58,20 @@ export class BasePostRepository extends BasePostgresRepository<BasePostEntity, B
   public async find(query?: BlogPostQuery): Promise<PaginationResult<BasePostEntity>> {
     const skip = query?.page && query?.limit ? (query.page - 1) * query.limit : undefined;
     const take = (query?.limit && query?.limit > MAX_POSTS_PER_PAGE) ? MAX_POSTS_PER_PAGE : query.limit;
-    // const where: Prisma.PostWhereInput = {};
+    const where: Prisma.PostWhereInput = {};
     const orderBy: Prisma.PostOrderByWithRelationInput = {};
 
-    // <--- TODO: Поиск по тегам
+    where.isPublished = true; // Показываем только опубликованные посты
 
-    // Сортировка и направление сортировки
-    if (query?.sortType && query?.sortDirection) {
-      const { key, value } = this.getSortKeyValue(query.sortType, query.sortDirection);
-
-      orderBy[key] = value;
+    // Поиск по тегам
+    if(query?.tags) {
+      where.tags = {
+        some: {
+          name: {
+            in: query.tags
+          }
+        }
+      }
     }
 
     // Поиск по title (WIP - пока не работает, т.к. title в доп. таблицах и пока непонятно, как это реализовать)
@@ -81,11 +85,17 @@ export class BasePostRepository extends BasePostgresRepository<BasePostEntity, B
     //   }
     // }
 
+    // Сортировка и направление сортировки
+    if (query?.sortType && query?.sortDirection) {
+      const { key, value } = this.getSortKeyValue(query.sortType, query.sortDirection);
+
+      orderBy[key] = value;
+    }
+
+    // TODO: Нам нужно возвращать ExtraFields, подумать, как это сделать
     const [posts, postsCount] = await Promise.all([
       this.dbClient.post.findMany({
-        where: {
-          isPublished: true // Показываем только опубликованные посты
-        },
+        where,
         include: {
           tags: true,
           comments: true,
@@ -97,7 +107,7 @@ export class BasePostRepository extends BasePostgresRepository<BasePostEntity, B
         skip,
         orderBy
       }),
-      this.dbClient.post.count()
+      this.getPostCount(where)
     ]);
 
     return {

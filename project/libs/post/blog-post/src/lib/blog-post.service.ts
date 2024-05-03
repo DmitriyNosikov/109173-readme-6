@@ -61,6 +61,18 @@ export class BlogPostService {
     return foundPost;
   }
 
+  public async getPaginatedPosts(query?: BlogPostQuery) {
+    const getPaginatedPosts = await this.basePostRepository.find(query);
+
+    if(!getPaginatedPosts || getPaginatedPosts.entities.length <= 0) {
+      const queryParams = Object.entries(query).join('; ').replace(/,/g, '=');
+
+      throw new NotFoundException(`Can't find post by requested params: ${queryParams}`);
+    }
+
+    return getPaginatedPosts;
+  }
+
   public async update(postId: string, updatedFields: Partial<UpdateBasePostDTO>) {
     const basePost: BasePostEntity = await this.basePostRepository.findById(postId);
 
@@ -112,16 +124,6 @@ export class BlogPostService {
 
     // удаляем пост
     await this.basePostRepository.deleteById(post.id);
-  }
-
-  public async getPaginatedPosts(query?: BlogPostQuery) {
-    const getPaginatedPosts = await this.basePostRepository.find(query);
-
-    if(!getPaginatedPosts || getPaginatedPosts.entities.length <= 0) {
-      throw new NotFoundException(BlogPostMessage.ERROR.DB_EMPTY);
-    }
-
-    return getPaginatedPosts;
   }
 
   private async getPostWithExtraFields(postId: string) {
