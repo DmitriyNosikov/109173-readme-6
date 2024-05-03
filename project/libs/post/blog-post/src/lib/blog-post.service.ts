@@ -18,6 +18,7 @@ import { BlogPostMessage } from './blog-post.constant';
 import { BasePostEntity } from './entities/base-post.entity';
 import { TagService } from '@project/tag';
 import { UpdateBasePostDTO } from './dto/update-base-post.dto';
+import { BlogPostQuery } from './blog-post.query';
 
 @Injectable()
 export class BlogPostService {
@@ -113,8 +114,12 @@ export class BlogPostService {
     await this.basePostRepository.deleteById(post.id);
   }
 
-  public async getPaginatedPosts() {
-    const getPaginatedPosts = await this.basePostRepository.getPaginatedPosts();
+  public async getPaginatedPosts(query?: BlogPostQuery) {
+    const getPaginatedPosts = await this.basePostRepository.find(query);
+
+    if(!getPaginatedPosts || getPaginatedPosts.entities.length <= 0) {
+      throw new NotFoundException(BlogPostMessage.ERROR.DB_EMPTY);
+    }
 
     return getPaginatedPosts;
   }

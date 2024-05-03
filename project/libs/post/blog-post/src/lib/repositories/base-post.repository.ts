@@ -50,19 +50,27 @@ export class BasePostRepository extends BasePostgresRepository<BasePostEntity, B
     return post;
   }
 
-  public async getPaginatedPosts(
-    page: number = DEFAULT_PAGE_COUNT,
-    itemsCount: number = MAX_POSTS_PER_PAGE,
-    sortType: SortTypeEnum = DEFAULT_SORT_TYPE,
-    sortDirection: SortDirectionEnum = DEFAULT_SORT_DIRECTION
-  ): Promise<PaginationResult<BasePostEntity>> {
-    itemsCount = (itemsCount > MAX_POSTS_PER_PAGE ) ? MAX_POSTS_PER_PAGE : itemsCount;
+  public async find(query?: BlogPostQuery): Promise<PaginationResult<BasePostEntity>> {
+    const skip = query?.page && query?.limit ? (query.page - 1) * query.limit : undefined;
+    const take = (query?.limit && query?.limit > MAX_POSTS_PER_PAGE) ? MAX_POSTS_PER_PAGE : query.limit;
+    // const where: Prisma.PostWhereInput = {};
+    const orderBy: Prisma.PostOrderByWithRelationInput = {};
 
-    const take = itemsCount;
-    const skip = (page && itemsCount) ? (page - 1) * itemsCount : undefined;
-    const orderBy = {};
+    // Сортировка и направление сортировки
+    if (query?.sortType && query?.sortDirection) {
+      orderBy[query.sortType] = query.sortDirection;
+    }
 
-    orderBy[sortType] = sortDirection;
+    // Поиск по title (WIP - пока не работает, т.к. title в доп. таблицах и пока непонятно, как это реализовать)
+    if (query?.title) {
+      // where.postToExtraFields = {
+      //   some: {
+      //     title: {
+      //       search: query.title
+      //     }
+      //   }
+      // }
+    }
 
     const [posts, postsCount] = await Promise.all([
       this.dbClient.post.findMany({
@@ -85,10 +93,10 @@ export class BasePostRepository extends BasePostgresRepository<BasePostEntity, B
 
     return {
       entities: posts.map((post) => this.createEntityFromDocument(post)),
-      totalPages: Math.ceil(postsCount / itemsCount),
+      currentPage:  query?.page,
+      totalPages: Math.ceil(postsCount / take),
       totalItems: postsCount,
-      currentPage: page,
-      itemsPerPage: itemsCount,
+      itemsPerPage: take,
     }
   }
 
@@ -111,48 +119,6 @@ export class BasePostRepository extends BasePostgresRepository<BasePostEntity, B
     const post = this.createEntityFromDocument(document);
 
     return post;
-  }
-
-  public async find(query?: BlogPostQuery): Promise<PaginationResult<BasePostEntity>> {
-    const skip = query?.page && query?.limit ? (query.page - 1) * query.limit : undefined;
-    const take = query?.limit;
-    const where: Prisma.PostWhereInput = {};
-    const orderBy: Prisma.PostOrderByWithRelationInput = {};
-
-    // Поиск по title (WIP - пока не работает, т.к. title в доп. таблицах и пока непонятно, как это реализовать)
-    if (query?.title) {
-      // where.postToExtraFields = {
-      //   some: {
-      //     title: {
-      //       search: query.title
-      //     }
-      //   }
-      // }
-    }
-
-    // Сортировка и направление сортировки
-    if (query?.sortType && query?.sortDirection) {
-      orderBy[query.sortType] = query.sortDirection;
-    }
-
-    const [records, postCount] = await Promise.all([
-      this.dbClient.post.findMany({ where, orderBy, skip, take,
-        include: {
-          tags: true,
-          comments: true,
-          likes: true,
-        },
-      }),
-      this.getPostCount(where),
-    ]);
-
-    return {
-      entities: records.map((record) => this.createEntityFromDocument(record)),
-      currentPage: query?.page,
-      totalPages: this.calculatePostsPage(postCount, take),
-      itemsPerPage: take,
-      totalItems: postCount,
-    }
   }
 
   public async updateById(

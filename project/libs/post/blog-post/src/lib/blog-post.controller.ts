@@ -1,5 +1,5 @@
 import { ApiResponse } from '@nestjs/swagger'
-import { Controller, Get, Post, Body, Param, Patch, Delete, HttpStatus } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, Patch, Delete, HttpStatus, Query } from '@nestjs/common';
 
 import { CreateBasePostDTO } from './dto/create-base-post.dto'
 import { CreatePostRDO } from './rdo/create-base-post.rdo';
@@ -8,6 +8,8 @@ import { fillDTO } from '@project/shared/helpers';
 
 import { BlogPostService } from './blog-post.service';
 import { BlogPostMessage } from './blog-post.constant';
+import { BlogPostQuery } from './blog-post.query';
+import { BasePostWithPaginationRdo } from './rdo/base-post-with-pagination.rdo';
 
 
 @Controller('posts')
@@ -15,11 +17,23 @@ export class BlogPostController {
   constructor(
     private readonly blogPostService: BlogPostService
   ){}
+  @ApiResponse({
+    status: HttpStatus.OK,
+    description: BlogPostMessage.SUCCESS.FOUND
+  })
+  @ApiResponse({
+    status: HttpStatus.NOT_FOUND,
+    description: BlogPostMessage.ERROR.NOT_FOUND
+  })
   @Get('/')
-  public async index(): Promise<void> {
-    const paginatedPosts = await this.blogPostService.getPaginatedPosts();
+  public async index(@Query() query: BlogPostQuery) {
+    const paginatedPosts = await this.blogPostService.getPaginatedPosts(query);
+    const result = {
+      ...paginatedPosts,
+      entities: paginatedPosts.entities.map((post) => post.toPOJO())
+    };
 
-    console.log('PAGINATED POSTS:', paginatedPosts);
+    return fillDTO(BasePostWithPaginationRdo, result);
   }
 
   @ApiResponse({
