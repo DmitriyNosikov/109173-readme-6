@@ -113,6 +113,12 @@ export class BlogPostService {
     await this.basePostRepository.deleteById(post.id);
   }
 
+  public async getPaginatedPosts() {
+    const getPaginatedPosts = await this.basePostRepository.getPaginatedPosts();
+
+    return getPaginatedPosts;
+  }
+
   private async getPostWithExtraFields(postId: string) {
     const post = await this.basePostRepository.findById(postId);
 

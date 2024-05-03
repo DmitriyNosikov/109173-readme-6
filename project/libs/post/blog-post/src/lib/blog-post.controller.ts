@@ -15,6 +15,12 @@ export class BlogPostController {
   constructor(
     private readonly blogPostService: BlogPostService
   ){}
+  @Get('/')
+  public async index(): Promise<void> {
+    const paginatedPosts = await this.blogPostService.getPaginatedPosts();
+
+    console.log('PAGINATED POSTS:', paginatedPosts);
+  }
 
   @ApiResponse({
     // type: UserRDO,

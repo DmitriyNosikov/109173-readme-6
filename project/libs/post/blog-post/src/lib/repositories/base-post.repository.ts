@@ -3,10 +3,11 @@ import { BasePostgresRepository } from '@project/shared/data-access'
 import { PrismaClientService } from '@project/blog/models';
 import { Prisma } from '@prisma/client';
 
-import { BasePostInterface, PaginationResult } from '@project/shared/core';
+import { BasePostInterface, PaginationResult, SortDirectionEnum, SortTypeEnum } from '@project/shared/core';
 import { BasePostEntity } from '../entities/base-post.entity';
 import { BasePostFactory } from '../factories/base-post.factory';
 import { BlogPostQuery } from '../blog-post.query';
+import { DEFAULT_PAGE_COUNT, DEFAULT_SORT_DIRECTION, DEFAULT_SORT_TYPE, MAX_POSTS_PER_PAGE } from '../blog-post.constant';
 
 @Injectable()
 export class BasePostRepository extends BasePostgresRepository<BasePostEntity, BasePostInterface> {
@@ -47,6 +48,48 @@ export class BasePostRepository extends BasePostgresRepository<BasePostEntity, B
     const post = this.createEntityFromDocument(document);
 
     return post;
+  }
+
+  public async getPaginatedPosts(
+    page: number = DEFAULT_PAGE_COUNT,
+    itemsCount: number = MAX_POSTS_PER_PAGE,
+    sortType: SortTypeEnum = DEFAULT_SORT_TYPE,
+    sortDirection: SortDirectionEnum = DEFAULT_SORT_DIRECTION
+  ): Promise<PaginationResult<BasePostEntity>> {
+    itemsCount = (itemsCount > MAX_POSTS_PER_PAGE ) ? MAX_POSTS_PER_PAGE : itemsCount;
+
+    const take = itemsCount;
+    const skip = (page && itemsCount) ? (page - 1) * itemsCount : undefined;
+    const orderBy = {};
+
+    orderBy[sortType] = sortDirection;
+
+    const [posts, postsCount] = await Promise.all([
+      this.dbClient.post.findMany({
+        where: {
+          isPublished: true
+        },
+        include: {
+          tags: true,
+          comments: true,
+          likes: true
+        },
+
+        // Pagination
+        take,
+        skip,
+        orderBy
+      }),
+      this.dbClient.post.count()
+    ]);
+
+    return {
+      entities: posts.map((post) => this.createEntityFromDocument(post)),
+      totalPages: Math.ceil(postsCount / itemsCount),
+      totalItems: postsCount,
+      currentPage: page,
+      itemsPerPage: itemsCount,
+    }
   }
 
   public async findById(entityId: string): Promise<BasePostEntity | null> {
@@ -96,9 +139,8 @@ export class BasePostRepository extends BasePostgresRepository<BasePostEntity, B
       this.dbClient.post.findMany({ where, orderBy, skip, take,
         include: {
           tags: true,
-          likes: true,
           comments: true,
-          postToExtraFields: true
+          likes: true,
         },
       }),
       this.getPostCount(where),
@@ -113,7 +155,6 @@ export class BasePostRepository extends BasePostgresRepository<BasePostEntity, B
     }
   }
 
-  // TODO: Пока не реализовано корректно
   public async updateById(
     entityId: string,
     updatedFields: Partial<BasePostEntity>
