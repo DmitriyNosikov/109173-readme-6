@@ -65,7 +65,7 @@ export class BasePostRepository extends BasePostgresRepository<BasePostEntity, B
     const where: Prisma.PostWhereInput = {};
     const orderBy: Prisma.PostOrderByWithRelationInput = {};
 
-    // where.isPublished = true; // Показываем только опубликованные посты
+    where.isPublished = true; // Показываем только опубликованные посты
 
     // Поиск по тегам
     if(query?.tags) {
@@ -79,7 +79,8 @@ export class BasePostRepository extends BasePostgresRepository<BasePostEntity, B
       }
     }
 
-    // Поиск по title (WIP - пока не работает, т.к. title в доп. таблицах и пока непонятно, как это реализовать)
+    // TODO: Поиск по title (WIP - пока не работает, т.к.
+    // title в доп. таблицах и пока непонятно, как это реализовать)
     // if (query?.title) {
     //   where.postToExtraFields = {
     //     some: {
@@ -97,7 +98,6 @@ export class BasePostRepository extends BasePostgresRepository<BasePostEntity, B
       orderBy[key] = value;
     }
 
-    // TODO: Нам нужно возвращать ExtraFields, подумать, как это сделать
     const [posts, postsCount] = await Promise.all([
       this.dbClient.post.findMany({
         where,
@@ -152,17 +152,27 @@ export class BasePostRepository extends BasePostgresRepository<BasePostEntity, B
     entityId: string,
     updatedFields: Partial<BasePostEntity>
   ): Promise<void | BasePostEntity> {
+
+    let updateTags = undefined;
+
+    if(updatedFields.tags) {
+      if(updatedFields.tags.length > 0) {
+        updateTags = {
+          set: updatedFields.tags,
+        }
+      } else { // Если передали пустой массив - очищаем теги
+        updateTags = {
+          set: [],
+        }
+      }
+    }
+
     const document = await this.dbClient.post.update({
       where: { id: entityId },
       data: {
         ...updatedFields,
 
-        tags: (updatedFields.tags && updatedFields.tags.length > 0) ? {
-          connect: updatedFields.tags, // Connect new tags
-          // disconnect: updatedFields.tags, // Remove only passed tags
-        } : {
-          set: [] // Remove all tags
-        },
+        tags: updateTags,
 
         comments: updatedFields.comments ? {
           connect: updatedFields.comments

@@ -1,8 +1,7 @@
 import { ApiResponse } from '@nestjs/swagger'
-import { Controller, Get, Post, Body, Param, Patch, Delete, HttpStatus, Query } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, Patch, Delete, HttpStatus, Query, HttpCode } from '@nestjs/common';
 
 import { CreateBasePostDTO } from './dto/create-base-post.dto'
-import { CreatePostRDO } from './rdo/create-base-post.rdo';
 import { UpdateBasePostDTO } from './dto/update-base-post.dto';
 import { fillDTO } from '@project/shared/helpers';
 
@@ -49,13 +48,10 @@ export class BlogPostController {
   public async show(@Param('postId') postId: string): Promise<BasePostWithExtraFieldsRDO | void> {
     const post = await this.blogPostService.findById(postId);
 
-    console.log('POST: ', post);
-
     return fillDTO(BasePostWithExtraFieldsRDO, post);
   }
 
   @ApiResponse({
-    // type: UserRDO,
     status: HttpStatus.CREATED,
     description: BlogPostMessage.SUCCESS.CREATED
   })
@@ -64,10 +60,10 @@ export class BlogPostController {
     description: BlogPostMessage.ERROR.UNAUTHORIZED
   })
   @Post()
-  public async create(@Body() dto: CreateBasePostDTO): Promise<CreatePostRDO | void> {
+  public async create(@Body() dto: CreateBasePostDTO): Promise<BasePostWithExtraFieldsRDO | void> {
     const createdPost = await this.blogPostService.create(dto);
 
-    return fillDTO(CreatePostRDO, createdPost);
+    return fillDTO(BasePostWithExtraFieldsRDO, createdPost);
   }
 
   @ApiResponse({
@@ -80,10 +76,9 @@ export class BlogPostController {
   })
   @Patch(':postId')
   public async update(@Param('postId') postId: string, @Body() updatedFields: UpdateBasePostDTO) {
-    console.log('POST FIELDS TO UPDATE: ', updatedFields);
     const updatedPost = this.blogPostService.update(postId, updatedFields);
 
-    return fillDTO(CreatePostRDO, updatedPost);
+    return fillDTO(BasePostWithExtraFieldsRDO, updatedPost);
   }
 
   @ApiResponse({
@@ -94,6 +89,7 @@ export class BlogPostController {
     status: HttpStatus.NOT_FOUND,
     description: BlogPostMessage.ERROR.NOT_FOUND
   })
+  @HttpCode(HttpStatus.NO_CONTENT)
   @Delete(':postId')
   public async delete(@Param('postId') postId: string): Promise<void> {
     await this.blogPostService.delete(postId);

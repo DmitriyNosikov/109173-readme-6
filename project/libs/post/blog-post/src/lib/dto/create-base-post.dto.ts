@@ -1,7 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger'
 import { ArrayMaxSize, IsArray, IsBoolean, IsIn, IsMongoId, IsNotEmpty, IsOptional, IsString, MaxLength, MinLength } from 'class-validator';
 
-import { BasePostInterface, PostType, PostTypeEnum, UserInterface } from '@project/shared/core';
+import { BasePostInterface, LikeInterface, PostType, PostTypeEnum, UserInterface } from '@project/shared/core';
 import { BlogPostValidation } from '../blog-post.constant';
 import { postTypeList } from 'libs/shared/core/src/lib/types/post/post-type.enum';
 
@@ -10,6 +10,7 @@ import { CreateTextPostDTO } from './create-text-post.dto';
 import { CreateQuotePostDTO } from './create-quote-post.dto';
 import { CreatePhotoPostDTO } from './create-photo-post.dto';
 import { CreateVideoPostDTO } from './create-video-post.dto';
+import { CommentInterface } from '@project/post/comment';
 
 
 export type ExtraFieldsDTO = CreateBasePostDTO | CreateLinkPostDTO | CreateTextPostDTO | CreateQuotePostDTO | CreatePhotoPostDTO | CreateVideoPostDTO;
@@ -50,7 +51,7 @@ export class CreateBasePostDTO {
   @IsArray()
   @IsString({ each: true })
   @IsOptional()
-  public comments: string[] | null;
+  public comments: CommentInterface[] | null;
 
   @ApiProperty({
     type: [String],
@@ -60,7 +61,7 @@ export class CreateBasePostDTO {
   @IsArray()
   @IsString({ each: true })
   @IsOptional()
-  public likes: string[] | null;
+  public likes: LikeInterface[] | null;
 
   @ApiProperty({
     description: 'Is post published flag',

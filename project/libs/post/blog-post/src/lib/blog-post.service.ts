@@ -96,7 +96,8 @@ export class BlogPostService {
       delete updatedFields.extraFields;
     }
 
-    // Обновление тегов (TODO: по хорошему, надо сверять и удалять связи лишние, а новые добавлять)
+    // Обновление тегов
+    // TODO: по хорошему, надо сверять и удалять связи лишние, а новые добавлять
     let updatedTags = undefined;
 
     if(updatedFields.tags && updatedFields.tags.length > 0) {
@@ -136,8 +137,6 @@ export class BlogPostService {
     }
 
     const postExtraFields = await this.postToExtraFieldsRepository.getExtraFields(post.id, post.type);
-
-    console.log('POST EXTRA FIELDS: ', postExtraFields);
 
     return {
       ...post.toPOJO(),
