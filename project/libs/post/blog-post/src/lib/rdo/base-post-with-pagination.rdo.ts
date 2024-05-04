@@ -1,9 +1,10 @@
-import { Expose } from 'class-transformer';
-import { CreateBasePostRDO } from './create-base-post.rdo';
+import { Expose, Type } from 'class-transformer';
+import { BasePostWithExtraFieldsRDO } from './base-post-with-extra-fields';
 
 export class BasePostWithPaginationRdo {
   @Expose()
-  public entities: CreateBasePostRDO[];
+  @Type(() => BasePostWithExtraFieldsRDO)
+  public entities: BasePostWithExtraFieldsRDO[];
 
   @Expose()
   public totalPages: number;

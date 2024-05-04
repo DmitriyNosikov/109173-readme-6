@@ -36,7 +36,11 @@ export class BasePostRepository extends BasePostgresRepository<BasePostEntity, B
         // По идее, лайков и комментариев не может быть у нового поста
         // (на текущий момент так)
         comments: undefined,
-        likes: undefined
+        likes: undefined,
+
+        postToExtraFields: entity.postToExtraFields ? {
+          connect: entity.postToExtraFields
+        } : undefined,
       },
       include: {
         tags: true,
@@ -61,7 +65,7 @@ export class BasePostRepository extends BasePostgresRepository<BasePostEntity, B
     const where: Prisma.PostWhereInput = {};
     const orderBy: Prisma.PostOrderByWithRelationInput = {};
 
-    where.isPublished = true; // Показываем только опубликованные посты
+    // where.isPublished = true; // Показываем только опубликованные посты
 
     // Поиск по тегам
     if(query?.tags) {
@@ -112,8 +116,10 @@ export class BasePostRepository extends BasePostgresRepository<BasePostEntity, B
       this.getPostCount(where)
     ]);
 
+    const postsEntities = posts.map((post) => this.createEntityFromDocument(post));
+
     return {
-      entities: posts.map((post) => this.createEntityFromDocument(post)),
+      entities: postsEntities,
       currentPage:  query?.page,
       totalPages: this.calculatePostsPage(postsCount, take),
       totalItems: postsCount,
@@ -164,7 +170,11 @@ export class BasePostRepository extends BasePostgresRepository<BasePostEntity, B
 
         likes: updatedFields.likes ? {
           connect: updatedFields.likes
-        } : undefined
+        } : undefined,
+
+        postToExtraFields: updatedFields.postToExtraFields ? {
+          connect: updatedFields.postToExtraFields
+        } : undefined,
       },
       include: {
         tags: true,

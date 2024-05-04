@@ -19,6 +19,7 @@ import { BasePostEntity } from './entities/base-post.entity';
 import { TagService } from '@project/tag';
 import { UpdateBasePostDTO } from './dto/update-base-post.dto';
 import { BlogPostQuery } from './blog-post.query';
+import { PostEntities } from './types/entities.enum';
 
 @Injectable()
 export class BlogPostService {
@@ -45,10 +46,12 @@ export class BlogPostService {
     // Сохраняем в БД основу для поста
     await this.createBasePost(dto);
 
-    // Сохраняем дополнительные поля базового поста (которыми как раз отличаются типизированные посты)
+    // Сохраняем дополнительные поля базового поста
+    // (которыми как раз отличаются типизированные посты)
     await this.createExtraFieldsPost(dto);
 
-    // Cохраняем все части нашего боста (базовая + дополнительная) в связующую таблицу
+    // Сохраняем все части нашего поста
+    // (базовая + дополнительная) в связующую таблицу
     await this.createPostToExtraFields();
 
     const createdPost  = await this.getPostWithExtraFields(this.basePost.id);
@@ -63,15 +66,18 @@ export class BlogPostService {
   }
 
   public async getPaginatedPosts(query?: BlogPostQuery) {
-    const getPaginatedPosts = await this.basePostRepository.search(query);
+    const paginatedPosts = await this.basePostRepository.search(query);
 
-    if(!getPaginatedPosts || getPaginatedPosts.entities.length <= 0) {
+    if(!paginatedPosts || paginatedPosts.entities.length <= 0) {
       const queryParams = Object.entries(query).join('; ').replace(/,/g, '=');
 
       throw new NotFoundException(`Can't find post by requested params: ${queryParams}`);
     }
 
-    return getPaginatedPosts;
+    // Добавляем к полученным постам их ExtraFields
+    await this.connectExtraFieldsToPosts(paginatedPosts.entities);
+
+    return paginatedPosts;
   }
 
   public async update(postId: string, updatedFields: Partial<UpdateBasePostDTO>) {
@@ -99,7 +105,8 @@ export class BlogPostService {
 
     await this.basePostRepository.updateById(postId, {
       ...updatedFields,
-      tags: updatedTags
+      tags: updatedTags,
+      extraFields: undefined
     });
 
     const updatedPost  = await this.getPostWithExtraFields(postId);
@@ -130,10 +137,67 @@ export class BlogPostService {
 
     const postExtraFields = await this.postToExtraFieldsRepository.getExtraFields(post.id, post.type);
 
+    console.log('POST EXTRA FIELDS: ', postExtraFields);
+
     return {
       ...post.toPOJO(),
-      extraFields: postExtraFields.toPOJO()
+      extraFields: [ postExtraFields.toPOJO() ]
     };
+  }
+
+  private typifyExtraFieldsIdsByPostType(posts) {
+    const typedExtraFields = posts.reduce(( postsMap: Map<PostTypeEnum, string[]>, post: BasePostEntity) => {
+      if(!postsMap.has(post.type)) {
+        postsMap.set(post.type, [])
+      }
+
+      const postExtraFieldsIds = post.postToExtraFields.map((postToExtraFieldsItem) => postToExtraFieldsItem.extraFieldsId);
+
+      postsMap.get(post.type).push(...postExtraFieldsIds);
+
+      return postsMap;
+    }, new Map<PostTypeEnum, string[]>());
+
+    return typedExtraFields;
+  }
+
+  private async getTypifiedExtraFieldsValues(typifiedExtraFields: Map<PostTypeEnum, string[]>): Promise<Map<PostTypeEnum, PostEntities[]>>{
+    const extraFieldsValuesMap = new Map();
+
+    for(const [postType, extraFieldsIds] of typifiedExtraFields) {
+      const postTypeExtraFields = await this.postToExtraFieldsRepository.getExtraFieldsByIds(postType, extraFieldsIds)
+
+      extraFieldsValuesMap.set(postType, postTypeExtraFields)
+    }
+
+    return extraFieldsValuesMap;
+  }
+
+  private async connectExtraFieldsToPosts(posts: BasePostEntity[]) {
+    if(!posts) {
+      return;
+    }
+
+    // Получаем ExtraFields постов и собираем их в Map
+    const typifiedExtraFieldsIds = this.typifyExtraFieldsIdsByPostType(posts);
+    const typifiedExtraFieldsValues = await this.getTypifiedExtraFieldsValues(typifiedExtraFieldsIds);
+
+    // Добавляем полученные ExtraFields к постам
+    posts.map((post) => {
+      const currentPostTypeExtraFields = typifiedExtraFieldsValues.get(post.type);
+
+      post.postToExtraFields.forEach((relation) => {
+        post['extraFields'] = [];
+
+        currentPostTypeExtraFields.forEach((extraFields) => {
+          if(extraFields.id === relation.extraFieldsId) {
+            post['extraFields'].push(extraFields);
+          }
+        });
+      });
+
+      return post;
+    })
   }
 
   private checkPostType(postType: PostTypeEnum) {
@@ -153,7 +217,8 @@ export class BlogPostService {
       ...dto,
       tags: basePostTags,
       comments: undefined,
-      likes: undefined
+      likes: undefined,
+      extraFields: undefined,
     });
 
     // Сохраняем в БД

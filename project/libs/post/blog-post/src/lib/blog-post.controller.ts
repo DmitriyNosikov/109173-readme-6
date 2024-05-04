@@ -10,6 +10,7 @@ import { BlogPostService } from './blog-post.service';
 import { BlogPostMessage } from './blog-post.constant';
 import { BlogPostQuery } from './blog-post.query';
 import { BasePostWithPaginationRdo } from './rdo/base-post-with-pagination.rdo';
+import { BasePostWithExtraFieldsRDO } from './rdo/base-post-with-extra-fields';
 
 
 @Controller('posts')
@@ -37,6 +38,23 @@ export class BlogPostController {
   }
 
   @ApiResponse({
+    status: HttpStatus.OK,
+    description: BlogPostMessage.SUCCESS.FOUND
+  })
+  @ApiResponse({
+    status: HttpStatus.NOT_FOUND,
+    description: BlogPostMessage.ERROR.NOT_FOUND
+  })
+  @Get(':postId')
+  public async show(@Param('postId') postId: string): Promise<BasePostWithExtraFieldsRDO | void> {
+    const post = await this.blogPostService.findById(postId);
+
+    console.log('POST: ', post);
+
+    return fillDTO(BasePostWithExtraFieldsRDO, post);
+  }
+
+  @ApiResponse({
     // type: UserRDO,
     status: HttpStatus.CREATED,
     description: BlogPostMessage.SUCCESS.CREATED
@@ -49,24 +67,7 @@ export class BlogPostController {
   public async create(@Body() dto: CreateBasePostDTO): Promise<CreatePostRDO | void> {
     const createdPost = await this.blogPostService.create(dto);
 
-    console.log('CREATED POST: ', createdPost);
-
     return fillDTO(CreatePostRDO, createdPost);
-  }
-
-  @ApiResponse({
-    status: HttpStatus.OK,
-    description: BlogPostMessage.SUCCESS.FOUND
-  })
-  @ApiResponse({
-    status: HttpStatus.NOT_FOUND,
-    description: BlogPostMessage.ERROR.NOT_FOUND
-  })
-  @Get(':postId')
-  public async show(@Param('postId') postId: string): Promise<CreatePostRDO | void> {
-    const post = await this.blogPostService.findById(postId);
-
-    return fillDTO(CreatePostRDO, post);
   }
 
   @ApiResponse({

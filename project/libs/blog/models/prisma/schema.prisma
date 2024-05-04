@@ -35,7 +35,7 @@ model PostToExtraFields {
   updatedAt       DateTime? @updatedAt @map("updated_at")
 
   postId          String    @db.VarChar(255) @map("post_id")
-  postType        String    @map("post_type") // Таблицу, из которой нужно получить экстра-филды, определяем по типу поста
+  postType        PostType    @map("post_type") // Таблицу, из которой нужно получить экстра-филды, определяем по типу поста
   extraFieldsId   String    @map("extra_fields_id") // Через данное поле будем вручную получать экстра-филды
 
   // --- Отношения

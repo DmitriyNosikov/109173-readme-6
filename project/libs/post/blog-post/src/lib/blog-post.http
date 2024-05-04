@@ -6,30 +6,7 @@
 
 # Environment
 @userId = 6dd03634-9785-49b8-a403-9ab61bb5656e
-@postId = 700f7c4f-1e29-4331-bae4-c5a02fa43faa
-
-# Get paginated posts list (without parameters)
-GET {{baseUrl}}/posts HTTP/1.1
-Content-Type: application/json
-###
-
-# Get paginated posts list (3 items)
-GET {{baseUrl}}/posts?limit=3 HTTP/1.1
-Content-Type: application/json
-###
-
-
-# Get paginated posts list (3 items + tags)
-GET {{baseUrl}}/posts?limit=3&tags[]=hot HTTP/1.1
-Content-Type: application/json
-###
-
-# Get paginated posts list (3 items + sort)
-GET {{baseUrl}}/posts?limit=3&sortType=likes&sortDirection=desc HTTP/1.1
-Content-Type: application/json
-###
-
-
+@postId = d14f8eb8-fcfd-43cd-8dec-4aca530601e1
 
 # Create text-post
 POST {{baseUrl}}/posts HTTP/1.1
@@ -65,6 +42,31 @@ Content-Type: application/json
   }
 }
 ###
+
+
+
+# Get paginated posts list (without parameters)
+GET {{baseUrl}}/posts HTTP/1.1
+Content-Type: application/json
+###
+
+# Get paginated posts list (3 items)
+GET {{baseUrl}}/posts?limit=3 HTTP/1.1
+Content-Type: application/json
+###
+
+
+# Get paginated posts list (3 items + tags)
+GET {{baseUrl}}/posts?limit=3&tags[]=hot HTTP/1.1
+Content-Type: application/json
+###
+
+# Get paginated posts list (3 items + sort)
+GET {{baseUrl}}/posts?limit=3&sortType=likes&sortDirection=desc HTTP/1.1
+Content-Type: application/json
+###
+
+
 
 # Find post by id
 GET {{baseUrl}}/posts/{{postId}} HTTP/1.1

@@ -1,10 +1,10 @@
 import { Expose, Type } from 'class-transformer';
 import { BasePostInterface, LikeInterface, PostTypeEnum, UserInterface } from '@project/shared/core';
-import { CreatePostToExtraFieldsRDO } from './create-post-to-extra-fields.rdo';
 import { CreateTagRDO } from 'libs/post/tag/src/lib/rdo/create-tag.rdo';
 import { CreateCommentRDO } from 'libs/post/comment/src/lib/rdo/create-comment.rdo';
+import { ExtraFieldsRDO } from './create-base-post.rdo';
 
-export class GetPostRDO {
+export class BasePostWithExtraFieldsRDO {
   @Expose()
   public id: string;
 
@@ -45,6 +45,11 @@ export class GetPostRDO {
   public originPostId: BasePostInterface['id'] | null;
 
   @Expose()
-  @Type(() => CreatePostToExtraFieldsRDO)
-  public postToExtraFields: CreatePostToExtraFieldsRDO[]
+  public extraFields: ExtraFieldsRDO[]
+
+  // PostToExtraFields - это чисто техническая
+  // таблица и пользователю она не нужна
+  // @Expose()
+  // @Type(() => CreatePostToExtraFieldsRDO)
+  // public postToExtraFields: CreatePostToExtraFieldsRDO[]
 }

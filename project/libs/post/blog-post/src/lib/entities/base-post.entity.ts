@@ -4,13 +4,18 @@ import {
   StorableEntity,
   BasePostInterface,
   UserInterface,
-  LikeInterface
+  LikeInterface,
+  PostToExtraFieldsInterface
 } from '@project/shared/core'
 
 import { TagInterface, TagEntity, TagFactory } from '@project/tag';
 import { CommentEntity, CommentFactory, CommentInterface } from '@project/post/comment'
 import { LikeEntity } from '@project/post/like'
 import { LikeFactory } from 'libs/post/like/src/lib/like.factory';
+
+import { PostToExtraFieldsEntity } from './post-to-extra-fields.entity';
+import { PostToExtraFieldsFactory } from '../factories/post-to-extra-fields';
+import { PostEntities } from '../types/entities.enum';
 
 export class BasePostEntity extends Entity implements BasePostInterface, StorableEntity<BasePostInterface> {
   public createdAt: Date;
@@ -28,8 +33,15 @@ export class BasePostEntity extends Entity implements BasePostInterface, Storabl
   public tags: TagEntity[] | undefined;
   public comments: CommentEntity[] | undefined;
   public likes: LikeEntity[] | undefined;
-  // public extraFields?: ExtraFields | undefined;
-  // public postToExtraFields?: PostToExtraFieldsInterface[] | undefined;
+
+  // т.к. в будущем мы подразумеваем, что одному посту
+  // может соответствовать несколько типов доп. полей
+  // (видео, фото, текст), то сразу закладываем такую возможность
+  public postToExtraFields?: PostToExtraFieldsEntity[] | undefined;
+
+  // Поле введено для корректной отдачи поста
+  // с доп. полями при конвертации в toPOJO()
+  public extraFields?: PostEntities[] | undefined;
 
   constructor(post?: BasePostInterface) {
     super();
@@ -56,6 +68,7 @@ export class BasePostEntity extends Entity implements BasePostInterface, Storabl
     this.tags = [];
     this.comments = [];
     this.likes = [];
+    this.postToExtraFields = [];
 
     // Заполняем теги
     if(post.tags) {
@@ -71,10 +84,15 @@ export class BasePostEntity extends Entity implements BasePostInterface, Storabl
     if(post.likes) {
       this.fillLikes(post.likes)
     }
+
+    // Заполняем отношения Post to ExtraFields
+    if(post.postToExtraFields) {
+      this.fillPostToExtraFields(post.postToExtraFields)
+    }
   }
 
   public toPOJO(): BasePostInterface {
-    return {
+    const basePost = {
       id: this.id,
       createdAt: this.createdAt,
       updatedAt: this.updatedAt,
@@ -90,7 +108,14 @@ export class BasePostEntity extends Entity implements BasePostInterface, Storabl
       tags: this.tags.map((tag) => tag.toPOJO()),
       comments: this.comments.map((comment) => comment.toPOJO()),
       likes: this.likes.map((like) => like.toPOJO()),
+      postToExtraFields: this.postToExtraFields.map((item) => item.toPOJO()),
     };
+
+    if(this.extraFields) {
+      basePost['extraFields'] = this.extraFields.map((extraField) => extraField.toPOJO());
+    }
+
+    return basePost;
   }
 
   private fillTags(tags: TagInterface[]): void {
@@ -120,6 +145,16 @@ export class BasePostEntity extends Entity implements BasePostInterface, Storabl
       const likeEntity = likesFactory.create(like);
 
       this.likes.push(likeEntity);
+    }
+  }
+
+  private fillPostToExtraFields(postToExtraFields: PostToExtraFieldsInterface[]): void {
+    const postToExtraFieldsFactory = new PostToExtraFieldsFactory();
+
+    for(const item of postToExtraFields) {
+      const postToExtraFieldsEntity = postToExtraFieldsFactory.create(item);
+
+      this.postToExtraFields.push(postToExtraFieldsEntity);
     }
   }
 }
