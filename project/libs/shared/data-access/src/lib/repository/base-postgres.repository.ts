@@ -24,6 +24,10 @@ export abstract class BasePostgresRepository<
     throw new Error('Not implemented');
   }
 
+  public async findByIds(ids: T['id'][]): Promise<T[] | null> {
+    throw new Error('Not implemented');
+  }
+
   public async create(id: T): Promise<T> {
     throw new Error('Not implemented');
   }

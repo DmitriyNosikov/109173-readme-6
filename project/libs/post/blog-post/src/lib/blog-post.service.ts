@@ -37,6 +37,7 @@ export class BlogPostService {
 
     private readonly tagService: TagService
   ) {}
+
   public async create(dto: CreateBasePostDTO) {
     if(!this.checkPostType(dto.type)) {
       return;
@@ -62,7 +63,7 @@ export class BlogPostService {
   }
 
   public async getPaginatedPosts(query?: BlogPostQuery) {
-    const getPaginatedPosts = await this.basePostRepository.find(query);
+    const getPaginatedPosts = await this.basePostRepository.search(query);
 
     if(!getPaginatedPosts || getPaginatedPosts.entities.length <= 0) {
       const queryParams = Object.entries(query).join('; ').replace(/,/g, '=');
@@ -84,10 +85,7 @@ export class BlogPostService {
     // одному посту может соответствовать только один тип ExtraFields
     // TODO: Нужна проверка на соответствие передаваемых полей типу поста
     if(updatedFields.extraFields) {
-      const extraFieldsRepository = this.blogPostRepositoryDeterminant.getRepository(basePost.type)
-      const postExtraFields = await this.postToExtraFieldsRepository.getExtraFields(basePost.id, basePost.type);
-
-      await extraFieldsRepository.updateById(postExtraFields.id, updatedFields.extraFields);
+      await this.postToExtraFieldsRepository.updateExtraFieldsByPost(basePost.id, basePost.type, updatedFields.extraFields)
 
       delete updatedFields.extraFields;
     }
@@ -116,11 +114,8 @@ export class BlogPostService {
       throw new NotFoundException(`Post with ID ${postId} not found`);
     }
 
-    const extraFieldsRepository = this.blogPostRepositoryDeterminant.getRepository(post.type)
-    const postExtraFields = await this.postToExtraFieldsRepository.getExtraFields(post.id, post.type);
-
     // Удаляем ExtraFields для Post
-    await extraFieldsRepository.deleteById(postExtraFields.id)
+    await this.postToExtraFieldsRepository.deleteExtraFieldsByPost(post.id, post.type)
 
     // удаляем пост
     await this.basePostRepository.deleteById(post.id);

@@ -42,20 +42,20 @@ export class BasePostRepository extends BasePostgresRepository<BasePostEntity, B
         tags: true,
         comments: true,
         likes: true,
+        postToExtraFields: true,
+
         _count: {
           select: { comments: true, likes: true }
         }
       }
     });
 
-    console.log('CREATED DOCUMENT: ', document);
-
     const post = this.createEntityFromDocument(document);
 
     return post;
   }
 
-  public async find(query?: BlogPostQuery): Promise<PaginationResult<BasePostEntity>> {
+  public async search(query?: BlogPostQuery): Promise<PaginationResult<BasePostEntity>> {
     const skip = query?.page && query?.limit ? (query.page - 1) * query.limit : undefined;
     const take = (query?.limit && query?.limit > MAX_POSTS_PER_PAGE) ? MAX_POSTS_PER_PAGE : query.limit;
     const where: Prisma.PostWhereInput = {};
@@ -68,9 +68,10 @@ export class BasePostRepository extends BasePostgresRepository<BasePostEntity, B
       where.tags = {
         some: {
           name: {
-            in: query.tags
+            in: query.tags,
+            mode: 'insensitive'
           }
-        }
+        },
       }
     }
 
@@ -99,7 +100,8 @@ export class BasePostRepository extends BasePostgresRepository<BasePostEntity, B
         include: {
           tags: true,
           comments: true,
-          likes: true
+          likes: true,
+          postToExtraFields: true
         },
 
         // Pagination
@@ -160,15 +162,15 @@ export class BasePostRepository extends BasePostgresRepository<BasePostEntity, B
           connect: updatedFields.comments
         } : undefined,
 
-        // TODO: ОБъеденить с соответствующими записями
-        likes: {
-          connect: []
-        },
+        likes: updatedFields.likes ? {
+          connect: updatedFields.likes
+        } : undefined
       },
       include: {
         tags: true,
         comments: true,
-        likes: true
+        likes: true,
+        postToExtraFields: true
       }
     });
 
@@ -185,9 +187,6 @@ export class BasePostRepository extends BasePostgresRepository<BasePostEntity, B
     switch(sortType) {
       case(SortType.CREATED_AT): {
         return { key: 'createdAt', value: sortDirection };
-      }
-      case(SortType.POPULAR): { // TODO: ХЗ что за популярность такая
-        return { key: 'createdAt', value: sortDirection }
       }
       case(SortType.COMMENTS): {
         return { key: 'comments', value: { _count: sortDirection } }

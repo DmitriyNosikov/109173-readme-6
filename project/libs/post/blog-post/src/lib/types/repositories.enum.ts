@@ -7,8 +7,18 @@ import { VideoPostRepository } from '../repositories/video-post.repository';
 
 export const RepositoryType = {
   [PostType.TEXT]: TextPostRepository,
-  [PostType.LINK]: LinkPostRepository,
   [PostType.QUOTE]: QuotePostRepository,
+  [PostType.LINK]: LinkPostRepository,
   [PostType.PHOTO]: PhotoPostRepository,
   [PostType.VIDEO]: VideoPostRepository,
+} as const;
+
+export type RepositoriesList = (typeof RepositoryType)[keyof typeof RepositoryType]
+
+export const PrismaRepositoryType = {
+  [PostType.TEXT]: 'textPost',
+  [PostType.QUOTE]: 'quotePost',
+  [PostType.LINK]: 'linkPost',
+  [PostType.PHOTO]: 'photoPost',
+  [PostType.VIDEO]: 'videoPost',
 } as const;

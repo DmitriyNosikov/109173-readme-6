@@ -15,7 +15,7 @@ export { PhotoPostInterface } from './lib/interfaces/post/photo-post.interface'
 export { VideoPostInterface } from './lib/interfaces/post/video-post.interface'
 
 export { CreatedUpdatedDatesInterface } from './lib/interfaces/created-updated-dates.interface'
-export { LikeInterface } from './lib/interfaces/like.interface'
+export { LikeInterface } from '../../../post/like/src/lib/like.interface'
 export { StorableEntity } from './lib/interfaces/storable-entity.interface'
 export { EntityFactory } from './lib/interfaces/entity-factory.interface'
 

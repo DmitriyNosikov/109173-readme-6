@@ -14,7 +14,7 @@ export class LikeEntity extends Entity implements LikeInterface {
   }
 
   public populate(like?: LikeInterface) {
-    this.id = like.id ?? '';
+    this.id = like.id;
     this.createdAt = like.createdAt;
     this.updatedAt = like.updatedAt;
     this.postId = like.postId;

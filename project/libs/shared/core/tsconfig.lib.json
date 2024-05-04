@@ -7,5 +7,5 @@
     "types": ["node"]
   },
   "exclude": ["jest.config.ts", "src/**/*.spec.ts", "src/**/*.test.ts"],
-  "include": ["src/**/*.ts", "../../post/tag/src/lib/tag.interface.ts", "../../post/comment/src/lib/comment.interface.ts"]
+  "include": ["src/**/*.ts", "../../post/tag/src/lib/tag.interface.ts", "../../post/comment/src/lib/comment.interface.ts", "../../post/like/src/lib/like.interface.ts"]
 }

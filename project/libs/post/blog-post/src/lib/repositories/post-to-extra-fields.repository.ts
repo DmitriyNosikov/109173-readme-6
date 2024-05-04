@@ -6,6 +6,7 @@ import { PostToExtraFieldsFactory } from '../factories/post-to-extra-fields';
 import { PrismaClientService } from '@project/blog/models';
 import { BlogPostRepositoryDeterminant } from './blog-post-determinant.repository';
 import { PostEntities } from '../types/entities.enum';
+import { ExtraFieldsDTO } from '../dto/create-base-post.dto';
 
 // Связущюее звено между Репозиторием базового поста (BlogPostRepository)
 // и всеми остальными репозиториями (PostTextRepository, PostQuoteRepository и т.д.)
@@ -41,5 +42,27 @@ export class PostToExtraFieldsRepository extends BasePostgresRepository<PostToEx
     const extraFields = await extraFieldsRepository.findById(postToExtraFields.extraFieldsId);
 
     return extraFields;
+  }
+
+  public async getExtraFieldsByIds(postType: PostTypeEnum, extraFieldsIDs: string[]) {
+    const extraFieldsRepository = this.blogPostRepositoryDeterminant.getRepository(postType);
+    const extraFields = await extraFieldsRepository.findByIds(extraFieldsIDs);
+
+    return extraFields;
+  }
+
+  public async updateExtraFieldsByPost(postId: string, postType: PostTypeEnum, updatedFields: ExtraFieldsDTO) {
+    const extraFieldsRepository = this.blogPostRepositoryDeterminant.getRepository(postType)
+    const postExtraFields = await this.getExtraFields(postId, postType);
+
+    await extraFieldsRepository.updateById(postExtraFields.id, updatedFields);
+  }
+
+  public async deleteExtraFieldsByPost(postId: string, postType: PostTypeEnum): Promise<void> {
+    const extraFieldsRepository = this.blogPostRepositoryDeterminant.getRepository(postType)
+    const postExtraFields = await this.getExtraFields(postId, postType);
+
+    // Удаляем ExtraFields для Post
+    await extraFieldsRepository.deleteById(postExtraFields.id);
   }
 }

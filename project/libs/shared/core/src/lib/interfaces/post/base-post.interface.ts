@@ -1,6 +1,6 @@
 import { UserInterface } from '../user/user.interface';
 import { PostTypeEnum } from '../../types/post/post-type.enum';
-import { LikeInterface } from '../like.interface';
+import { LikeInterface } from '../../../../../../post/like/src/lib/like.interface';
 import { CreatedUpdatedDatesInterface } from '../created-updated-dates.interface';
 
 import { TagInterface } from '@project/tag';

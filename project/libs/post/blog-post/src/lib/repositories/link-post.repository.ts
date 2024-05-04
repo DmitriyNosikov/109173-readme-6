@@ -19,6 +19,20 @@ export class LinkPostRepository extends BasePostgresRepository<LinkPostEntity, L
     return await this.exists(id);
   }
 
+  public async findByIds(ids: string[]): Promise<LinkPostEntity[] | null> {
+    const documents = await this.dbClient.linkPost.findMany({
+      where: {
+        id: {
+          in: ids
+        }
+      }
+    });
+
+    const linkPosts = documents.map((document) => this.createEntityFromDocument(document))
+
+    return linkPosts;
+  }
+
   public async create(entity: LinkPostEntity): Promise<LinkPostEntity> {
     const linkPost = await this.dbClient.linkPost.create({
       data: { ...entity }

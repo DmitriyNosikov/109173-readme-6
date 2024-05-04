@@ -6,8 +6,12 @@ import {
   UserInterface,
   LikeInterface
 } from '@project/shared/core'
+
 import { TagInterface, TagEntity, TagFactory } from '@project/tag';
 import { CommentEntity, CommentFactory, CommentInterface } from '@project/post/comment'
+import { LikeEntity } from '@project/post/like'
+import { LikeFactory } from 'libs/post/like/src/lib/like.factory';
+
 export class BasePostEntity extends Entity implements BasePostInterface, StorableEntity<BasePostInterface> {
   public createdAt: Date;
   public updatedAt: Date;
@@ -23,7 +27,7 @@ export class BasePostEntity extends Entity implements BasePostInterface, Storabl
 
   public tags: TagEntity[] | undefined;
   public comments: CommentEntity[] | undefined;
-  public likes: LikeInterface[] | undefined;
+  public likes: LikeEntity[] | undefined;
   // public extraFields?: ExtraFields | undefined;
   // public postToExtraFields?: PostToExtraFieldsInterface[] | undefined;
 
@@ -37,7 +41,7 @@ export class BasePostEntity extends Entity implements BasePostInterface, Storabl
       return;
     }
 
-    this.id = post.id ?? undefined;
+    this.id = post.id;
     this.createdAt = post.createdAt;
     this.updatedAt = post.updatedAt;
     this.publishedAt = post.publishedAt;
@@ -45,9 +49,9 @@ export class BasePostEntity extends Entity implements BasePostInterface, Storabl
     this.type = post.type;
     this.isPublished = post.isPublished ?? false;
     this.isRepost = post.isRepost ?? false;
-    this.authorId = post.authorId ?? '';
-    this.originAuthorId = post.originAuthorId ?? undefined;
-    this.originPostId = post.originPostId ?? undefined;
+    this.authorId = post.authorId;
+    this.originAuthorId = post.originAuthorId;
+    this.originPostId = post.originPostId;
 
     this.tags = [];
     this.comments = [];
@@ -63,8 +67,10 @@ export class BasePostEntity extends Entity implements BasePostInterface, Storabl
       this.fillComments(post.comments)
     }
 
-    // Лайки пока оставляем так
-    this.likes = post.likes ?? undefined;
+    // Заполняем лайки
+    if(post.likes) {
+      this.fillLikes(post.likes)
+    }
   }
 
   public toPOJO(): BasePostInterface {
@@ -83,7 +89,7 @@ export class BasePostEntity extends Entity implements BasePostInterface, Storabl
 
       tags: this.tags.map((tag) => tag.toPOJO()),
       comments: this.comments.map((comment) => comment.toPOJO()),
-      likes: this.likes,
+      likes: this.likes.map((like) => like.toPOJO()),
     };
   }
 
@@ -104,6 +110,16 @@ export class BasePostEntity extends Entity implements BasePostInterface, Storabl
       const commentEntity = commentFactory.create(comment);
 
       this.comments.push(commentEntity);
+    }
+  }
+
+  private fillLikes(likes: LikeInterface[]): void {
+    const likesFactory = new LikeFactory();
+
+    for(const like of likes) {
+      const likeEntity = likesFactory.create(like);
+
+      this.likes.push(likeEntity);
     }
   }
 }
