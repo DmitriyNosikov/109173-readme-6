@@ -6,12 +6,10 @@ import { BCryptHasher } from '@project/shared/hasher'
 
 import { JwtModule } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
-import { JWTConfigModule, getJWTOptions } from '@project/shared/configurations/jwt-config'
+import { getJWTOptions } from '@project/shared/configurations/jwt-config'
+import { JWTAccessStrategy } from './strategies/jwt-access.strategy';
 @Module({
   imports: [
-    // Наш модуль для чтения настроек JWT из .env
-    JWTConfigModule,
-
     // Модуль для работы с JWT-токенами
     JwtModule.registerAsync({
       inject: [ConfigService],
@@ -24,6 +22,7 @@ import { JWTConfigModule, getJWTOptions } from '@project/shared/configurations/j
   ],
   controllers: [AuthenticationController],
   providers: [
+    JWTAccessStrategy,
     AuthenticationService,
     {
       provide: 'Hasher',

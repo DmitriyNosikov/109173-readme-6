@@ -6,7 +6,7 @@ import { ConfigEnvironment, TokenPayload } from '@project/shared/core';
 import { JWTConfigEnum } from '@project/shared/configurations/jwt-config';
 
 @Injectable()
-export class JwtAccessStrategy extends PassportStrategy(Strategy) {
+export class JWTAccessStrategy extends PassportStrategy(Strategy) {
   constructor(
     private readonly configService: ConfigService,
   ) {
@@ -15,7 +15,6 @@ export class JwtAccessStrategy extends PassportStrategy(Strategy) {
       ignoreExpiration: false,
       secretOrKey: configService.get<string>(`${ConfigEnvironment.JWT}.${JWTConfigEnum.JWT_ACCESS_TOKEN_SECRET}`)
     });
-
   }
 
   public async validate(payload: TokenPayload) {

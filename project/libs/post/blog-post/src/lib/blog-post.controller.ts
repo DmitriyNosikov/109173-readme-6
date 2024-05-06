@@ -11,7 +11,6 @@ import { BlogPostQuery } from './blog-post.query';
 import { BasePostWithPaginationRdo } from './rdo/base-post-with-pagination.rdo';
 import { BasePostWithExtraFieldsRDO } from './rdo/base-post-with-extra-fields';
 
-
 @Controller('posts')
 export class BlogPostController {
   constructor(
@@ -59,6 +58,7 @@ export class BlogPostController {
     status: HttpStatus.UNAUTHORIZED,
     description: BlogPostMessage.ERROR.UNAUTHORIZED
   })
+  // @UseGuards(JWTAuthGuard)
   @Post()
   public async create(@Body() dto: CreateBasePostDTO): Promise<BasePostWithExtraFieldsRDO | void> {
     const createdPost = await this.blogPostService.create(dto);
@@ -74,6 +74,7 @@ export class BlogPostController {
     status: HttpStatus.NOT_FOUND,
     description: BlogPostMessage.ERROR.NOT_FOUND
   })
+  // @UseGuards(JWTAuthGuard)
   @Patch(':postId')
   public async update(@Param('postId') postId: string, @Body() updatedFields: UpdateBasePostDTO) {
     const updatedPost = this.blogPostService.update(postId, updatedFields);
@@ -90,22 +91,9 @@ export class BlogPostController {
     description: BlogPostMessage.ERROR.NOT_FOUND
   })
   @HttpCode(HttpStatus.NO_CONTENT)
+  // @UseGuards(JWTAuthGuard)
   @Delete(':postId')
   public async delete(@Param('postId') postId: string): Promise<void> {
     await this.blogPostService.delete(postId);
-  }
-
-  @ApiResponse({
-    status: HttpStatus.OK,
-    description: BlogPostMessage.SUCCESS.FOUND
-  })
-  @ApiResponse({
-    status: HttpStatus.NOT_FOUND,
-    description: BlogPostMessage.ERROR.NOT_FOUND
-  })
-  @Post('search')
-  public async search(@Body('title') title: string): Promise<void> {
-    console.log('POST TITLE:', title);
-    throw new Error('Method not implemented yet');
   }
 }

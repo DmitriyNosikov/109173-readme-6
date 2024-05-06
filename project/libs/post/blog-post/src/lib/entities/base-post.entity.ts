@@ -4,13 +4,12 @@ import {
   StorableEntity,
   BasePostInterface,
   UserInterface,
-  LikeInterface,
   PostToExtraFieldsInterface
 } from '@project/shared/core'
 
 import { TagInterface, TagEntity, TagFactory } from '@project/tag';
 import { CommentEntity, CommentFactory, CommentInterface } from '@project/post/comment'
-import { LikeEntity } from '@project/post/like'
+import { LikeEntity, LikeInterface } from '@project/post/like'
 import { LikeFactory } from 'libs/post/like/src/lib/like.factory';
 
 import { PostToExtraFieldsEntity } from './post-to-extra-fields.entity';

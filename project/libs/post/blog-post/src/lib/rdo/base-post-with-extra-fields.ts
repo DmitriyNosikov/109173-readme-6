@@ -1,5 +1,6 @@
 import { Expose, Type } from 'class-transformer';
-import { BasePostInterface, LikeInterface, PostTypeEnum, UserInterface } from '@project/shared/core';
+import { BasePostInterface, PostTypeEnum, UserInterface } from '@project/shared/core';
+import { LikeInterface } from '@project/post/like';
 
 import { CreateTextPostRDO } from './create-text-post.rdo';
 import { CreateQuotePostRDO } from './create-quote-post.rdo';

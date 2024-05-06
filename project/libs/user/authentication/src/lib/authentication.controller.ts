@@ -4,7 +4,6 @@ import { CreateUserDTO, LoggedUSerRDO, LoginUserDTO, UserRDO } from '@project/us
 import { AuthenticationService } from './authentication.service';
 import { AuthenticationMessage } from './authentication.constant';
 import { fillDTO } from '@project/shared/helpers';
-
 @Controller('auth')
 export class AuthenticationController {
   constructor(

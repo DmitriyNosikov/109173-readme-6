@@ -1,7 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger'
 import { ArrayMaxSize, IsArray, IsBoolean, IsIn, IsMongoId, IsNotEmpty, IsOptional, IsString, MaxLength, MinLength } from 'class-validator';
 
-import { BasePostInterface, LikeInterface, PostType, PostTypeEnum, UserInterface } from '@project/shared/core';
+import { BasePostInterface, PostType, PostTypeEnum, UserInterface } from '@project/shared/core';
 import { BlogPostValidation } from '../blog-post.constant';
 import { postTypeList } from 'libs/shared/core/src/lib/types/post/post-type.enum';
 
@@ -11,6 +11,7 @@ import { CreateQuotePostDTO } from './create-quote-post.dto';
 import { CreatePhotoPostDTO } from './create-photo-post.dto';
 import { CreateVideoPostDTO } from './create-video-post.dto';
 import { CommentInterface } from '@project/post/comment';
+import { LikeInterface } from '@project/post/like';
 
 
 export type ExtraFieldsDTO = CreateBasePostDTO | CreateLinkPostDTO | CreateTextPostDTO | CreateQuotePostDTO | CreatePhotoPostDTO | CreateVideoPostDTO;
