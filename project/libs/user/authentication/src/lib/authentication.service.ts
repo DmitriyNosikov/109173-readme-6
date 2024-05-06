@@ -1,17 +1,25 @@
-import { ConflictException, Inject, Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common'
+import { ConflictException, HttpException, HttpStatus, Inject, Injectable, Logger, NotFoundException, UnauthorizedException } from '@nestjs/common'
 import { BlogUserFactory, BlogUserRepository, CreateUserDTO, LoginUserDTO } from '@project/user/blog-user';
-import { HasherInterface } from '@project/shared/hasher';
+
 import { AuthenticationMessage } from './authentication.constant';
+
+import { HasherInterface } from '@project/shared/hasher';
+import { UserInterface, TokenPayload } from '@project/shared/core';
+import { JwtService } from '@nestjs/jwt';
 
 type BlogUserEntity = ReturnType<BlogUserFactory['create']>;
 @Injectable()
 export class AuthenticationService {
+  private readonly logger = new Logger(AuthenticationService.name);
+
   constructor(
     private readonly blogUserRepository: BlogUserRepository,
     private readonly blogUserFactory: BlogUserFactory,
 
     @Inject('Hasher')
-    private readonly hasher: HasherInterface
+    private readonly hasher: HasherInterface,
+
+    private readonly jwtService: JwtService
   ){}
 
   public async register(dto: CreateUserDTO): Promise<BlogUserEntity> {
@@ -55,5 +63,25 @@ export class AuthenticationService {
     }
 
     return user;
+  }
+
+  public async createToken(user: UserInterface) {
+    const payload: TokenPayload = {
+      userId: user.id,
+      email: user.email,
+      firstname: user.firstName,
+      lastname: user.lastName
+    }
+
+
+    try {
+      const accessToken = await this.jwtService.signAsync(payload);
+
+      return { accessToken };
+    } catch (error) {
+      this.logger.error('[Token generation error]: ' + error.message);
+
+      throw new HttpException('Can`t create JWT-Token.', HttpStatus.INTERNAL_SERVER_ERROR);
+    }
   }
 }

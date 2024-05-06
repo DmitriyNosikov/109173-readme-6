@@ -1,12 +1,17 @@
 import { Body, Controller, Delete, Get, Param, Patch, HttpStatus } from '@nestjs/common';
-import { ApiResponse } from '@nestjs/swagger'
-import { BlogUserService } from './blog-user.service';
-import { ChangePasswordDTO } from './dto/change-password.dto';
-import { fillDTO } from '@project/shared/helpers'
-import { UserRDO } from './rdo/user.rdo';
-import { UpdateUserDTO } from './dto/update-user.dto';
-import { BlogUserMessage } from './blog-user.constant';
+import { ApiResponse, ApiTags } from '@nestjs/swagger'
 
+import { fillDTO } from '@project/shared/helpers'
+import { MongoIdValidationPipe } from '@project/shared/pipes'
+
+import { BlogUserMessage } from './blog-user.constant';
+import { BlogUserService } from './blog-user.service';
+
+import { ChangePasswordDTO } from './dto/change-password.dto';
+import { UpdateUserDTO } from './dto/update-user.dto';
+import { UserRDO } from './rdo/user.rdo';
+
+@ApiTags('users')
 @Controller('users')
 export class BlogUserController {
   constructor(
@@ -23,7 +28,7 @@ export class BlogUserController {
     description: BlogUserMessage.ERROR.NOT_FOUND
   })
   @Get(':userId')
-  public async show(@Param('userId') userId: string): Promise<UserRDO | UserRDO[]> {
+  public async show(@Param('userId', MongoIdValidationPipe) userId: string): Promise<UserRDO | UserRDO[]> {
     const user = await this.blogUserService.getUser(userId);
 
     return fillDTO(UserRDO, user.toPOJO());
@@ -40,7 +45,7 @@ export class BlogUserController {
   })
   @Patch(':userId')
   public async updateUser(
-    @Param('userId') userId: string,
+    @Param('userId', MongoIdValidationPipe) userId: string,
     @Body() dto: UpdateUserDTO
   ): Promise<UserRDO | UserRDO[]> {
     const { email, firstName, lastName, avatar } = dto;
@@ -54,7 +59,7 @@ export class BlogUserController {
     description: BlogUserMessage.SUCCESS.DELETED
   })
   @Delete(':userId')
-  public async deleteUser(@Param('userId') userId: string): Promise<void> {
+  public async deleteUser(@Param('userId', MongoIdValidationPipe) userId: string): Promise<void> {
     await this.blogUserService.deleteUser(userId);
   }
 
@@ -73,7 +78,7 @@ export class BlogUserController {
   })
   @Patch('password/:userId')
   public async changePassword(
-    @Param('userId') userId: string,
+    @Param('userId', MongoIdValidationPipe) userId: string,
     @Body() dto: ChangePasswordDTO
   ): Promise<UserRDO | UserRDO[]> {
     const { password, newPassword } = dto;

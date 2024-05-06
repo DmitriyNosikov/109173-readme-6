@@ -1,6 +1,6 @@
 import { ApiResponse} from '@nestjs/swagger';
 import { Body, Controller, Post, HttpStatus } from '@nestjs/common';
-import { CreateUserDTO, LoginUserDTO, UserRDO } from '@project/user/blog-user';
+import { CreateUserDTO, LoggedUSerRDO, LoginUserDTO, UserRDO } from '@project/user/blog-user';
 import { AuthenticationService } from './authentication.service';
 import { AuthenticationMessage } from './authentication.constant';
 import { fillDTO } from '@project/shared/helpers';
@@ -39,7 +39,13 @@ export class AuthenticationController {
   @Post('login')
   public async login(@Body() dto: LoginUserDTO) {
     const loggedUser = await this.authService.verify(dto);
+    const userToken = await this.authService.createToken(loggedUser);
 
-    return fillDTO(UserRDO, loggedUser.toPOJO());
+    const loggedUserWithPayload = {
+      ...loggedUser.toPOJO(),
+      ...userToken
+    };
+
+    return fillDTO(LoggedUSerRDO, loggedUserWithPayload);
   }
 }

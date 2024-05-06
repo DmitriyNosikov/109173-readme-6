@@ -3,7 +3,7 @@
 @port = 8000
 @baseUrl = http://{{host}}:{{port}}/api
 # Environment
-@userId = 663297c1170accb90255cbb8
+@userId = 6638932ef7a446eb78cb2f06
 
 # Get detail info about user
 GET {{baseUrl}}/users/{{userId}}

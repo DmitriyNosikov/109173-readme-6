@@ -1,4 +1,5 @@
-import { BasePostInterface, Entity, LikeInterface, UserInterface } from '@project/shared/core'
+import { BasePostInterface, Entity, UserInterface } from '@project/shared/core'
+import { LikeInterface } from './like.interface';
 
 export class LikeEntity extends Entity implements LikeInterface {
   public createdAt?: Date;
