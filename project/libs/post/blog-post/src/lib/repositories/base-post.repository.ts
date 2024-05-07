@@ -65,7 +65,7 @@ export class BasePostRepository extends BasePostgresRepository<BasePostEntity, B
     const where: Prisma.PostWhereInput = {};
     const orderBy: Prisma.PostOrderByWithRelationInput = {};
 
-    where.isPublished = true; // Показываем только опубликованные посты
+    // where.isPublished = true; // Показываем только опубликованные посты
 
     // Поиск по тегам
     if(query?.tags) {
@@ -78,18 +78,6 @@ export class BasePostRepository extends BasePostgresRepository<BasePostEntity, B
         },
       }
     }
-
-    // TODO: Поиск по title (WIP - пока не работает, т.к.
-    // title в доп. таблицах и пока непонятно, как это реализовать)
-    // if (query?.title) {
-    //   where.postToExtraFields = {
-    //     some: {
-    //       title: {
-    //         search: query.title
-    //       }
-    //     }
-    //   }
-    // }
 
     // Сортировка и направление сортировки
     if (query?.sortType && query?.sortDirection) {
@@ -116,7 +104,11 @@ export class BasePostRepository extends BasePostgresRepository<BasePostEntity, B
       this.getPostCount(where)
     ]);
 
-    const postsEntities = posts.map((post) => this.createEntityFromDocument(post));
+    let postsEntities = posts.map((post) => this.createEntityFromDocument(post));
+
+    if (query?.title) {
+      postsEntities = await this.filterPostsByTitle(postsEntities, query.title);
+    }
 
     return {
       entities: postsEntities,
@@ -201,6 +193,40 @@ export class BasePostRepository extends BasePostgresRepository<BasePostEntity, B
     await this.dbClient.post.delete({
       where: { id: postId }
     });
+  }
+
+  //////////////////// Вспомогательные методы поиска и пагинации ////////////////////
+  private async filterPostsByTitle(posts, title: string) {
+    const extraFieldsIDs = await this.getExtraFieldsIDsByTitle(title)
+
+    const filteredPosts = posts.filter((postEntity) => {
+      // Ищем в ExtraFields поста все поля, ID которых есть в полученных по Title ExtraFields
+      const isPostIncluded = postEntity.postToExtraFields.find((postExtraFieldsItem) => {
+        return extraFieldsIDs.includes(postExtraFieldsItem.extraFieldsId);
+      })
+
+      return isPostIncluded;
+    });
+
+    return filteredPosts;
+  }
+
+  private async getExtraFieldsIDsByTitle(title: string) {
+    // TODO: Возможно, получится оптимизировать (позже)
+    // путем созжания доп. таблицы (индекса) для поиска  по title
+    // Сейчас - просто получаем ID всех ExtraFields, у которых Title = запросу
+    const targetTitle = `%${title}%`;
+    const getExtraFieldsByTitle: Record<"id", string>[] | null = await this.dbClient.$queryRaw`
+      SELECT id FROM "text_posts"  WHERE title ILIKE ${targetTitle} UNION
+      SELECT id FROM "video_posts" WHERE title ILIKE ${targetTitle};
+    `;
+    const extraFieldsIDs = getExtraFieldsByTitle.map((item) => item.id);
+
+    if(extraFieldsIDs.length <= 0) {
+      throw new NotFoundException(`Posts with title ${title} not found`);
+    }
+
+    return extraFieldsIDs;
   }
 
   private getSortKeyValue(sortType: SortTypeEnum, sortDirection: SortDirectionEnum) {

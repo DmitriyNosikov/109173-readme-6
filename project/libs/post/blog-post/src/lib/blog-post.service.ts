@@ -71,7 +71,7 @@ export class BlogPostService {
     if(!paginatedPosts || paginatedPosts.entities.length <= 0) {
       const queryParams = Object.entries(query).join('; ').replace(/,/g, '=');
 
-      throw new NotFoundException(`Can't find post by requested params: ${queryParams}`);
+      throw new NotFoundException(`Can't find published posts by requested params: ${queryParams}`);
     }
 
     // Добавляем к полученным постам их ExtraFields
