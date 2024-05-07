@@ -24,9 +24,13 @@ import { PhotoPostFactory } from './factories/photo-post.factory';
 import { VideoPostFactory } from './factories/video-post.factory';
 
 import { TagModule}  from '@project/tag'
-
+import { CommentModule } from '@project/post/comment';
 @Module({
-  imports: [PrismaClientModule, TagModule],
+  imports: [
+    PrismaClientModule,
+    TagModule,
+    CommentModule
+  ],
   controllers: [BlogPostController],
   providers: [
     BasePostRepository,

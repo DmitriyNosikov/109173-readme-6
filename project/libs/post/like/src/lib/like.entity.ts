@@ -1,4 +1,5 @@
-import { BasePostInterface, Entity, LikeInterface, UserInterface } from '@project/shared/core'
+import { BasePostInterface, Entity, UserInterface } from '@project/shared/core'
+import { LikeInterface } from './like.interface';
 
 export class LikeEntity extends Entity implements LikeInterface {
   public createdAt?: Date;
@@ -14,7 +15,7 @@ export class LikeEntity extends Entity implements LikeInterface {
   }
 
   public populate(like?: LikeInterface) {
-    this.id = like.id ?? '';
+    this.id = like.id;
     this.createdAt = like.createdAt;
     this.updatedAt = like.updatedAt;
     this.postId = like.postId;

@@ -3,7 +3,7 @@ import { BasePostgresRepository } from '@project/shared/data-access'
 import { PrismaClientService } from '@project/blog/models';
 
 import { LikeEntity } from './like.entity';
-import { LikeInterface } from '@project/shared/core';
+import { LikeInterface } from './like.interface';
 import { LikeFactory } from './like.factory';
 
 @Injectable()

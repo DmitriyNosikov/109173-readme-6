@@ -6,6 +6,7 @@ import { TagEntity } from './tag.entity';
 import { TagFactory } from './tag.factory';
 import { TagRepository } from './tag.repository';
 import { TagMessage } from './tag.constant';
+import { TagInterface } from './tag.interface';
 
 @Injectable()
 export class TagService {
@@ -24,7 +25,7 @@ export class TagService {
     const tag = await this.tagRepository.findByName(tagName.toLowerCase());
 
     if(!tag) {
-      throw new NotFoundException(`Tag ${tagName} not found`);
+      throw new NotFoundException(`Tag '${tagName}' not found`);
     }
 
     return tag;
@@ -65,14 +66,17 @@ export class TagService {
     return tag;
   }
 
-  public async getOrCreate(tagNames: string[]) {
+  public async getOrCreate(tagNames: string[]): Promise<TagInterface[]> {
     const tags = [];
 
-    for(const tagName of tagNames) {
-      const tagEntity = this.tagFactory.create({ name: tagName });
-      const tag = await this.tagRepository.create(tagEntity);
+    // Очищаем теги от дублей
+    tagNames = Array.from(new Set(tagNames));
 
-      tags.push(tag);
+    for(const tagName of tagNames) {
+      const tagObject = { name: tagName };
+      const tag = await this.create(tagObject)
+
+      tags.push(tag.toPOJO());
     }
 
     return tags;
@@ -89,6 +93,12 @@ export class TagService {
 
     if(updatedFields.name) {
       updatedFields.name = updatedFields.name.toLowerCase();
+    }
+
+    const isTagNameExists = await this.tagRepository.findByName(updatedFields.name)
+
+    if(isTagNameExists) {
+      throw new ConflictException(`Tag with name '${updatedFields.name}' already exists`);
     }
 
     const updatedTag = await this.tagRepository.updateById(tagId, updatedFields);

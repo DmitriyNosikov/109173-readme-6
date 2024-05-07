@@ -3,7 +3,7 @@ import { BasePostgresRepository } from '@project/shared/data-access'
 import { PrismaClientService } from '@project/blog/models';
 
 import { CommentEntity } from './comment.entity';
-import { CommentInterface } from '@project/shared/core';
+import { CommentInterface } from './comment.interface';
 import { CommentFactory } from './comment.factory';
 
 @Injectable()
@@ -25,6 +25,8 @@ export class CommentRepository extends BasePostgresRepository<CommentEntity, Com
       });
 
     entity.id = document.id;
+    entity.createdAt = document.createdAt;
+    entity.updatedAt = document.updatedAt;
 
     return entity;
   }

@@ -1,18 +1,17 @@
 import { Injectable } from '@nestjs/common';
 import { ModuleRef } from '@nestjs/core';
 import { PostTypeEnum } from '@project/shared/core'
-import { Repository } from '@project/shared/data-access';
 
-import { RepositoryType } from '../types/repositories.enum';
-import { PostEntities } from '../types/entities.enum';
+import { RepositoriesList, RepositoryType } from '../types/repositories.enum';
 
+type ModuleRefGetRepositoryType = ReturnType<ModuleRef['get'][keyof RepositoriesList]>;
 @Injectable()
 export class BlogPostRepositoryDeterminant {
   constructor( // Получаем ссылку на хранилище инстансов (как в inversify)
     private moduleRef: ModuleRef
   ) {}
-
-  public getRepository(postType: PostTypeEnum): Repository<PostEntities> {
+  // Repository<PostEntities>
+  public getRepository(postType: PostTypeEnum): ModuleRefGetRepositoryType {
     const repositoryType = RepositoryType[postType];
 
     if(!repositoryType) {

@@ -1,8 +1,9 @@
-import { Entity, TagInterface } from '@project/shared/core'
+import { Entity, StorableEntity } from '@project/shared/core'
+import { TagInterface } from './tag.interface';
 
-export class TagEntity extends Entity implements TagInterface{
-  public createdAt?: Date;
-  public updatedAt?: Date;
+export class TagEntity extends Entity implements TagInterface, StorableEntity<TagInterface>{
+  public createdAt: Date;
+  public updatedAt: Date;
 
   public name: string;
 

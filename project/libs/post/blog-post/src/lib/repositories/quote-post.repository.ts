@@ -19,6 +19,20 @@ export class QuotePostRepository extends BasePostgresRepository<QuotePostEntity,
     return await this.exists(id);
   }
 
+  public async findByIds(ids: string[]): Promise<QuotePostEntity[] | null> {
+    const documents = await this.dbClient.quotePost.findMany({
+      where: {
+        id: {
+          in: ids
+        }
+      }
+    });
+
+    const quotePosts = documents.map((document) => this.createEntityFromDocument(document))
+
+    return quotePosts;
+  }
+
   public async create(entity: QuotePostEntity): Promise<QuotePostEntity> {
     const quotePost = await this.dbClient.quotePost.create({
       data: { ...entity }

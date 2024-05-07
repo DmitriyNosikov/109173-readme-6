@@ -2,7 +2,6 @@ import { BadRequestException, Injectable, NotFoundException } from '@nestjs/comm
 import { CommentRepository } from './comment.repository';
 import { CommentFactory } from './comment.factory';
 import { CreateCommentDTO } from './dto/create-comment.dto';
-import { BlogPostService } from '@project/blog-post';
 import { omitUndefined } from '@project/shared/helpers';
 import { CommentEntity } from './comment.entity';
 import { CommentMessage } from './comment.constant';
@@ -12,11 +11,10 @@ export class CommentService {
   constructor(
     private readonly commentRepository: CommentRepository,
     private readonly commentFactory: CommentFactory,
-    private readonly blogPostService: BlogPostService
   ){}
 
   async create(postId: string, dto: CreateCommentDTO) {
-    // <--- TODO: Перед созданием комментария проверятьЖ
+    // <--- TODO: Перед созданием комментария проверять
     // - Существование поста
     const commentEntity = this.commentFactory.create({ postId, ...dto });
     const comment = await this.commentRepository.create(commentEntity);

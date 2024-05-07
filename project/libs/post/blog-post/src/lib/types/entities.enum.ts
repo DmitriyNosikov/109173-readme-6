@@ -7,10 +7,10 @@ import { VideoPostEntity } from '../entities/video-post.entity';
 
 export const EntityType = {
   [PostType.TEXT]: TextPostEntity,
-  [PostType.LINK]: LinkPostEntity,
   [PostType.QUOTE]: QuotePostEntity,
+  [PostType.LINK]: LinkPostEntity,
   [PostType.PHOTO]: PhotoPostEntity,
   [PostType.VIDEO]: VideoPostEntity,
 } as const;
 
-export type PostEntities = TextPostEntity | LinkPostEntity | QuotePostEntity | PhotoPostEntity | VideoPostEntity;
+export type PostEntities = TextPostEntity | QuotePostEntity| LinkPostEntity  | PhotoPostEntity | VideoPostEntity;

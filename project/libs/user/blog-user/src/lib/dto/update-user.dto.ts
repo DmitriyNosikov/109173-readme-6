@@ -1,31 +1,44 @@
 import { ApiProperty } from '@nestjs/swagger'
+import { BlogUserValidation } from '../blog-user.constant';
+import { IsEmail, IsOptional, IsString, MaxLength, MinLength } from 'class-validator';
 
 export class UpdateUserDTO {
   @ApiProperty({
     description: 'User email',
     example: 'iron-man@starkindustries.it'
   })
-  email: string;
+  @IsEmail()
+  @IsOptional()
+  email?: string;
 
   @ApiProperty({
     description: 'User first name',
-    example: 'Tony',
-    minimum: 3,
-    maximum: 50
+    example: 'Tony Stark',
+    minimum: BlogUserValidation.FIRST_NAME.MIN_LENGTH,
+    maximum: BlogUserValidation.FIRST_NAME.MAX_LENGTH
   })
-  firstName: string;
+  @MaxLength(BlogUserValidation.FIRST_NAME.MAX_LENGTH)
+  @MinLength(BlogUserValidation.FIRST_NAME.MIN_LENGTH)
+  @IsString()
+  @IsOptional()
+  firstName?: string;
 
   @ApiProperty({
     description: 'User last name',
-    example: 'Stark',
-    minimum: 3,
-    maximum: 50
+    example: 'Tony Stark',
+    minimum: BlogUserValidation.FIRST_NAME.MIN_LENGTH,
+    maximum: BlogUserValidation.FIRST_NAME.MAX_LENGTH
   })
-  lastName: string;
+  @MaxLength(BlogUserValidation.FIRST_NAME.MAX_LENGTH)
+  @MinLength(BlogUserValidation.FIRST_NAME.MIN_LENGTH)
+  @IsString()
+  @IsOptional()
+  lastName?: string;
 
   @ApiProperty({
     description: 'User avatar',
     example: '/playboy/millioner/philanthropist.jpeg'
   })
+  @IsOptional()
   avatar?: string;
 }

@@ -19,6 +19,20 @@ export class TextPostRepository extends BasePostgresRepository<TextPostEntity, T
     return await this.exists(id);
   }
 
+  public async findByIds(ids: string[]): Promise<TextPostEntity[] | null> {
+    const documents = await this.dbClient.textPost.findMany({
+      where: {
+        id: {
+          in: ids
+        }
+      }
+    });
+
+    const textPosts = documents.map((document) => this.createEntityFromDocument(document))
+
+    return textPosts;
+  }
+
   public async create(entity: TextPostEntity): Promise<TextPostEntity> {
     const textPost = await this.dbClient.textPost.create({
       data: { ...entity }

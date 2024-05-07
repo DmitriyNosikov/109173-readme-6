@@ -19,6 +19,20 @@ export class VideoPostRepository extends BasePostgresRepository<VideoPostEntity,
     return await this.exists(id);
   }
 
+  public async findByIds(ids: string[]): Promise<VideoPostEntity[] | null> {
+    const documents = await this.dbClient.videoPost.findMany({
+      where: {
+        id: {
+          in: ids
+        }
+      }
+    });
+
+    const videoPosts = documents.map((document) => this.createEntityFromDocument(document))
+
+    return videoPosts;
+  }
+
   public async create(entity: VideoPostEntity): Promise<VideoPostEntity> {
     const videoPost = await this.dbClient.videoPost.create({
       data: { ...entity }

@@ -3,7 +3,7 @@
 @port = 8000
 @baseUrl = http://{{host}}:{{port}}/api
 # Environment
-@userId = 661908de1671ea44276cfe06
+@userId = 6638932ef7a446eb78cb2f06
 
 # Get detail info about user
 GET {{baseUrl}}/users/{{userId}}
@@ -14,7 +14,7 @@ PATCH {{baseUrl}}/users/password/{{userId}}
 Content-Type: application/json
 
 {
-  "password": "jarvis-iron-hearth123",
+  "password": "jarvis-123",
   "newPassword": "123456"
 }
 ###
@@ -24,7 +24,7 @@ PATCH  {{baseUrl}}/users/{{userId}}
 Content-Type: application/json
 
 {
-  "firstName": "Tonyyyyy"
+  "firstName": "TT"
 }
 ###
 

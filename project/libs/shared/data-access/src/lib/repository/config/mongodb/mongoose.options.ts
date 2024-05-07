@@ -6,15 +6,15 @@ import { MongoConfigEnum } from './mongodb.schema';
 
 export function getMongooseOptions(): MongooseModuleAsyncOptions {
   return {
-    useFactory: async (config: ConfigService) => {
+    useFactory: async (configService: ConfigService) => {
       return {
         uri: getMongoConnectionString({
-          username: config.get<string>(`${ConfigEnvironment.DB}.${MongoConfigEnum.USER}`),
-          password: config.get<string>(`${ConfigEnvironment.DB}.${MongoConfigEnum.PASSWORD}`),
-          host: config.get<string>(`${ConfigEnvironment.DB}.${MongoConfigEnum.HOST}`),
-          port: config.get<string>(`${ConfigEnvironment.DB}.${MongoConfigEnum.PORT}`),
-          dbName: config.get<string>(`${ConfigEnvironment.DB}.${MongoConfigEnum.DB_NAME}`),
-          authDatabase: config.get<string>(`${ConfigEnvironment.DB}.${MongoConfigEnum.AUTH_DATABASE}`),
+          username: configService.get<string>(`${ConfigEnvironment.DB}.${MongoConfigEnum.USER}`),
+          password: configService.get<string>(`${ConfigEnvironment.DB}.${MongoConfigEnum.PASSWORD}`),
+          host: configService.get<string>(`${ConfigEnvironment.DB}.${MongoConfigEnum.HOST}`),
+          port: configService.get<string>(`${ConfigEnvironment.DB}.${MongoConfigEnum.PORT}`),
+          dbName: configService.get<string>(`${ConfigEnvironment.DB}.${MongoConfigEnum.DB_NAME}`),
+          authDatabase: configService.get<string>(`${ConfigEnvironment.DB}.${MongoConfigEnum.AUTH_DATABASE}`),
         })
       };
     },

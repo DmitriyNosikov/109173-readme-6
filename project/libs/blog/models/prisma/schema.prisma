@@ -30,12 +30,13 @@ enum PostType {
 
 //////////////////// POSTS & EXTRA-FIELDS RELATIONS ////////////////////
 model PostToExtraFields {
-  id              String @id @default(uuid())
-  createdAt       DateTime @default(now()) @map("created_at")
-  updatedAt       DateTime @updatedAt @map("updated_at")
-  postId          String @db.VarChar(255) @map("post_id")
-  postType        String @map("post_type") // Таблицу, из которой нужно получить экстра-филды, определяем по типу поста
-  extraFieldsId   String @map("extra_fields_id") // Через данное поле будем вручную получать экстра-филды
+  id              String    @id @default(uuid())
+  createdAt       DateTime? @default(now()) @map("created_at")
+  updatedAt       DateTime? @updatedAt @map("updated_at")
+
+  postId          String    @db.VarChar(255) @map("post_id")
+  postType        PostType    @map("post_type") // Таблицу, из которой нужно получить экстра-филды, определяем по типу поста
+  extraFieldsId   String    @map("extra_fields_id") // Через данное поле будем вручную получать экстра-филды
 
   // --- Отношения
   post Post @relation(fields: [postId], references: [id], onDelete: Cascade, onUpdate: Cascade) // Связываем с таблицей Post через внутреннее поле postId
@@ -44,17 +45,17 @@ model PostToExtraFields {
 }
 
 model Post {
-  id              String   @id @default(uuid())
-  createdAt       DateTime @default(now()) @map("created_at")
-  updatedAt       DateTime @updatedAt @map("updated_at")
-  publishedAt     DateTime @default(now()) @map("published_at")
+  id              String    @id @default(uuid())
+  createdAt       DateTime? @default(now()) @map("created_at")
+  updatedAt       DateTime? @updatedAt @map("updated_at")
+  publishedAt     DateTime? @default(now()) @map("published_at")
 
   type            PostType
   isPublished     Boolean  @map("is_published")
-  isRepost        Boolean  @map("is_repost")
+  isRepost        Boolean? @map("is_repost")
   authorId        String   @map("author_id")
-  originAuthorId  String   @map("origin_author_id")
-  originPostId    String   @map("origin_post_id")
+  originAuthorId  String?  @map("origin_author_id")
+  originPostId    String?  @map("origin_post_id")
 
   // --- Отношения
   tags            PostTag[]
@@ -70,9 +71,9 @@ model Post {
 //////////////////// TAGS ////////////////////
 model PostTag {
   id        String    @id @default(uuid())
-  createdAt DateTime  @default(now()) @map("created_at")
-  updatedAt DateTime  @updatedAt @map("updated_at")
-  name     String    @unique() @db.VarChar(10)
+  createdAt DateTime? @default(now()) @map("created_at")
+  updatedAt DateTime? @updatedAt @map("updated_at")
+  name      String    @unique() @db.VarChar(10)
 
   posts     Post[]
 
@@ -81,12 +82,13 @@ model PostTag {
 
 //////////////////// COMMENTS ////////////////////
 model PostComment {
-  id        String   @id @default(uuid())
-  postId    String   @map("postId")
-  authorId  String   @map("author_id")
-  createdAt DateTime @default(now()) @map("created_at")
-  updatedAt DateTime @updatedAt @map("updated_at")
-  text      String   @db.VarChar(300)
+  id        String    @id @default(uuid())
+  createdAt DateTime? @default(now()) @map("created_at")
+  updatedAt DateTime? @updatedAt @map("updated_at")
+
+  postId    String @map("postId")
+  authorId  String @map("author_id")
+  text      String @db.VarChar(300)
 
   // --- Отношения
   post Post @relation(fields: [postId], references: [id], onDelete: Cascade, onUpdate: Cascade)
@@ -97,10 +99,11 @@ model PostComment {
 //////////////////// LIKES ////////////////////
 model PostLike {
   id        String  @id @default(uuid())
+  createdAt DateTime? @default(now()) @map("created_at")
+  updatedAt DateTime? @updatedAt @map("updated_at")
+
   postId    String  @map("postId")
   authorId  String  @map("author_id")
-  createdAt DateTime @default(now()) @map("created_at")
-  updatedAt DateTime @updatedAt @map("updated_at")
 
   // --- Отношения
   post Post @relation(fields: [postId], references: [id], onDelete: Cascade, onUpdate: Cascade)
@@ -108,6 +111,7 @@ model PostLike {
   @@map("posts_likes")
 }
 
+//////////////////// EXTRA FIELDS ////////////////////
 model TextPost {
   id        String @id @default(uuid())
   announce  String
@@ -118,20 +122,27 @@ model TextPost {
   @@map("text_posts")
 }
 
-model LinkPost {
-  id          String @id @default(uuid())
-  linkURL     String @map("link_url")
-  description String @db.VarChar(300)
-
-  @@map("link_posts")
-}
-
 model QuotePost {
   id        String @id @default(uuid())
   authorId  String @map("author_id")
   text      String @db.VarChar(300)
 
   @@map("quote_posts")
+}
+
+model LinkPost {
+  id          String @id @default(uuid())
+  linkURL     String @map("link_url")
+  description String? @db.VarChar(300)
+
+  @@map("link_posts")
+}
+
+model PhotoPost {
+  id        String @id @default(uuid())
+  photoURL  String @map("photo_url")
+
+  @@map("photo_posts")
 }
 
 model VideoPost {
@@ -141,11 +152,4 @@ model VideoPost {
 
   @@index([title])
   @@map("video_posts")
-}
-
-model PhotoPost {
-  id        String @id @default(uuid())
-  photoURL  String @map("photo_url")
-
-  @@map("photo_posts")
 }

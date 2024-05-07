@@ -1,4 +1,5 @@
-import { EntityFactory, LikeInterface } from '@project/shared/core';
+import { EntityFactory } from '@project/shared/core';
+import { LikeInterface } from './like.interface';
 import { LikeEntity } from './like.entity';
 
 export class LikeFactory implements EntityFactory<LikeEntity> {

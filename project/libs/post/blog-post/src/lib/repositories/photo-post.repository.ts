@@ -19,6 +19,20 @@ export class PhotoPostRepository extends BasePostgresRepository<PhotoPostEntity,
     return await this.exists(id);
   }
 
+  public async findByIds(ids: string[]): Promise<PhotoPostEntity[] | null> {
+    const documents = await this.dbClient.photoPost.findMany({
+      where: {
+        id: {
+          in: ids
+        }
+      }
+    });
+
+    const photoPosts = documents.map((document) => this.createEntityFromDocument(document))
+
+    return photoPosts;
+  }
+
   public async create(entity: PhotoPostEntity): Promise<PhotoPostEntity> {
     const photoPost = await this.dbClient.photoPost.create({
       data: { ...entity }

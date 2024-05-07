@@ -11,11 +11,11 @@ POST {{baseUrl}}/auth/register/ HTTP/1.1
 Content-Type: application/json
 
 {
-  "email": "iron-man@starkindustries.it",
+  "email": "iron-man8@starkindustries.it",
   "firstName": "Tony",
   "lastName": "Stark123",
   "avatar": "/playboy/millioner/philanthropist.jpeg",
-  "password": "jarvis-iron-hearth123"
+  "password": "jarvis-123"
 }
 
 # {
@@ -33,6 +33,7 @@ POST  {{baseUrl}}/auth/login/ HTTP/1.1
 Content-Type: application/json
 
 {
-  "email": "iron-man@starkindustries.it",
-  "password": "jarvis-iron-hearth1223"
+  "email": "iron-man3@starkindustries.it",
+  "password": "jarvis-123"
 }
+###

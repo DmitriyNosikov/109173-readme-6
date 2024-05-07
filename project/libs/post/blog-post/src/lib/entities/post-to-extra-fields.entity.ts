@@ -1,10 +1,10 @@
-import { BasePostInterface, Entity, PostToExtraFieldsInterface, StorableEntity } from '@project/shared/core';
+import { BasePostInterface, Entity, PostToExtraFieldsInterface, PostTypeEnum, StorableEntity } from '@project/shared/core';
 
 export class PostToExtraFieldsEntity extends Entity implements PostToExtraFieldsInterface, StorableEntity<PostToExtraFieldsInterface>{
   public createdAt: Date;
   public updatedAt: Date;
   public postId: BasePostInterface['id'];
-  public postType: BasePostInterface['type'];
+  public postType: PostTypeEnum;
   public extraFieldsId: string;
 
   constructor(postRelation: PostToExtraFieldsInterface) {
@@ -14,7 +14,7 @@ export class PostToExtraFieldsEntity extends Entity implements PostToExtraFields
       return;
     }
 
-    this.id = postRelation.id ?? undefined;
+    this.id = postRelation.id;
     this.createdAt = postRelation.createdAt;
     this.updatedAt = postRelation.updatedAt;
     this.postId = postRelation.postId;

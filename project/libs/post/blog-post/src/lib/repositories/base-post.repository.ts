@@ -1,10 +1,13 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { BasePostgresRepository } from '@project/shared/data-access'
 import { PrismaClientService } from '@project/blog/models';
+import { Prisma } from '@prisma/client';
 
-import { BasePostInterface, TagInterface } from '@project/shared/core';
+import { BasePostInterface, PaginationResult, SortDirectionEnum, SortType, SortTypeEnum } from '@project/shared/core';
 import { BasePostEntity } from '../entities/base-post.entity';
 import { BasePostFactory } from '../factories/base-post.factory';
+import { BlogPostQuery } from '../blog-post.query';
+import { DEFAULT_SORT_DIRECTION, DEFAULT_SORT_TYPE, MAX_POSTS_PER_PAGE } from '../blog-post.constant';
 
 @Injectable()
 export class BasePostRepository extends BasePostgresRepository<BasePostEntity, BasePostInterface> {
@@ -19,10 +22,10 @@ export class BasePostRepository extends BasePostgresRepository<BasePostEntity, B
     let postTags = undefined;
 
     if(entity.tags && entity.tags.length > 0) {
-       postTags = this.convertTagsToObjects(entity.tags);
+       postTags = entity.tags.map((tag) => tag.toPOJO())
     }
 
-    const post = await this.dbClient.post.create({
+    const document = await this.dbClient.post.create({
       data: {
         ...entity,
 
@@ -34,16 +37,88 @@ export class BasePostRepository extends BasePostgresRepository<BasePostEntity, B
         // (на текущий момент так)
         comments: undefined,
         likes: undefined,
-        postToExtraFields: undefined
+
+        postToExtraFields: entity.postToExtraFields ? {
+          connect: entity.postToExtraFields
+        } : undefined,
       },
+      include: {
+        tags: true,
+        comments: true,
+        likes: true,
+        postToExtraFields: true,
+
+        _count: {
+          select: { comments: true, likes: true }
+        }
+      }
     });
 
-    entity.id = post.id;
-    entity.createdAt = post.createdAt;
-    entity.updatedAt = post.updatedAt;
-    entity.publishedAt = post.publishedAt;
+    const post = this.createEntityFromDocument(document);
 
-    return entity;
+    return post;
+  }
+
+  public async search(query?: BlogPostQuery): Promise<PaginationResult<BasePostEntity>> {
+    const skip = query?.page && query?.limit ? (query.page - 1) * query.limit : undefined;
+    const take = (query?.limit && query?.limit > MAX_POSTS_PER_PAGE) ? MAX_POSTS_PER_PAGE : query.limit;
+    const where: Prisma.PostWhereInput = {};
+    const orderBy: Prisma.PostOrderByWithRelationInput = {};
+
+    // where.isPublished = true; // Показываем только опубликованные посты
+
+    // Поиск по тегам
+    if(query?.tags) {
+      where.tags = {
+        some: {
+          name: {
+            in: query.tags,
+            mode: 'insensitive'
+          }
+        },
+      }
+    }
+
+    // Сортировка и направление сортировки
+    if (query?.sortType && query?.sortDirection) {
+      const { key, value } = this.getSortKeyValue(query.sortType, query.sortDirection);
+
+      orderBy[key] = value;
+    }
+
+    const [posts, totalPostsCount] = await Promise.all([
+      this.dbClient.post.findMany({
+        where,
+        include: {
+          tags: true,
+          comments: true,
+          likes: true,
+          postToExtraFields: true
+        },
+
+        // Pagination
+        take,
+        skip,
+        orderBy
+      }),
+      this.getPostCount(where)
+    ]);
+
+    let postsEntities = posts.map((post) => this.createEntityFromDocument(post));
+    let postsCount = totalPostsCount;
+
+    if (query?.title) {
+      postsEntities = await this.filterPostsByTitle(postsEntities, query.title);
+      postsCount = postsEntities.length;
+    }
+
+    return {
+      entities: postsEntities,
+      currentPage:  query?.page,
+      totalPages: this.calculatePostsPage(postsCount, take),
+      totalItems: postsCount,
+      itemsPerPage: take,
+    }
   }
 
   public async findById(entityId: string): Promise<BasePostEntity | null> {
@@ -54,8 +129,7 @@ export class BasePostRepository extends BasePostgresRepository<BasePostEntity, B
       include: {
         tags: true,
         comments: true,
-        likes: true,
-        postToExtraFields: true
+        likes: true
       }
     });
 
@@ -63,20 +137,28 @@ export class BasePostRepository extends BasePostgresRepository<BasePostEntity, B
       throw new NotFoundException(`Document with id ${entityId} not found`);
     }
 
-    const post = this.createEntityFromDocument(document as BasePostEntity);
+    const post = this.createEntityFromDocument(document);
 
     return post;
   }
 
-  // TODO: Пока не реализовано
   public async updateById(
     entityId: string,
     updatedFields: Partial<BasePostEntity>
   ): Promise<void | BasePostEntity> {
-    let postTags = undefined;
 
-    if(updatedFields.tags && updatedFields.tags.length > 0) {
-       postTags = this.convertTagsToObjects(updatedFields.tags);
+    let updateTags = undefined;
+
+    if(updatedFields.tags) {
+      if(updatedFields.tags.length > 0) {
+        updateTags = {
+          set: updatedFields.tags,
+        }
+      } else { // Если передали пустой массив - очищаем теги
+        updateTags = {
+          set: [],
+        }
+      }
     }
 
     const document = await this.dbClient.post.update({
@@ -84,14 +166,25 @@ export class BasePostRepository extends BasePostgresRepository<BasePostEntity, B
       data: {
         ...updatedFields,
 
-        tags: postTags ? {
-          connect: postTags
+        tags: updateTags,
+
+        comments: updatedFields.comments ? {
+          connect: updatedFields.comments
         } : undefined,
 
-        // TODO: Поправить в будущем
-        comments: undefined,
-        likes: undefined,
-        postToExtraFields: undefined
+        likes: updatedFields.likes ? {
+          connect: updatedFields.likes
+        } : undefined,
+
+        postToExtraFields: updatedFields.postToExtraFields ? {
+          connect: updatedFields.postToExtraFields
+        } : undefined,
+      },
+      include: {
+        tags: true,
+        comments: true,
+        likes: true,
+        postToExtraFields: true
       }
     });
 
@@ -104,9 +197,62 @@ export class BasePostRepository extends BasePostgresRepository<BasePostEntity, B
     });
   }
 
-  private convertTagsToObjects(tags: TagInterface[]) {
-    const tagsObjects = tags.map((tag) => ({ id: tag.id}));
+  //////////////////// Вспомогательные методы поиска и пагинации ////////////////////
+  private async filterPostsByTitle(posts, title: string) {
+    const extraFieldsIDs = await this.getExtraFieldsIDsByTitle(title)
 
-    return tagsObjects;
+    const filteredPosts = posts.filter((postEntity) => {
+      // Ищем в ExtraFields поста все поля, ID которых есть в полученных по Title ExtraFields
+      const isPostIncluded = postEntity.postToExtraFields.find((postExtraFieldsItem) => {
+        return extraFieldsIDs.includes(postExtraFieldsItem.extraFieldsId);
+      })
+
+      return isPostIncluded;
+    });
+
+    return filteredPosts;
+  }
+
+  private async getExtraFieldsIDsByTitle(title: string) {
+    // TODO: Возможно, получится оптимизировать (позже)
+    // путем созжания доп. таблицы (индекса) для поиска  по title
+    // Сейчас - просто получаем ID всех ExtraFields, у которых Title = запросу
+    const targetTitle = `%${title}%`;
+    const getExtraFieldsByTitle: Record<"id", string>[] | null = await this.dbClient.$queryRaw`
+      SELECT id FROM "text_posts"  WHERE title ILIKE ${targetTitle} UNION
+      SELECT id FROM "video_posts" WHERE title ILIKE ${targetTitle};
+    `;
+    const extraFieldsIDs = getExtraFieldsByTitle.map((item) => item.id);
+
+    if(extraFieldsIDs.length <= 0) {
+      throw new NotFoundException(`Posts with title '${title}' not found`);
+    }
+
+    return extraFieldsIDs;
+  }
+
+  private getSortKeyValue(sortType: SortTypeEnum, sortDirection: SortDirectionEnum) {
+    switch(sortType) {
+      case(SortType.CREATED_AT): {
+        return { key: 'createdAt', value: sortDirection };
+      }
+      case(SortType.COMMENTS): {
+        return { key: 'comments', value: { _count: sortDirection } }
+      }
+      case(SortType.LIKES): {
+        return { key: 'likes', value: { _count: sortDirection } }
+      }
+      default: {
+        return { key: DEFAULT_SORT_TYPE, value: DEFAULT_SORT_DIRECTION };
+      }
+    }
+  }
+
+  private async getPostCount(where: Prisma.PostWhereInput): Promise<number> {
+    return this.dbClient.post.count({ where });
+  }
+
+  private calculatePostsPage(totalCount: number, limit: number): number {
+    return Math.ceil(totalCount / limit);
   }
 }

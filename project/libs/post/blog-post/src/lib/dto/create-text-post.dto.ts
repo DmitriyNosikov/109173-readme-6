@@ -1,32 +1,46 @@
 import { ApiProperty } from '@nestjs/swagger'
+import { IsNotEmpty, IsString, MaxLength, MinLength } from 'class-validator';
 import { PostWithTextDTO } from './post-with-text.dto';
 import { PostWithTitleDTO } from './post-with-title.dto';
+import { BlogPostValidation } from '../blog-post.constant';
 
 export class CreateTextPostDTO implements PostWithTitleDTO, PostWithTextDTO {
   @ApiProperty({
     description: 'Text title',
     example: 'Some text title',
-    minLength: 20,
-    maxLength: 50,
+    minLength: BlogPostValidation.TITLE.MIN_LENGTH,
+    maxLength: BlogPostValidation.TITLE.MAX_LENGTH,
     required: true
   })
+  @MinLength(BlogPostValidation.TITLE.MIN_LENGTH)
+  @MaxLength(BlogPostValidation.TITLE.MAX_LENGTH)
+  @IsString()
+  @IsNotEmpty()
   public title: string;
 
   @ApiProperty({
     description: 'Text announce',
     example: 'Little text presentation',
-    minLength: 50,
-    maxLength: 255,
+    minLength: BlogPostValidation.ANNOUNCE.MIN_LENGTH,
+    maxLength: BlogPostValidation.ANNOUNCE.MAX_LENGTH,
     required: true
   })
+  @MinLength(BlogPostValidation.ANNOUNCE.MIN_LENGTH)
+  @MaxLength(BlogPostValidation.ANNOUNCE.MAX_LENGTH)
+  @IsString()
+  @IsNotEmpty()
   public announce: string;
 
   @ApiProperty({
     description: 'Post text',
     example: 'Full post text',
-    minLength: 100,
-    maxLength: 1024,
+    minLength: BlogPostValidation.TEXT.MIN_LENGTH,
+    maxLength: BlogPostValidation.TEXT.MAX_LENGTH,
     required: true
   })
+  @MinLength(BlogPostValidation.TEXT.MIN_LENGTH)
+  @MaxLength(BlogPostValidation.TEXT.MAX_LENGTH)
+  @IsString()
+  @IsNotEmpty()
   public text: string;
 }

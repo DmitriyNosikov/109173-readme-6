@@ -5,7 +5,7 @@ import { Model } from 'mongoose';
 import { BaseMongoDbRepository } from '@project/shared/data-access'
 import { BlogUserEntity } from './blog-user.entity';
 import { BlogUserFactory } from './blog-user.factory';
-import { BlogUserModel } from './bog-user.model';
+import { BlogUserModel } from './blog-user.model';
 
 @Injectable()
 export class BlogUserRepository extends BaseMongoDbRepository<BlogUserEntity, BlogUserModel> {
