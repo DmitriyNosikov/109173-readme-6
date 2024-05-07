@@ -2,8 +2,16 @@ import { ApiProperty } from '@nestjs/swagger'
 import { ArrayMaxSize, IsArray, IsBoolean, IsMongoId, IsNotEmpty, IsOptional, IsString, MaxLength, MinLength } from 'class-validator';
 
 import { BasePostInterface, UserInterface } from '@project/shared/core';
-import { ExtraFieldsDTO } from './create-base-post.dto';
+import { CreateBasePostDTO, ExtraFieldsDTO } from './create-base-post.dto';
 import { BlogPostValidation } from '../blog-post.constant';
+import { CommentInterface } from '@project/post/comment';
+import { LikeInterface } from '@project/post/like';
+import { CreateCommentRDO } from 'libs/post/comment/src/lib/rdo/create-comment.rdo';
+import { CreateLinkPostDTO } from './create-link-post.dto';
+import { CreateTextPostDTO } from './create-text-post.dto';
+import { CreateQuotePostDTO } from './create-quote-post.dto';
+import { CreatePhotoPostDTO } from './create-photo-post.dto';
+import { CreateVideoPostDTO } from './create-video-post.dto';
 
 export class UpdateBasePostDTO {
   @ApiProperty({
@@ -20,7 +28,27 @@ export class UpdateBasePostDTO {
   @ArrayMaxSize(BlogPostValidation.TAG.MAX_СOUNT)
   @IsArray()
   @IsOptional()
-  public tags: string[] | null;
+  public tags?: string[] | null;
+
+  // TODO: Разобраться с этими полями
+  // @ApiProperty({
+  //   description: 'Post comments id`s (can be undefined)',
+  //   type: [CreateCommentRDO]
+  // })
+  // @IsArray()
+  // @IsString({ each: true })
+  // @IsOptional()
+  // public comments?: CommentInterface[] | null;
+
+  // @ApiProperty({
+  //   type: [String],
+  //   description: 'Post likes id`s (can be undefined)',
+  //   example: '[ "438734-gdjf9g843-gsmi43", "gsmi43-gdjf9g843-fg435gd" ]',
+  // })
+  // @IsArray()
+  // @IsString({ each: true })
+  // @IsOptional()
+  // public likes?: LikeInterface[] | null;
 
   @ApiProperty({
     description: 'Is post published flag',
@@ -28,9 +56,9 @@ export class UpdateBasePostDTO {
     default: false
   })
   @IsBoolean()
-  @IsOptional()
   @IsNotEmpty()
-  public isPublished: boolean;
+  @IsOptional()
+  public isPublished?: boolean;
 
   @ApiProperty({
     description: 'Is repost flag',
@@ -38,28 +66,28 @@ export class UpdateBasePostDTO {
     default: false
   })
   @IsBoolean()
-  @IsOptional()
   @IsNotEmpty()
-  public isRepost: boolean;
+  @IsOptional()
+  public isRepost?: boolean;
 
   @ApiProperty({
-    description: 'Post author id',
-    example: '6dd03634-9785-49b8-a403-9ab61bb5656e',
+    description: 'Post author MongoDB id',
+    example: '66224f68a3f9a165a1ab5fbd',
     required: true
   })
   @IsString()
   @IsMongoId()
   @IsOptional()
-  public authorId: UserInterface['id'];
+  public authorId?: UserInterface['id'];
 
   @ApiProperty({
-    description: 'Original post author id (when reposted)',
-    example: '6dd03634-9785-49b8-a403-9ab61bb5656e',
+    description: 'Original post author MongoDB id (when reposted)',
+    example: '66224f68a3f9a165a1ab5fbd',
   })
   @IsString()
   @IsMongoId()
   @IsOptional()
-  public originAuthorId: UserInterface['id'] | null;
+  public originAuthorId?: UserInterface['id'] | null;
 
 
   @ApiProperty({
@@ -68,16 +96,18 @@ export class UpdateBasePostDTO {
   })
   @IsString()
   @IsOptional()
-  public originPostId: BasePostInterface['id'] | null;
+  public originPostId?: BasePostInterface['id'] | null;
 
   @ApiProperty({
     description: 'Extra-fields, specific for each post type (text, link, quote etc.)',
-    example: '{ "announce": "Some announce text", "title": "Article title", "text": "Long story short text" }'
+    enum: [CreateBasePostDTO, CreateLinkPostDTO, CreateTextPostDTO, CreateQuotePostDTO, CreatePhotoPostDTO, CreateVideoPostDTO],
+    example: 'For text post: { "announce": "Some announce text", "title": "Article title", "text": "Long story short text" }'
   })
   @IsNotEmpty()
   @IsOptional()
-  public extraFields: ExtraFieldsDTO;
+  public extraFields?: ExtraFieldsDTO;
 
+  // TODO: Разобраться
     // ПОКА ЗАПРЕЩАЕМ МЕНЯТЬ ТИП ПОСТА
   // @ApiProperty({
   //   description: 'Post type',
@@ -86,25 +116,4 @@ export class UpdateBasePostDTO {
   //   required: true
   // })
   // public type: PostTypeEnum;
-
-    // ПОКА ЗАПРЕЩАЕМ МЕНЯТЬ КОММЕНТАРИИ И ЛАЙКИ
-  // @ApiProperty({
-  //   type: [String],
-  //   description: 'Post comments',
-  //   example: '[ { id: "438734-gdjf9g843-gsmi43", authorId: "gh8394g8h9efgh39434g", text: "Some comment text" } ]',
-  //   minLength: 3,
-  //   maxLength: 10,
-  //   maxProperties: 8
-  // })
-  // public comments: CommentInterface[] | null;
-
-  // @ApiProperty({
-  //   type: [String],
-  //   description: 'Post tags',
-  //   example: '[ { id: "438734-gdjf9g843-gsmi43", authorId: "gh8394g8h9efgh39434g" } ]',
-  //   minLength: 3,
-  //   maxLength: 10,
-  //   maxProperties: 8
-  // })
-  // public likes: LikeInterface[] | null;
 }

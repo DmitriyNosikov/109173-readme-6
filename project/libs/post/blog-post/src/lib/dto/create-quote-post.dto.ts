@@ -5,8 +5,8 @@ import { BlogPostValidation } from '../blog-post.constant';
 
 export class CreateQuotePostDTO implements PostWithTextDTO {
   @ApiProperty({
-    description: 'Quote author id',
-    example: '6dd03634-9785-49b8-a403-9ab61bb5656e',
+    description: 'Quote author MongoDB id',
+    example: '66224f68a3f9a165a1ab5fbd',
     minLength: BlogPostValidation.QUOTE_AUTHOR.MIN_LENGTH,
     maxLength: BlogPostValidation.QUOTE_AUTHOR.MAX_LENGTH,
     required: true

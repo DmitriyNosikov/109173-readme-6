@@ -223,7 +223,7 @@ export class BasePostRepository extends BasePostgresRepository<BasePostEntity, B
     const extraFieldsIDs = getExtraFieldsByTitle.map((item) => item.id);
 
     if(extraFieldsIDs.length <= 0) {
-      throw new NotFoundException(`Posts with title ${title} not found`);
+      throw new NotFoundException(`Posts with title '${title}' not found`);
     }
 
     return extraFieldsIDs;

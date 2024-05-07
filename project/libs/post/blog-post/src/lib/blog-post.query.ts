@@ -3,7 +3,7 @@ import { ArrayMaxSize, IsArray, IsIn, IsNumber, IsOptional, IsString, Max, MaxLe
 
 import { SortDirection, SortDirectionEnum, SortType, SortTypeEnum } from '@project/shared/core';
 
-import { BlogPostValidation, DEFAULT_PAGE_COUNT, DEFAULT_SORT_DIRECTION, DEFAULT_SORT_TYPE, MAX_SEARCH_POSTS_LIMIT } from './blog-post.constant';
+import { BlogPostValidation, DEFAULT_PAGE_NUMBER, DEFAULT_SORT_DIRECTION, DEFAULT_SORT_TYPE, MAX_SEARCH_POSTS_LIMIT } from './blog-post.constant';
 
 export class BlogPostQuery {
   @IsString()
@@ -32,7 +32,7 @@ export class BlogPostQuery {
   @IsOptional()
   public sortDirection: SortDirectionEnum = DEFAULT_SORT_DIRECTION;
 
-  @Transform(({ value }) => Number(value) || DEFAULT_PAGE_COUNT)
+  @Transform(({ value }) => Number(value) || DEFAULT_PAGE_NUMBER)
   @IsOptional()
-  public page: number = DEFAULT_PAGE_COUNT;
+  public page: number = DEFAULT_PAGE_NUMBER;
 }

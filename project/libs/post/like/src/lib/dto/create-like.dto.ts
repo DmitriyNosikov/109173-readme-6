@@ -5,7 +5,7 @@ import { IsMongoId, IsString } from 'class-validator';
 export class CreateLikeDTO {
   @ApiProperty({
     description: 'Like author id',
-    example: '6dd03634-9785-49b8-a403-9ab61bb5656e',
+    example: '66224f68a3f9a165a1ab5fbd',
     required: true
   })
   @IsString()

@@ -13,7 +13,7 @@ export class CreateLinkPostDTO {
 
   @ApiProperty({
     description: 'Link description',
-    example: '6dd03634-9785-49b8-a403-9ab61bb5656e',
+    example: 'Site to check your internet connection speed',
     maxLength: BlogPostValidation.LINK_DESCRIPTION.MAX_LENGTH
   })
   @MaxLength(BlogPostValidation.LINK_DESCRIPTION.MAX_LENGTH)

@@ -12,6 +12,7 @@ import { CreatePhotoPostDTO } from './create-photo-post.dto';
 import { CreateVideoPostDTO } from './create-video-post.dto';
 import { CommentInterface } from '@project/post/comment';
 import { LikeInterface } from '@project/post/like';
+import { CreateCommentRDO } from 'libs/post/comment/src/lib/rdo/create-comment.rdo';
 
 
 export type ExtraFieldsDTO = CreateBasePostDTO | CreateLinkPostDTO | CreateTextPostDTO | CreateQuotePostDTO | CreatePhotoPostDTO | CreateVideoPostDTO;
@@ -45,9 +46,8 @@ export class CreateBasePostDTO {
   public tags: string[] | null;
 
   @ApiProperty({
-    type: [String],
-    description: 'Post comments id`s',
-    example: '[ "438734-gdjf9g843-gsmi43", "gsmi43-gdjf9g843-fg435gd" ]',
+    description: 'Post comments id`s (can be undefined)',
+    type: [CreateCommentRDO]
   })
   @IsArray()
   @IsString({ each: true })
@@ -56,7 +56,7 @@ export class CreateBasePostDTO {
 
   @ApiProperty({
     type: [String],
-    description: 'Post likes id`s',
+    description: 'Post likes id`s (can be undefined)',
     example: '[ "438734-gdjf9g843-gsmi43", "gsmi43-gdjf9g843-fg435gd" ]',
   })
   @IsArray()
@@ -83,8 +83,8 @@ export class CreateBasePostDTO {
   public isRepost: boolean;
 
   @ApiProperty({
-    description: 'Post author id',
-    example: '6dd03634-9785-49b8-a403-9ab61bb5656e',
+    description: 'Post author MongoDB id',
+    example: '66224f68a3f9a165a1ab5fbd',
     required: true
   })
   @IsString()
@@ -92,8 +92,8 @@ export class CreateBasePostDTO {
   public authorId: UserInterface['id'];
 
   @ApiProperty({
-    description: 'Original post author id (when reposted)',
-    example: '6dd03634-9785-49b8-a403-9ab61bb5656e',
+    description: 'Original post author MongoDB id (when reposted)',
+    example: '66224f68a3f9a165a1ab5fbd',
   })
   @IsString()
   @IsMongoId()
@@ -111,7 +111,8 @@ export class CreateBasePostDTO {
 
   @ApiProperty({
     description: 'Extra-fields, specific for each post type (text, link, quote etc.)',
-    example: '{ "announce": "Some announce text", "title": "Article title", "text": "Long story short text" }'
+    enum: [CreateBasePostDTO, CreateLinkPostDTO, CreateTextPostDTO, CreateQuotePostDTO, CreatePhotoPostDTO, CreateVideoPostDTO],
+    example: 'For text post: { "announce": "Some announce text", "title": "Article title", "text": "Long story short text" }'
   })
   @IsNotEmpty()
   public extraFields: ExtraFieldsDTO;

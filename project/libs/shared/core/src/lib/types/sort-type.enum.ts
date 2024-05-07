@@ -1,5 +1,4 @@
 export const SortType = {
-  POPULAR: 'popular', // по популярности (количетсву комментариев)
   CREATED_AT: 'createdAt',
   LIKES: 'likes',
   COMMENTS: 'comments' // Возможно, не понадобится, т.к. непонятна сортировка по популярности

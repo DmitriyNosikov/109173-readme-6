@@ -6,7 +6,7 @@ export const POST_ONLY_PUBLISHED = true; // В список публикаций
 export const MAX_SEARCH_POSTS_LIMIT = 20; // Максимальное количество возвращаемых публикаций при поиске
 export const DEFAULT_SORT_TYPE = SortType.CREATED_AT;
 export const DEFAULT_SORT_DIRECTION = SortDirection.DESC;
-export const DEFAULT_PAGE_COUNT = 1;
+export const DEFAULT_PAGE_NUMBER = 1;
 
 export const MAX_COMMENTS_PER_PAGE = 50; // Максимальное количество комментариев на один запрос
 
@@ -57,9 +57,28 @@ export const BlogPostMessage: MessagesType = {
     NOT_FOUND: 'Posts not found. Possible reason: Request is incorrect or Database is empty'
   },
   SUCCESS: {
-    FOUND: 'Post found',
+    FOUND: 'Posts found',
     CREATED: 'Post has been successfully created',
     UPDATED: 'Post has been successfully updated',
     DELETED: 'Post has been successfully deleted',
+  },
+  DESCRIPTION: {
+    INDEX: 'Show all posts by passed query',
+    SHOW: 'Get detail info about post by id',
+    CREATE: 'Create new post',
+    UPDATE: 'Update exists post by id',
+    DELETE: 'Delete exists post by id',
+    POST_ID: "Post ID",
+    POST_TITLE: "Post title",
+
+    // PAGINATION
+    LIMIT: "[Pagination] Limit posts count for 1 page",
+    DEFAULT_LIMIT: `Default limit: ${MAX_POSTS_PER_PAGE}`,
+    PAGE: `[Pagination] Current page in pagination`,
+    DEFAULT_PAGE: `Default page number: ${DEFAULT_PAGE_NUMBER}`,
+    SORT_TYPE: `You can sort items by: ${SortType}`,
+    DEFAULT_SORT_TYPE: `Default sort by field '${DEFAULT_SORT_TYPE}'`,
+    SORT_DIRECTION: `Sort direction: ${SortDirection}`,
+    DEFAULT_SORT_DIRECTION: `Default sort direction: ${DEFAULT_SORT_DIRECTION}`,
   }
 } as const;

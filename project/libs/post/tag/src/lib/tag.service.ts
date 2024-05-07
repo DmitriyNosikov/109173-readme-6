@@ -69,6 +69,9 @@ export class TagService {
   public async getOrCreate(tagNames: string[]): Promise<TagInterface[]> {
     const tags = [];
 
+    // Очищаем теги от дублей
+    tagNames = Array.from(new Set(tagNames));
+
     for(const tagName of tagNames) {
       const tagObject = { name: tagName };
       const tag = await this.create(tagObject)
