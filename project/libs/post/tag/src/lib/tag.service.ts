@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common'
+import { BadRequestException, ConflictException, Injectable, NotFoundException } from '@nestjs/common'
 import { omitUndefined } from '@project/shared/helpers';
 
 import { CreateTagDTO } from './dto/create-tag.dto';
@@ -25,7 +25,7 @@ export class TagService {
     const tag = await this.tagRepository.findByName(tagName.toLowerCase());
 
     if(!tag) {
-      throw new NotFoundException(`Tag ${tagName} not found`);
+      throw new NotFoundException(`Tag '${tagName}' not found`);
     }
 
     return tag;
@@ -93,6 +93,12 @@ export class TagService {
 
     if(updatedFields.name) {
       updatedFields.name = updatedFields.name.toLowerCase();
+    }
+
+    const isTagNameExists = await this.tagRepository.findByName(updatedFields.name)
+
+    if(isTagNameExists) {
+      throw new ConflictException(`Tag with name '${updatedFields.name}' already exists`);
     }
 
     const updatedTag = await this.tagRepository.updateById(tagId, updatedFields);

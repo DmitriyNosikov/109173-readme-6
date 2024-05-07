@@ -29,13 +29,13 @@ export class CommentController {
     })
     @ApiParam({
       name: "postId",
-      required: true,
       example: 'b0103f3e-a6ac-4719-94bc-60c8294c08c6',
-      description: CommentMessage.DESCRIPTION.POST_ID
+      description: CommentMessage.DESCRIPTION.POST_ID,
+      required: true
     })
     @ApiBody({
-      required: true,
-      type: CreateCommentDTO
+      type: CreateCommentDTO,
+      required: true
     })
   public async create(@Param('postId') postId: string, @Body() dto: CreateCommentDTO) {
     const comment = await this.commentService.create(postId, dto);
@@ -57,9 +57,9 @@ export class CommentController {
   })
   @ApiParam({
     name: "postId",
-    required: true,
     example: 'b0103f3e-a6ac-4719-94bc-60c8294c08c6',
-    description: CommentMessage.DESCRIPTION.POST_ID
+    description: CommentMessage.DESCRIPTION.POST_ID,
+    required: true
   })
   public async show(@Param('postId') postId: string) {
     const documents = await this.commentService.getCommentsByPostId(postId);
@@ -82,15 +82,15 @@ export class CommentController {
   })
   @ApiParam({
     name: "postId",
-    required: true,
     example: 'b0103f3e-a6ac-4719-94bc-60c8294c08c6',
-    description: CommentMessage.DESCRIPTION.POST_ID
+    description: CommentMessage.DESCRIPTION.POST_ID,
+    required: true
   })
   @ApiParam({
     name: "commentId",
-    required: true,
     example: 'b0103f3e-a6ac-4719-94bc-60c8294c08c6',
-    description: CommentMessage.DESCRIPTION.COMMENT_ID
+    description: CommentMessage.DESCRIPTION.COMMENT_ID,
+    required: true
   })
   @ApiBody({
     type: PartialType(UpdateCommentDTO)
@@ -109,15 +109,15 @@ export class CommentController {
   @ApiOperation({ summary: CommentMessage.DESCRIPTION.DELETE })
   @ApiParam({
     name: "postId",
-    required: true,
     example: 'b0103f3e-a6ac-4719-94bc-60c8294c08c6',
-    description: CommentMessage.DESCRIPTION.POST_ID
+    description: CommentMessage.DESCRIPTION.POST_ID,
+    required: true
   })
   @ApiParam({
     name: "commentId",
-    required: true,
     example: 'b0103f3e-a6ac-4719-94bc-60c8294c08c6',
-    description: CommentMessage.DESCRIPTION.POST_ID
+    description: CommentMessage.DESCRIPTION.POST_ID,
+    required: true
   })
   @ApiResponse({
     status: HttpStatus.NO_CONTENT,

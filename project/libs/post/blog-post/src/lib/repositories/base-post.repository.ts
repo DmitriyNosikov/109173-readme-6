@@ -86,7 +86,7 @@ export class BasePostRepository extends BasePostgresRepository<BasePostEntity, B
       orderBy[key] = value;
     }
 
-    const [posts, postsCount] = await Promise.all([
+    const [posts, totalPostsCount] = await Promise.all([
       this.dbClient.post.findMany({
         where,
         include: {
@@ -105,9 +105,11 @@ export class BasePostRepository extends BasePostgresRepository<BasePostEntity, B
     ]);
 
     let postsEntities = posts.map((post) => this.createEntityFromDocument(post));
+    let postsCount = totalPostsCount;
 
     if (query?.title) {
       postsEntities = await this.filterPostsByTitle(postsEntities, query.title);
+      postsCount = postsEntities.length;
     }
 
     return {

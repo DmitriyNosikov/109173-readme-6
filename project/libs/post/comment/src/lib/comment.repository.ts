@@ -25,6 +25,8 @@ export class CommentRepository extends BasePostgresRepository<CommentEntity, Com
       });
 
     entity.id = document.id;
+    entity.createdAt = document.createdAt;
+    entity.updatedAt = document.updatedAt;
 
     return entity;
   }

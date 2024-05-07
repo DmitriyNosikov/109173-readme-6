@@ -7,7 +7,7 @@
 # Environment
 @userId = 6dd03634-9785-49b8-a403-9ab61bb5656e
 @userToken = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NjM4ZDIzZDgyNGQ3ZTdkNzQ3NzNjYmIiLCJlbWFpbCI6Imlyb24tbWFuM0BzdGFya2luZHVzdHJpZXMuaXQiLCJmaXJzdG5hbWUiOiJUb255IiwibGFzdG5hbWUiOiJTdGFyazEyMyIsImlhdCI6MTcxNTAwNTE4MCwiZXhwIjoxNzE1MDA1NDgwfQ.ICvT_awGBKungmnqBCp3_1is0qwGgDJMW61IG7SmksM
-@postId = aa97d6b9-717b-4421-90e8-c0dc40ca4742
+@postId = 357ec235-8658-4531-9f2e-e32cc9fd8ff4
 
 # Create text-post
 POST {{baseUrl}}/posts HTTP/1.1
@@ -80,11 +80,6 @@ GET {{baseUrl}}/posts/{{postId}} HTTP/1.1
 Content-Type: application/json
 ###
 
-# Delete post by id
-DELETE  {{baseUrl}}/posts/{{postId}} HTTP/1.1
-Content-Type: application/json
-###
-
 # Update video post (extra fields) - Wrong fields for special (to check validation)
 PATCH  {{baseUrl}}/posts/{{postId}} HTTP/1.1
 Content-Type: application/json
@@ -116,4 +111,9 @@ Content-Type: application/json
     "videoURL": "https://www.youtube.com/watch?v=HBAoNL9TYvo&ab_channel=GarasiDrift"
   }
 }
+###
+
+# Delete post by id
+DELETE  {{baseUrl}}/posts/{{postId}} HTTP/1.1
+Content-Type: application/json
 ###
