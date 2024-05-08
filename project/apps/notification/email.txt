@@ -1,0 +1,12 @@
+From: Robert Downey Jr. <iron-man@stark-industries.ai>
+To: Jarvis <ai@jarvis.local>
+Subject: Hello, Jarvis
+Date: Wed, 08 May 2024 17:34:00
+Content-Type: text/html; charset=utf8
+
+<html>
+<body>
+  <header>
+    <h1>Hello, Jarvis!</h1>
+  </header>
+</body>
