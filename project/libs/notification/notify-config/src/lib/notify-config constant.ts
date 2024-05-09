@@ -2,6 +2,8 @@ import { MessagesType } from '@project/shared/core';
 
 export const NOTIFY_ENV_FILE_PATH = 'apps/notification/notification.env'
 
+export const DEFAULT_PORT = 9000;
+
 export const DEFAULT_MONGODB_PORT = 27020;
 export const DEFAULT_MONGODB_EXPRESS_PORT = 8083;
 
@@ -10,6 +12,8 @@ export const DEFAULT_RABBITMQ_UI_PORT = 1088;
 
 export const NotifyMessage: MessagesType = {
   ERROR: {
+    NOTIFY_APP_HOST_REQUIRED: '[Notify App Config] host is required',
+
     MONGODB_DBNAME_REQUIRED: '[MongoDB Config] database name is required',
     MONGODB_HOST_REQUIRED: '[MongoDB Config] host is required',
     MONGODB_USER_REQUIRED: '[MongoDB Config] user name is required',

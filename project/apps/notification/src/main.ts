@@ -10,14 +10,14 @@ import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger'
 
 import { AppModule } from './app/app.module';
 import { ConfigEnvironment } from '@project/shared/core';
-import { PostConfigEnum } from '@project/post/post-config';
+import { NotifyConfigEnum } from '@project/notify-config';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   const configService = app.get(ConfigService);
   const swaggerConfig = new DocumentBuilder()
-    .setTitle('The "Post" service')
-    .setDescription('Post service API')
+    .setTitle('The "Notification" service')
+    .setDescription('Notification service API')
     .setVersion('1.0')
     .build();
 
@@ -32,8 +32,8 @@ async function bootstrap() {
   const swaggerDocument = SwaggerModule.createDocument(app, swaggerConfig);
   SwaggerModule.setup('spec', app, swaggerDocument);
 
-  const host = configService.get(`${ConfigEnvironment.POST}.${PostConfigEnum.HOST}`);
-  const port = configService.get(`${ConfigEnvironment.POST}.${PostConfigEnum.PORT}`);
+  const host = configService.get(`${ConfigEnvironment.NOTIF}.${NotifyConfigEnum.HOST}`);
+  const port = configService.get(`${ConfigEnvironment.NOTIF}.${NotifyConfigEnum.PORT}`);
 
   await app.listen(port, host);
 

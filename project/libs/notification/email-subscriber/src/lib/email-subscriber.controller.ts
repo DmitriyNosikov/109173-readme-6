@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Param, Patch, HttpStatus, Post } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Patch, HttpStatus } from '@nestjs/common';
 import { ApiResponse, ApiTags } from '@nestjs/swagger'
 
 import { fillDTO } from '@project/shared/helpers'
@@ -39,64 +39,7 @@ export class EmailSubscriberController {
     status: HttpStatus.CONFLICT,
     description: SubscriberMessage.ERROR.ALREADY_EXISTS
   })
-  public async create(subscriber: CreateEmailSubscriberDTO): Promise<EmailSubscriberRDO> {
-    const newSubscriber = await this.emailSubscriberService.addSubscriber(subscriber);
-
-    return fillDTO(EmailSubscriberRDO, newSubscriber.toPOJO());
-  }
-
-  @Get(':subscriberId')
-  @ApiResponse({
-    type: EmailSubscriberRDO,
-    status: HttpStatus.OK,
-    description: SubscriberMessage.SUCCESS.FOUND
-  })
-  @ApiResponse({
-    status: HttpStatus.NOT_FOUND,
-    description: SubscriberMessage.ERROR.NOT_FOUND
-  })
-  public async show(@Param('subscriberId', MongoIdValidationPipe) subscriberId: string): Promise<EmailSubscriberRDO | EmailSubscriberRDO[]> {
-    const subscriber = await this.emailSubscriberService.getSubscriber(subscriberId);
-
-    return fillDTO(EmailSubscriberRDO, subscriber.toPOJO());
-  }
-
-  @Patch(':subscriberId')
-  @ApiResponse({
-    type: EmailSubscriberRDO,
-    status: HttpStatus.CREATED,
-    description: SubscriberMessage.SUCCESS.UPDATED
-  })
-  @ApiResponse({
-    status: HttpStatus.BAD_REQUEST,
-    description: SubscriberMessage.ERROR.CANT_UPDATE
-  })
-  public async updateUser(
-    @Param('subscriberId', MongoIdValidationPipe) subscriberId: string,
-    @Body() dto: UpdateEmailSubscriberDTO
-  ): Promise<EmailSubscriberRDO | EmailSubscriberRDO[]> {
-    const { email, firstName, lastName } = dto;
-    const updatedSubscriber= await this.emailSubscriberService.updateSubscriber(subscriberId, { email, firstName, lastName });
-
-    return fillDTO(EmailSubscriberRDO, updatedSubscriber.toPOJO());
-  }
-
-  @Delete(':subscriberId')
-  @ApiResponse({
-    status: HttpStatus.OK,
-    description: SubscriberMessage.SUCCESS.DELETED
-  })
-  public async deleteSubscriber(@Param('subscriberId', MongoIdValidationPipe) subscriberId: string): Promise<void> {
-    await this.emailSubscriberService.deleteSubscriber(subscriberId);
-  }
-
-
-  @Delete(':subscriberEmail')
-  @ApiResponse({
-    status: HttpStatus.OK,
-    description: SubscriberMessage.SUCCESS.DELETED
-  })
-  public async deleteSubscriberByEmail(@Param('subscriberEmail', MongoIdValidationPipe) subscriberEmail: string): Promise<void> {
-    await this.emailSubscriberService.deleteSubscriberByEmail(subscriberEmail);
+  public async create(subscriber: CreateEmailSubscriberDTO) {
+    await this.emailSubscriberService.addSubscriber(subscriber);
   }
 }

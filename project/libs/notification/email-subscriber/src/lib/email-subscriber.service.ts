@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 
 import { omitUndefined } from '@project/shared/helpers';
 import { SubscriberMessage } from './email-subscriber.constant';
@@ -15,7 +15,7 @@ export class EmailSubscriberService {
 
   public async addSubscriber(subscriber: CreateEmailSubscriberDTO): Promise<EmailSubscriberEntity | null> {
     const { email } = subscriber;
-    const existsSubscriber = this.emailSubscriberRepository.findByEmail(email);
+    const existsSubscriber = await this.emailSubscriberRepository.findByEmail(email);
 
     if(existsSubscriber) {
       return existsSubscriber;

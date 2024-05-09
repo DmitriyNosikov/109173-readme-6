@@ -3,7 +3,7 @@ import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document } from 'mongoose';
 
 @Schema({
-  collection: 'blog-users',
+  collection: 'blog-subscribers',
   timestamps: true
 })
 export class EmailSubscriberModel extends Document implements SubscriberInterface {
@@ -22,11 +22,6 @@ export class EmailSubscriberModel extends Document implements SubscriberInterfac
     required: true
   })
   lastName: string;
-
-  @Prop({
-    required: true
-  })
-  passwordHash: string;
 }
 
 export const EmailSubscriberSchema = SchemaFactory.createForClass(EmailSubscriberModel);

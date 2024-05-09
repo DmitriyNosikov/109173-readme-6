@@ -20,7 +20,6 @@
       "@project/email-subscriber": [
         "libs/notification/email-subscriber/src/index.ts"
       ],
-      "@project/notify": ["libs/notification/notify/src/index.ts"],
       "@project/notify-config": ["libs/notification/notify-config/src/index.ts"],
       "@project/post/comment": ["libs/post/comment/src/index.ts"],
       "@project/post/like": ["libs/post/like/src/index.ts"],
@@ -40,7 +39,8 @@
       "@project/user/authentication": ["libs/user/authentication/src/index.ts"],
       "@project/user/blog-user": ["libs/user/blog-user/src/index.ts"],
       "@project/user/password": ["libs/user/password/src/index.ts"],
-      "@project/user/user-config": ["libs/user/user-config/src/index.ts"]
+      "@project/user/user-config": ["libs/user/user-config/src/index.ts"],
+      "@project/user/notify": ["libs/user/notify/src/index.ts"],
     }
   },
   "exclude": ["node_modules", "tmp"]

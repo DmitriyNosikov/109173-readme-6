@@ -2,11 +2,13 @@ import { ConfigType, registerAs } from '@nestjs/config'
 import { plainToClass } from 'class-transformer';
 import { ConfigEnvironment } from '@project/shared/core';
 import { NotifConfigSchema } from './notify-config.schema';
-import { DEFAULT_MONGODB_EXPRESS_PORT, DEFAULT_MONGODB_PORT, DEFAULT_RABBITMQ_UI_PORT, DEFAULT_RAMMITMQ_PORT } from './notify-config constant';
+import { DEFAULT_MONGODB_EXPRESS_PORT, DEFAULT_MONGODB_PORT, DEFAULT_PORT, DEFAULT_RABBITMQ_UI_PORT, DEFAULT_RAMMITMQ_PORT } from './notify-config constant';
 
 type PromisifiedConfig = Promise<ConfigType<typeof getConfig>>;
 
 async function getConfig(): Promise<NotifConfigSchema> {
+  const port = process.env.PORT || String(DEFAULT_PORT);
+
   const dbPort = process.env.MONGODB_PORT || String(DEFAULT_MONGODB_PORT);
   const express_port = process.env.MONGODB_EXPRESS_PORT || String(DEFAULT_MONGODB_EXPRESS_PORT);
 
@@ -14,6 +16,9 @@ async function getConfig(): Promise<NotifConfigSchema> {
   const rabbitmqUiPort = process.env.RABBITMQ_UI_PORT || String(DEFAULT_RABBITMQ_UI_PORT);
 
   const config = plainToClass(NotifConfigSchema, {
+    host: process.env.HOST,
+    port: parseInt(port, 10),
+
     // MONGODB
     dbPort: parseInt(dbPort, 10),
     dbHost: process.env.MONGODB_HOST,
@@ -24,6 +29,7 @@ async function getConfig(): Promise<NotifConfigSchema> {
     express_port: parseInt(express_port, 10),
 
     // RABBBITMQ
+    rabbitmqHost: process.env.RABBITMQ_HOST,
     rabbitmqPort: parseInt(rabbitmqPort, 10),
     rabbitmqUiPort: parseInt(rabbitmqUiPort, 10),
     rabbitmqUser: process.env.RABBITMQ_USER,

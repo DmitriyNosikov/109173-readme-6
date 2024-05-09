@@ -6,6 +6,7 @@ import { AuthenticationMessage } from './authentication.constant';
 import { HasherInterface } from '@project/shared/hasher';
 import { UserInterface, TokenPayload } from '@project/shared/core';
 import { JwtService } from '@nestjs/jwt';
+import { NotifyService } from '@project/user/notify';
 
 type BlogUserEntity = ReturnType<BlogUserFactory['create']>;
 @Injectable()
@@ -19,7 +20,8 @@ export class AuthenticationService {
     @Inject('Hasher')
     private readonly hasher: HasherInterface,
 
-    private readonly jwtService: JwtService
+    private readonly jwtService: JwtService,
+    private readonly notifyService: NotifyService
   ){}
 
   public async register(dto: CreateUserDTO): Promise<BlogUserEntity> {
@@ -44,6 +46,13 @@ export class AuthenticationService {
     userEntity.setPassword(hashedPassword);
 
     await this.blogUserRepository.create(userEntity);
+
+    // Подписываем пользователя на уведломления
+    const registeredSubscriber = await this.notifyService.registerSubscriber({ email, firstName, lastName });
+
+    if(registeredSubscriber) {
+      console.log(`Subscriber ${email} successfully registered`);
+    }
 
     return userEntity;
   }

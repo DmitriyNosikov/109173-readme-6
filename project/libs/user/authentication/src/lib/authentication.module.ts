@@ -4,6 +4,7 @@ import { AuthenticationController } from './authentication.controller';
 import { AuthenticationService } from './authentication.service';
 import { BCryptHasher } from '@project/shared/hasher'
 
+import { NotifyModule } from '@project/user/notify'
 import { JwtModule } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
 import { getJWTOptions } from '@project/shared/configurations/jwt-config'
@@ -15,6 +16,9 @@ import { JWTAccessStrategy } from './strategies/jwt-access.strategy';
       inject: [ConfigService],
       useFactory: getJWTOptions,
     }),
+
+    // Модуль для работы с уведомлениями
+    NotifyModule,
 
     // Импортируем модуль управления пользователями блога
     // для дальнейшей возможности пользоваться его провайдерами
