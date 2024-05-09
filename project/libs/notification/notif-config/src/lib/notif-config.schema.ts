@@ -14,6 +14,7 @@ export const NotifConfigEnum = {
   AUTH_DATABASE: 'authDatabase',
 
   // RABBITMQ
+  RABBITMQ_HOST: 'rabbitmqHost',
   RABBITMQ_PORT: 'rabbitmqPort',
   RABBITMQ_UI_PORT: 'rabbitmqUiPort',
   RABBITMQ_USER: 'rabbitmqUser',
@@ -33,6 +34,7 @@ export interface NotifConfigInterface {
   [NotifConfigEnum.AUTH_DATABASE]: string;
 
   // RABBITMQ
+  [NotifConfigEnum.RABBITMQ_HOST]: string;
   [NotifConfigEnum.RABBITMQ_PORT]: number;
   [NotifConfigEnum.RABBITMQ_UI_PORT]: number;
   [NotifConfigEnum.RABBITMQ_USER]: string;
@@ -71,6 +73,9 @@ export class NotifConfigSchema implements NotifConfigInterface {
   public authDatabase: string;
 
   // RABBITMQ
+  @IsString({ message: NotifMessage.ERROR.RABBITMQ_HOST_REQUIRED })
+  public rabbitmqHost: string;
+
   @IsNumber()
   @Max(MAX_PORT)
   @Min(MIN_PORT)

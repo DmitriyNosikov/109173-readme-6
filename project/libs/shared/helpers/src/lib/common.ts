@@ -37,3 +37,7 @@ export function getMongoConnectionString({ username, password, host, port, dbNam
   // https://www.mongodb.com/docs/manual/reference/connection-string/#standard-connection-string-format
   return `mongodb://${username}:${password}@${host}:${port}/${dbName}?authSource=${authDatabase}`
 }
+
+export function getRabbitMQConnectionString({username, password, host, port}): string {
+  return `amqp://${username}:${password}@${host}:${port}`;
+}
