@@ -21,6 +21,7 @@ export const SubscriberMessage: MessagesType = {
   },
   SUCCESS: {
     FOUND: 'Subscriber found',
+    CREATED: 'Subscriber has been successfully created',
     UPDATED: 'Subscriber has been successfully updated',
     DELETED: 'Subscriber has been successfully deleted',
   }

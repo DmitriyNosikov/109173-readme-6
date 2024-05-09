@@ -2,14 +2,14 @@ import { ConfigService } from '@nestjs/config';
 import { ConfigEnvironment } from '@project/shared/core'
 import { getRabbitMQConnectionString } from './common';
 
-export function getRabbitMQOptions(optionSpace) {
+export function getRabbitMQOptions(optionSpace?: string) {
   optionSpace = optionSpace ?? ConfigEnvironment.NOTIF;
 
   return {
     useFactory: async (config: ConfigService) => ({
       exchanges: [
         {
-          name: config.get<string>(`${optionSpace}.queue`),
+          name: config.get<string>(`${optionSpace}.rabbitmqQueue`),
           type: 'direct'
         }
       ],
