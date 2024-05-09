@@ -13,5 +13,6 @@ export const ConfigEnvironment = {
   USER: 'user',
   POST: 'post',
   DB: 'database',
-  JWT: 'jwt'
+  JWT: 'jwt',
+  NOTIF: 'notif',
 } as const;

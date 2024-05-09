@@ -17,6 +17,11 @@
     "paths": {
       "@project/blog-post": ["libs/post/blog-post/src/index.ts"],
       "@project/blog/models": ["libs/blog/models/src/index.ts"],
+      "@project/email-subscriber": [
+        "libs/notification/email-subscriber/src/index.ts"
+      ],
+      "@project/notif": ["libs/notification/notif/src/index.ts"],
+      "@project/notif-config": ["libs/notification/notif-config/src/index.ts"],
       "@project/post/comment": ["libs/post/comment/src/index.ts"],
       "@project/post/like": ["libs/post/like/src/index.ts"],
       "@project/post/post-config": ["libs/post/post-config/src/index.ts"],
