@@ -1,1 +1,1 @@
-export * from './lib/email-subscriber';
+export { EmailSubscriberModule } from './lib/email-subscriber.module'

@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
-import { NOTIF_ENV_FILE_PATH } from './notif-config constant';
-import notifConfig from './notif-config';
+import { NOTIFY_ENV_FILE_PATH } from './notify-config constant';
+import notifyConfig from './notify-config';
 
 @Module({
   imports: [
@@ -9,9 +9,9 @@ import notifConfig from './notif-config';
       isGlobal: true,
       cache: true,
       // Cписок конфигураций для загрузки
-      load: [notifConfig],
+      load: [notifyConfig],
 
-      envFilePath: NOTIF_ENV_FILE_PATH
+      envFilePath: NOTIFY_ENV_FILE_PATH
     })
   ],
   controllers: [],

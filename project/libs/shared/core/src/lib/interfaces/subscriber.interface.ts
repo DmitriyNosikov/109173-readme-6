@@ -1,6 +1,6 @@
-export interface Subscriber {
+export interface SubscriberInterface {
   id?: string;
   email: string;
-  firstname: string;
-  lastname: string;
+  firstName: string;
+  lastName: string;
 }

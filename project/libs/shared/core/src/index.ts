@@ -21,7 +21,7 @@ export { EntityFactory } from './lib/interfaces/entity-factory.interface'
 export { Token } from './lib/interfaces/token.interface'
 export { TokenPayload } from './lib/interfaces/token-payload.interface'
 
-export { Subscriber } from './lib/interfaces/subscriber.interface'
+export { SubscriberInterface } from './lib/interfaces/subscriber.interface'
 
 // TYPES
 export { PlainObject } from './lib/types/plain-object.type'

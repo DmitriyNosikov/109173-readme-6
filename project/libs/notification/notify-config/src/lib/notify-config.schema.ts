@@ -1,9 +1,9 @@
 import { IsNumber, IsOptional, IsString, Max, Min, ValidationError, validateOrReject } from 'class-validator';
 import { MAX_PORT, MIN_PORT } from '@project/shared/core';
-import { DEFAULT_RABBITMQ_UI_PORT, DEFAULT_RAMMITMQ_PORT, NotifMessage } from './notif-config constant';
+import { DEFAULT_RABBITMQ_UI_PORT, DEFAULT_RAMMITMQ_PORT, NotifyMessage } from './notify-config constant';
 import { DEFAULT_MONGODB_EXPRESS_PORT, DEFAULT_MONGODB_PORT } from 'libs/shared/data-access/src/lib/repository/config/mongodb/mongodb.constant';
 
-export const NotifConfigEnum = {
+export const NotifyConfigEnum = {
   // MONGODB
   DB_NAME: 'dbName',
   DB_HOST: 'dbHost',
@@ -25,30 +25,30 @@ export const NotifConfigEnum = {
 
 export interface NotifConfigInterface {
   // MONGODB
-  [NotifConfigEnum.DB_NAME]: string;
-  [NotifConfigEnum.DB_HOST]: string;
-  [NotifConfigEnum.DB_PORT]: number;
-  [NotifConfigEnum.EXPRESS_PORT]: number;
-  [NotifConfigEnum.DB_USER]: string;
-  [NotifConfigEnum.DB_PASSWORD]: string;
-  [NotifConfigEnum.AUTH_DATABASE]: string;
+  [NotifyConfigEnum.DB_NAME]: string;
+  [NotifyConfigEnum.DB_HOST]: string;
+  [NotifyConfigEnum.DB_PORT]: number;
+  [NotifyConfigEnum.EXPRESS_PORT]: number;
+  [NotifyConfigEnum.DB_USER]: string;
+  [NotifyConfigEnum.DB_PASSWORD]: string;
+  [NotifyConfigEnum.AUTH_DATABASE]: string;
 
   // RABBITMQ
-  [NotifConfigEnum.RABBITMQ_HOST]: string;
-  [NotifConfigEnum.RABBITMQ_PORT]: number;
-  [NotifConfigEnum.RABBITMQ_UI_PORT]: number;
-  [NotifConfigEnum.RABBITMQ_USER]: string;
-  [NotifConfigEnum.RABBITMQ_PASSWORD]: string;
-  [NotifConfigEnum.RABBITMQ_QUEUE]: string;
-  [NotifConfigEnum.RABBITMQ_EXCHANGE]: string;
+  [NotifyConfigEnum.RABBITMQ_HOST]: string;
+  [NotifyConfigEnum.RABBITMQ_PORT]: number;
+  [NotifyConfigEnum.RABBITMQ_UI_PORT]: number;
+  [NotifyConfigEnum.RABBITMQ_USER]: string;
+  [NotifyConfigEnum.RABBITMQ_PASSWORD]: string;
+  [NotifyConfigEnum.RABBITMQ_QUEUE]: string;
+  [NotifyConfigEnum.RABBITMQ_EXCHANGE]: string;
 }
 
 export class NotifConfigSchema implements NotifConfigInterface {
   // MONGODB
-  @IsString({ message: NotifMessage.ERROR.MONGODB_DBNAME_REQUIRED })
+  @IsString({ message: NotifyMessage.ERROR.MONGODB_DBNAME_REQUIRED })
   public dbName: string;
 
-  @IsString({ message: NotifMessage.ERROR.MONGODB_HOST_REQUIRED })
+  @IsString({ message: NotifyMessage.ERROR.MONGODB_HOST_REQUIRED })
   public dbHost: string;
 
   @IsNumber()
@@ -63,17 +63,17 @@ export class NotifConfigSchema implements NotifConfigInterface {
   @IsOptional()
   public expressPort: number = DEFAULT_MONGODB_EXPRESS_PORT;
 
-  @IsString({ message: NotifMessage.ERROR.MONGODB_USER_REQUIRED })
+  @IsString({ message: NotifyMessage.ERROR.MONGODB_USER_REQUIRED })
   public dbUser: string;
 
-  @IsString({ message: NotifMessage.ERROR.MONGODB_PASSWORD_REQUIRED })
+  @IsString({ message: NotifyMessage.ERROR.MONGODB_PASSWORD_REQUIRED })
   public  dbPassword: string;
 
-  @IsString({ message: NotifMessage.ERROR.MONGODB_AUTH_DATABASE_REQUIRED })
+  @IsString({ message: NotifyMessage.ERROR.MONGODB_AUTH_DATABASE_REQUIRED })
   public authDatabase: string;
 
   // RABBITMQ
-  @IsString({ message: NotifMessage.ERROR.RABBITMQ_HOST_REQUIRED })
+  @IsString({ message: NotifyMessage.ERROR.RABBITMQ_HOST_REQUIRED })
   public rabbitmqHost: string;
 
   @IsNumber()
@@ -88,10 +88,10 @@ export class NotifConfigSchema implements NotifConfigInterface {
   @IsOptional()
   public rabbitmqUiPort: number = DEFAULT_RABBITMQ_UI_PORT;
 
-  @IsString({ message: NotifMessage.ERROR.RABBITMQ_USER_REQUIRED })
+  @IsString({ message: NotifyMessage.ERROR.RABBITMQ_USER_REQUIRED })
   public rabbitmqUser: string;
 
-  @IsString({ message: NotifMessage.ERROR.RABBITMQ_PASSWORD_REQUIRED })
+  @IsString({ message: NotifyMessage.ERROR.RABBITMQ_PASSWORD_REQUIRED })
   public rabbitmqPassword: string;
 
   @IsString()
@@ -102,7 +102,7 @@ export class NotifConfigSchema implements NotifConfigInterface {
 
   async validate() {
     return await validateOrReject(this).catch(errors => {
-      console.log(NotifMessage.ERROR.VALIDATION, errors);
+      console.log(NotifyMessage.ERROR.VALIDATION, errors);
 
       throw new ValidationError();
     });

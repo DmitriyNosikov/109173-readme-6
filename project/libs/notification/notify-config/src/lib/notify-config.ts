@@ -1,8 +1,8 @@
 import { ConfigType, registerAs } from '@nestjs/config'
 import { plainToClass } from 'class-transformer';
 import { ConfigEnvironment } from '@project/shared/core';
-import { NotifConfigSchema } from './notif-config.schema';
-import { DEFAULT_MONGODB_EXPRESS_PORT, DEFAULT_MONGODB_PORT, DEFAULT_RABBITMQ_UI_PORT, DEFAULT_RAMMITMQ_PORT } from './notif-config constant';
+import { NotifConfigSchema } from './notify-config.schema';
+import { DEFAULT_MONGODB_EXPRESS_PORT, DEFAULT_MONGODB_PORT, DEFAULT_RABBITMQ_UI_PORT, DEFAULT_RAMMITMQ_PORT } from './notify-config constant';
 
 type PromisifiedConfig = Promise<ConfigType<typeof getConfig>>;
 
