@@ -1,19 +1,19 @@
 import { IsNumber, IsOptional, IsString, Max, Min, ValidationError, validateOrReject } from 'class-validator';
-import { DEFAULT_DB_PORT, DEFAULT_DB_UI_PORT, DEFAULT_PORT, UserConfigMessage } from './user-config.constant';
+import { DEFAULT_MONGODB_PORT, DEFAULT_MONGODB_EXPRESS_PORT, DEFAULT_PORT, UserConfigMessage } from './user-config.constant';
 import { MAX_PORT, MIN_PORT } from '@project/shared/core';
 
 export const UserConfigEnum = {
   HOST: 'host',
   PORT: 'port',
-  DB_PORT: 'db_port',
-  DB_UI_PORT: 'db_ui_port',
+  MONGODB_PORT: 'mongodbPort',
+  MONGODB_EXPRESS_PORT: 'mongodbExpressPort',
 } as const;
 
 export interface UserConfigInterface {
   [UserConfigEnum.HOST]: string;
   [UserConfigEnum.PORT]: number;
-  [UserConfigEnum.DB_PORT]: number;
-  [UserConfigEnum.DB_UI_PORT]: number;
+  [UserConfigEnum.MONGODB_PORT]: number;
+  [UserConfigEnum.MONGODB_EXPRESS_PORT]: number;
 }
 
 export class UserConfigSchema implements UserConfigInterface {
@@ -30,13 +30,13 @@ export class UserConfigSchema implements UserConfigInterface {
   @Max(MAX_PORT)
   @Min(MIN_PORT)
   @IsOptional()
-  db_port: number = DEFAULT_DB_PORT;
+  mongodbPort: number = DEFAULT_MONGODB_PORT;
 
   @IsNumber()
   @Max(MAX_PORT)
   @Min(MIN_PORT)
   @IsOptional()
-  db_ui_port: number = DEFAULT_DB_UI_PORT;
+  mongodbExpressPort: number = DEFAULT_MONGODB_EXPRESS_PORT;
 
   async validate() {
     return await validateOrReject(this).catch(errors => {
