@@ -11,9 +11,9 @@ POST {{baseUrl}}/auth/register/ HTTP/1.1
 Content-Type: application/json
 
 {
-  "email": "iron-man34445sfkjhasdfdf345@starkindustries.it",
+  "email": "iron-man@starkindustries.it",
   "firstName": "Tony",
-  "lastName": "Stark123",
+  "lastName": "Stark",
   "avatar": "/playboy/millioner/philanthropist.jpeg",
   "password": "jarvis-123"
 }

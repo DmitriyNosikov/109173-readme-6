@@ -32,7 +32,9 @@ export { PaginationResult } from './lib/types/pagination-result'
 export { SortType, SortDirection, SortTypeEnum, SortDirectionEnum } from './lib/types/sort-type.enum'
 
 // RABBITMQ
-export { RabbitRouting, RabbitExchange, RabbitQueue } from './lib/types/rabbit-routing.enum'
+export { RabbitRouting } from './lib/types/rabbit-routing.enum'
+export { RabbitExchange } from './lib/types/rabbit-exchange.enum'
+export { RabbitQueue } from './lib/types/rabbit-queue.enum'
 
 // CONSTANTS
 export {

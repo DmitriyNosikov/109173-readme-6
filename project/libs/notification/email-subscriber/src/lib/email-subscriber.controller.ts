@@ -1,13 +1,9 @@
-import { Body, Controller, Delete, Get, Param, Patch, HttpStatus } from '@nestjs/common';
+import { Controller, HttpStatus } from '@nestjs/common';
 import { ApiResponse, ApiTags } from '@nestjs/swagger'
 
-import { fillDTO } from '@project/shared/helpers'
-import { MongoIdValidationPipe } from '@project/shared/pipes'
 import { EmailSubscriberService } from './email-subscriber.service';
 
-import { EmailSubscriberRDO } from './rdo/email-subscriber.rdo';
 import { SubscriberMessage } from './email-subscriber.constant';
-import { UpdateEmailSubscriberDTO } from './dto/update-email-subscriber.dto';
 import { CreateEmailSubscriberDTO } from './dto/create-email-subscriber.dto';
 import { RabbitSubscribe } from '@golevelup/nestjs-rabbitmq';
 import { RabbitExchange, RabbitQueue, RabbitRouting } from '@project/shared/core';
@@ -27,8 +23,8 @@ export class EmailSubscriberController {
   // с ключом RoutingKey - выполнится данный метод
   @RabbitSubscribe({
     routingKey: RabbitRouting.ADD_SUBSCRIBER,
-    exchange: RabbitExchange.DEFAULT,
-    queue: RabbitQueue.DEFAULT,
+    exchange: RabbitExchange.INCOME,
+    queue: RabbitQueue.INCOME
   })
   @ApiResponse({
     type: CreateEmailSubscriberDTO,
