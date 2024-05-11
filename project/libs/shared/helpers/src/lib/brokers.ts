@@ -6,15 +6,15 @@ export function getRabbitMQOptions(optionSpace?: string) {
     useFactory: async (config: ConfigService) => ({
       exchanges: [
         {
-          name: config.get<string>(`${optionSpace}.rabbitmqExchange`),
+          name: config.get<string>(`${optionSpace}.exchange`),
           type: 'direct'
         }
       ],
       uri:getRabbitMQConnectionString({
-        host: config.get<string>(`${optionSpace}.rabbitmqHost`),
-        password: config.get<string>(`${optionSpace}.rabbitmqPassword`),
-        username: config.get<string>(`${optionSpace}.rabbitmqUser`),
-        port: config.get<string>(`${optionSpace}.rabbitmqPort`),
+        host: config.get<string>(`${optionSpace}.host`),
+        port: config.get<string>(`${optionSpace}.port`),
+        username: config.get<string>(`${optionSpace}.user`),
+        password: config.get<string>(`${optionSpace}.password`),
       }),
       connectionInitOptions: { wait: false },
       enableControllerDiscovery: true,

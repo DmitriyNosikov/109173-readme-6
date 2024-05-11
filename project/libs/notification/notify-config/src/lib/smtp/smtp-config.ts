@@ -2,7 +2,7 @@ import { ConfigType, registerAs } from '@nestjs/config'
 import { plainToClass } from 'class-transformer';
 import { ConfigEnvironment } from '@project/shared/core';
 import { SmtpConfigSchema } from './smtp-config.schema';
-import { DEFAULT_SMTP_PORT } from '../notify-config constant';
+import { DEFAULT_SMTP_PORT } from './smtp-config constant';
 
 type PromisifiedConfig = Promise<ConfigType<typeof getConfig>>;
 

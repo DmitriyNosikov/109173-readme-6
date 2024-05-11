@@ -3,7 +3,7 @@ import { MessagesType } from '@project/shared/core';
 export const DEFAULT_MONGODB_PORT = 27020;
 export const DEFAULT_MONGODB_EXPRESS_PORT = 8083;
 
-export const MongodbMessage: MessagesType = {
+export const MongoDBMessage: MessagesType = {
   ERROR: {
     MONGODB_DBNAME_REQUIRED: '[Notify App MongoDB Config] database name is required',
     MONGODB_HOST_REQUIRED: '[Notify App MongoDB Config] host is required',

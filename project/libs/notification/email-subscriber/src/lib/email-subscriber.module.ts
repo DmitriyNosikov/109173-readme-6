@@ -24,7 +24,7 @@ import { SendMailModule } from './send-mail/send-mail.module';
     // Модуль для подключения RabbitMQ
     RabbitMQModule.forRootAsync(
       RabbitMQModule,
-      getRabbitMQOptions(ConfigEnvironment.NOTIFY)
+      getRabbitMQOptions(ConfigEnvironment.NOTIFY_RABBITMQ)
     ),
 
     // Модуль для отправки Email уведомлений

@@ -1,7 +1,6 @@
 import { IsEmail, IsNumber, IsOptional, IsString, Max, Min, ValidationError, validateOrReject } from 'class-validator';
 import { MAX_PORT, MIN_PORT } from '@project/shared/core';
-import { SmtpMessage } from './smtp-config constant';
-import { DEFAULT_SMTP_FROM, DEFAULT_SMTP_PORT } from '../notify-config constant';
+import { DEFAULT_SMTP_FROM, DEFAULT_SMTP_PORT, SmtpMessage } from './smtp-config constant';
 
 
 export const SmtpConfigEnum = {

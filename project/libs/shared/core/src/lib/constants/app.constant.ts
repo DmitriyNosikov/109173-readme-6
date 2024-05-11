@@ -10,13 +10,19 @@ export const Environment = {
 export type EnvironmentType = typeof Environment[keyof typeof Environment];
 
 export const ConfigEnvironment = {
-  USER: 'user',
-  USER_RABBIT: 'user-rabbit',
-  POST: 'post',
   DB: 'database',
   JWT: 'jwt',
+
+  // USER
+  USER: 'user',
+  USER_RABBIT: 'user-rabbit',
+
+  // POST
+  POST: 'post',
+
+  // NOTIFY
   NOTIFY: 'notify',
   NOTIFY_MONGODB: 'notify-mongodb',
   NOTIFY_RABBITMQ: 'notify-rabbitmq',
-  NOTIFY_SMTP: 'notify-rabbitmq',
+  NOTIFY_SMTP: 'notify-smtp',
 } as const;
