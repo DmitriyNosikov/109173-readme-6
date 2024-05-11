@@ -11,17 +11,24 @@ import { EmailSubscriberRepository } from './email-subscriber.repository';
 
 import { RabbitMQModule } from '@golevelup/nestjs-rabbitmq';
 import { getRabbitMQOptions } from '@project/shared/helpers';
+import { SendMailModule } from './send-mail/send-mail.module';
 
 
 @Module({
   imports: [
+    // Модуль для подключение к БД с подписчиками
     MongooseModule.forFeature([
       { name: EmailSubscriberModel.name, schema: EmailSubscriberSchema }
     ]),
+
+    // Модуль для подключения RabbitMQ
     RabbitMQModule.forRootAsync(
       RabbitMQModule,
       getRabbitMQOptions(ConfigEnvironment.NOTIFY)
-    )
+    ),
+
+    // Модуль для отправки Email уведомлений
+    SendMailModule
   ],
   controllers: [EmailSubscriberController],
 

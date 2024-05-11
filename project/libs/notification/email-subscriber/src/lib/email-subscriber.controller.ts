@@ -7,12 +7,14 @@ import { SubscriberMessage } from './email-subscriber.constant';
 import { CreateEmailSubscriberDTO } from './dto/create-email-subscriber.dto';
 import { RabbitSubscribe } from '@golevelup/nestjs-rabbitmq';
 import { RabbitExchange, RabbitQueue, RabbitRouting } from '@project/shared/core';
+import { SendMailService } from './send-mail/send-mail.service';
 
 @ApiTags('email subscribers')
 @Controller('subscribers')
 export class EmailSubscriberController {
   constructor(
-    private readonly emailSubscriberService: EmailSubscriberService
+    private readonly emailSubscriberService: EmailSubscriberService,
+    private readonly  sendMailService: SendMailService,
   ){}
 
   // Декоратор RabbitSubscribe используется вместо декораторов @Post/@Get и т.д.
@@ -36,6 +38,10 @@ export class EmailSubscriberController {
     description: SubscriberMessage.ERROR.ALREADY_EXISTS
   })
   public async create(subscriber: CreateEmailSubscriberDTO) {
+    // Добавляем подписчика в базу MongoDB
     await this.emailSubscriberService.addSubscriber(subscriber);
+
+    // Отправляем ему сообщение о подписке на Email
+    await this.sendMailService.sendNotifyNewSubscriber(subscriber);
   }
 }
