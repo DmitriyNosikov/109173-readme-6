@@ -5,15 +5,11 @@ import { MAX_PORT, MIN_PORT } from '@project/shared/core';
 export const UserConfigEnum = {
   HOST: 'host',
   PORT: 'port',
-  MONGODB_PORT: 'mongodbPort',
-  MONGODB_EXPRESS_PORT: 'mongodbExpressPort',
 } as const;
 
 export interface UserConfigInterface {
   [UserConfigEnum.HOST]: string;
   [UserConfigEnum.PORT]: number;
-  [UserConfigEnum.MONGODB_PORT]: number;
-  [UserConfigEnum.MONGODB_EXPRESS_PORT]: number;
 }
 
 export class UserConfigSchema implements UserConfigInterface {
@@ -25,18 +21,6 @@ export class UserConfigSchema implements UserConfigInterface {
   @Min(MIN_PORT)
   @IsOptional()
   port: number = DEFAULT_PORT;
-
-  @IsNumber()
-  @Max(MAX_PORT)
-  @Min(MIN_PORT)
-  @IsOptional()
-  mongodbPort: number = DEFAULT_MONGODB_PORT;
-
-  @IsNumber()
-  @Max(MAX_PORT)
-  @Min(MIN_PORT)
-  @IsOptional()
-  mongodbExpressPort: number = DEFAULT_MONGODB_EXPRESS_PORT;
 
   async validate() {
     return await validateOrReject(this).catch(errors => {

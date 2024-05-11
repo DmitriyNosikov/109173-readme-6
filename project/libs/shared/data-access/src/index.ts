@@ -5,7 +5,6 @@ export { BasePostgresRepository } from './lib/repository/base-postgres.repositor
 
 // MongoDB Config
 export { MongoConfigEnum } from './lib/repository/config/mongodb/mongodb.schema'
-export { getMongooseOptions } from './lib/repository/config/mongodb/mongoose.options'
 export { default as mongoConfig } from './lib/repository/config/mongodb/mongodb.config'
 
 // Postgres Config

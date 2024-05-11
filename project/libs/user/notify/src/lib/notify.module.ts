@@ -11,7 +11,7 @@ import { ConfigEnvironment } from '@project/shared/core';
     RabbitMQModule.forRootAsync(
       RabbitMQModule,
       getRabbitMQOptions(ConfigEnvironment.USER_RABBIT)
-    )
+    ),
   ],
   providers: [NotifyService],
   exports: [NotifyService]

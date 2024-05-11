@@ -4,7 +4,7 @@ import { NOTIFY_ENV_FILE_PATH } from './notify-config constant';
 
 // CONFIGS
 import notifyConfig from './notify-config';
-import notifyRabbitMQConfig from './rabbit/rabitmq-config'
+import notifyRabbitMQConfig from './rabbitmq/rabitmq-config'
 import notifyMongoDBConfig from './mongodb/mongodb-config';
 import notifySmtpConfig from './smtp/smtp-config';
 

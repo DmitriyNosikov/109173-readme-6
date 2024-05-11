@@ -15,6 +15,7 @@ export const ConfigEnvironment = {
 
   // USER
   USER: 'user',
+  USER_MONGODB: 'user-mongodb',
   USER_RABBIT: 'user-rabbit',
 
   // POST

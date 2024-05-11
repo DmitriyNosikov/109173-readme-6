@@ -5,12 +5,13 @@ import { UserConfigModule } from '@project/user/user-config';
 import { BlogUserModule } from '@project/user/blog-user';
 
 import { MongooseModule } from '@nestjs/mongoose';
-import { getMongooseOptions } from '@project/shared/data-access';
+import { ConfigEnvironment } from '@project/shared/core';
+import { getMongooseOptions } from '@project/shared/helpers';
 @Module({
   imports: [
     UserConfigModule,
     MongooseModule.forRootAsync(
-      getMongooseOptions()
+      getMongooseOptions(ConfigEnvironment.USER_MONGODB)
     ),
     AuthenticationModule,
     BlogUserModule
