@@ -20,6 +20,7 @@ import { TagService } from '@project/tag';
 import { UpdateBasePostDTO } from './dto/update-base-post.dto';
 import { BlogPostQuery } from './blog-post.query';
 import { PostEntities } from './types/entities.enum';
+import { PostNotifyService } from '@project/post-notify';
 
 @Injectable()
 export class BlogPostService {
@@ -36,8 +37,24 @@ export class BlogPostService {
     private readonly postToExtraFieldsFactory: PostToExtraFieldsFactory,
     private readonly postToExtraFieldsRepository: PostToExtraFieldsRepository,
 
-    private readonly tagService: TagService
+    private readonly tagService: TagService,
+
+    private readonly postNotifyService: PostNotifyService
   ) {}
+
+  public async findAllPosts(): Promise<BasePostEntity[] | null> {
+    const newPosts = await this.basePostRepository.findAll();
+
+    await this.connectExtraFieldsToPosts(newPosts);
+
+    return newPosts;
+  }
+
+  public async findById(postId: string) {
+    const foundPost = await this.getPostWithExtraFields(postId);
+
+    return foundPost;
+  }
 
   public async create(dto: CreateBasePostDTO) {
     if(!this.checkPostType(dto.type)) {
@@ -57,12 +74,6 @@ export class BlogPostService {
     const createdPost  = await this.getPostWithExtraFields(this.basePost.id);
 
     return createdPost;
-  }
-
-  public async findById(postId: string) {
-    const foundPost = await this.getPostWithExtraFields(postId);
-
-    return foundPost;
   }
 
   public async getPaginatedPosts(query?: BlogPostQuery) {
@@ -129,6 +140,27 @@ export class BlogPostService {
     await this.basePostRepository.deleteById(post.id);
   }
 
+  // NOTIFICATION
+  public async notifyAboutNewPosts() {
+    // TODO: Нужна новая таблица в Postgress с датами
+    // последней рассылки уведомлений, чтобы в дальнейшем
+    // выбирать не все посты, а только те, что вышли с даты
+    // последней рассылки
+    const newPosts = await this.findAllPosts();
+
+    if(!newPosts) {
+      throw new NotFoundException(BlogPostMessage.ERROR.NEW_NOT_FOUND);
+    }
+
+    const postsToSend = newPosts.map((post) => post.toPOJO());
+
+    // Уведомляем подписчиков о новых постах
+    await this.postNotifyService.sendPosts(postsToSend);
+
+  }
+
+
+  // SERVICE METHODS
   private async getPostWithExtraFields(postId: string) {
     const post = await this.basePostRepository.findById(postId);
 

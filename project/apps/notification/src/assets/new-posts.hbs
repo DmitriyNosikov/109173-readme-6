@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Список новых публикаций</title>
+
+  <style>
+    .post {
+      border: 1px solid grey;
+      padding: 10px;
+      margin-bottom: 10px;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Здравствуйте, {{user}}!</h1>
+    <p>Предлагаем вам ознакомиться со списком публикаций, вышедших с момента последней рассылки.</p>
+  </header>
+  <section>
+    <h1>Список новых публикаций: </h1>
+    {{#each posts}}
+      <article class="post">
+        {{#if extraFields.title}}
+          <h2>{{title}}</h2>
+        {{/if}}
+
+        <p><strong>Автор публикации:</strong> {{authorId}}</p>
+        <p><strong>Дата публикации:</strong> {{publishedAt}}</p>
+        <p><strong>Тип поста:</strong> {{type}}</p>
+
+        {{#if extraFields}}
+          {{!-- Перебираем доп. поля поста --}}
+          {{#each extraFields}}
+            {{!-- Вывод текстовых постов --}}
+            {{#if announce}}
+              <h3>Заголовок: "{{title}}"</h3>
+              <p><strong>Анонс: </strong>{{announce}}</p>
+              <p>{{text}}</p>
+            {{/if}}
+
+            {{!-- Вывод постов-цитат --}}
+            {{#if authorId}}
+              <h3>Автор цитаты: {{authorId}}</h3>
+              <p><strong>Вот что он сказал: </strong>"{{text}}"</p>
+            {{/if}}
+
+            {{!-- Вывод постов-ссылок --}}
+            {{#if linkURL}}
+              <h3>Пост-ссылка:</h3>
+              <a href={{linkURL}}>>>> Ссылка на ресурс <<<</a>
+              <p><strong>Описание ссылки: </strong>{{description}}</p>
+            {{/if}}
+
+            {{!-- Вывод постов-видео --}}
+            {{#if videoURL}}
+              <h3>Видео-пост:</h3>
+              <h3>{{title}}</h3>
+              <a href={{videoURL}}>Ссылка на видео</a>
+            {{/if}}
+
+            {{!-- Вывод постов-фото --}}
+            {{#if photoURL}}
+              <h3>Фото-пост:</h3>
+              <a href={{photoURL}}>Ссылка на фото</a>
+            {{/if}}
+          {{/each}}
+        {{/if}}
+      </article>
+    {{/each}}
+  </section>
+</body>
+</html>

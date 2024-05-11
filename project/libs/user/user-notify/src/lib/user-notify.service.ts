@@ -8,7 +8,7 @@ import { userRabbitMQConfig } from '@project/user/user-config';
 import { CreateSubscriberDto } from './dto/create-subscriber.dto';
 
 @Injectable()
-export class NotifyService {
+export class UserNotifyService {
   constructor(
     private readonly rabbitClient: AmqpConnection,
     @Inject(userRabbitMQConfig.KEY)

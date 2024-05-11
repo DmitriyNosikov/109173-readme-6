@@ -9,16 +9,16 @@ export function getMailerAsyncOptions(optionSpace: string): MailerAsyncOptions {
     useFactory: async (configService: ConfigService) => {
       return {
         transport: {
-          host: configService.get<string>(`${optionSpace}.smtpHost`),
-          port: configService.get<number>(`${optionSpace}.smtpPort`),
+          host: configService.get<string>(`${optionSpace}.host`),
+          port: configService.get<number>(`${optionSpace}.port`),
           secure: false,
           auth: {
-            user: configService.get<string>(`${optionSpace}.smtpUser`),
-            pass: configService.get<string>(`${optionSpace}.smtpPassword`)
+            user: configService.get<string>(`${optionSpace}.user`),
+            pass: configService.get<string>(`${optionSpace}.password`)
           }
         },
         defaults: {
-          from: configService.get<string>(`${optionSpace}.smtpFrom`),
+          from: configService.get<string>(`${optionSpace}.from`),
         },
         template: {
           dir: resolve(__dirname, 'assets'),

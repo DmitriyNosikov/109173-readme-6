@@ -6,7 +6,7 @@ import { AuthenticationMessage } from './authentication.constant';
 import { HasherInterface } from '@project/shared/hasher';
 import { UserInterface, TokenPayload } from '@project/shared/core';
 import { JwtService } from '@nestjs/jwt';
-import { NotifyService } from '@project/user/notify';
+import { NotifyService } from 'libs/user/user-notify/src';
 
 type BlogUserEntity = ReturnType<BlogUserFactory['create']>;
 @Injectable()

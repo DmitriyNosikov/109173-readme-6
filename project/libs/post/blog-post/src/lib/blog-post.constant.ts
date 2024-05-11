@@ -54,13 +54,15 @@ export const BlogPostMessage: MessagesType = {
     POST_TYPE: 'Received invalid post type',
     CANT_UPDATE: 'Can`t update post. Possible reason: Object with fields to update are empty',
     UNAUTHORIZED: 'Post can be created only by authorized user',
-    NOT_FOUND: 'Posts not found. Possible reason: Request is incorrect or Database is empty'
+    NOT_FOUND: 'Posts not found. Possible reason: Request is incorrect or Database is empty',
+    NEW_NOT_FOUND: 'New posts not found. Possible reason: Nobody posts something new from latest notification',
   },
   SUCCESS: {
     FOUND: 'Posts found',
     CREATED: 'Post has been successfully created',
     UPDATED: 'Post has been successfully updated',
     DELETED: 'Post has been successfully deleted',
+    NOTIFIED: 'Subscribers susccessfully notified'
   },
   DESCRIPTION: {
     INDEX: 'Show all posts by passed query',
@@ -68,6 +70,8 @@ export const BlogPostMessage: MessagesType = {
     CREATE: 'Create new post',
     UPDATE: 'Update exists post by id',
     DELETE: 'Delete exists post by id',
+    NOTIFY: 'Notify all subscribers about new posts',
+
     POST_ID: "Post ID",
     POST_TITLE: "Post title",
 

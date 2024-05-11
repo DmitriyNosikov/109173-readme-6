@@ -20,6 +20,7 @@ export const ConfigEnvironment = {
 
   // POST
   POST: 'post',
+  POST_RABBITMQ: 'post-rabbitmq',
 
   // NOTIFY
   NOTIFY: 'notify',

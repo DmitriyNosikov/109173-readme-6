@@ -7,7 +7,7 @@ import { SendMailService } from './send-mail.service';
 @Module({
   imports: [
     MailerModule.forRootAsync(
-      getMailerAsyncOptions(ConfigEnvironment.NOTIFY)
+      getMailerAsyncOptions(ConfigEnvironment.NOTIFY_SMTP)
     )
   ],
 

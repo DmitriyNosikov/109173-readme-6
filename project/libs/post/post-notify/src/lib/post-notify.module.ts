@@ -1,19 +1,18 @@
 import { Module } from '@nestjs/common';
+import { PostNotifyService } from './post-notify.service';
 import { RabbitMQModule } from '@golevelup/nestjs-rabbitmq';
-
 import { getRabbitMQOptions } from '@project/shared/helpers';
-
-import { NotifyService } from './notify.service';
 import { ConfigEnvironment } from '@project/shared/core';
 
 @Module({
   imports: [
     RabbitMQModule.forRootAsync(
       RabbitMQModule,
-      getRabbitMQOptions(ConfigEnvironment.USER_RABBIT)
+      getRabbitMQOptions(ConfigEnvironment.POST_RABBITMQ)
     ),
   ],
-  providers: [NotifyService],
-  exports: [NotifyService]
+  controllers: [],
+  providers: [PostNotifyService],
+  exports: [PostNotifyService]
 })
-export class NotifyModule {}
+export class PostNotifyModule {}

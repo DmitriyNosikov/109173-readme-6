@@ -7,7 +7,7 @@ import { BasePostInterface, PaginationResult, SortDirectionEnum, SortType, SortT
 import { BasePostEntity } from '../entities/base-post.entity';
 import { BasePostFactory } from '../factories/base-post.factory';
 import { BlogPostQuery } from '../blog-post.query';
-import { DEFAULT_SORT_DIRECTION, DEFAULT_SORT_TYPE, MAX_POSTS_PER_PAGE } from '../blog-post.constant';
+import { BlogPostMessage, DEFAULT_SORT_DIRECTION, DEFAULT_SORT_TYPE, MAX_POSTS_PER_PAGE } from '../blog-post.constant';
 
 @Injectable()
 export class BasePostRepository extends BasePostgresRepository<BasePostEntity, BasePostInterface> {
@@ -65,7 +65,7 @@ export class BasePostRepository extends BasePostgresRepository<BasePostEntity, B
     const where: Prisma.PostWhereInput = {};
     const orderBy: Prisma.PostOrderByWithRelationInput = {};
 
-    // where.isPublished = true; // Показываем только опубликованные посты
+    where.isPublished = true; // Показываем только опубликованные посты
 
     // Поиск по тегам
     if(query?.tags) {
@@ -119,6 +119,29 @@ export class BasePostRepository extends BasePostgresRepository<BasePostEntity, B
       totalItems: postsCount,
       itemsPerPage: take,
     }
+  }
+
+  // Получение всех опубликованных постов без каких-либо доп. условий
+  public async findAll(): Promise<BasePostEntity[] | null> {
+    const documents = await this.dbClient.post.findMany({
+      where: {
+        isPublished: true
+      },
+      include: {
+        tags: true,
+        comments: true,
+        likes: true,
+        postToExtraFields: true
+      }
+    });
+
+    if(!documents) {
+      throw new NotFoundException(BlogPostMessage.ERROR.NOT_FOUND);
+    }
+
+    const posts = documents.map((document) => this.createEntityFromDocument(document));
+
+    return posts;
   }
 
   public async findById(entityId: string): Promise<BasePostEntity | null> {
@@ -215,7 +238,7 @@ export class BasePostRepository extends BasePostgresRepository<BasePostEntity, B
 
   private async getExtraFieldsIDsByTitle(title: string) {
     // TODO: Возможно, получится оптимизировать (позже)
-    // путем созжания доп. таблицы (индекса) для поиска  по title
+    // путем создания доп. таблицы (индекса) для поиска  по title
     // Сейчас - просто получаем ID всех ExtraFields, у которых Title = запросу
     const targetTitle = `%${title}%`;
     const getExtraFieldsByTitle: Record<"id", string>[] | null = await this.dbClient.$queryRaw`
