@@ -14,7 +14,7 @@ export const SubscriberValidation = {
 export const SubscriberMessage: MessagesType = {
   ERROR: {
     ALREADY_EXISTS: 'Subscriber already exists',
-    NOT_FOUND: 'Subscriber not found',
+    NOT_FOUND: 'Subscribers not found',
     INCORRECT_CREDENTIALS: 'Incorrect Subscriber email/password',
     CANT_UPDATE: 'Can`t update Subscriber. Possible reason: Object with fields to update are empty',
     ENTITY_NOT_FOUND: 'Entity doesn`t exists in this repository'

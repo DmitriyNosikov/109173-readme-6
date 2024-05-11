@@ -16,4 +16,7 @@ export const ConfigEnvironment = {
   DB: 'database',
   JWT: 'jwt',
   NOTIFY: 'notify',
+  NOTIFY_MONGODB: 'notify-mongodb',
+  NOTIFY_RABBITMQ: 'notify-rabbitmq',
+  NOTIFY_SMTP: 'notify-rabbitmq',
 } as const;

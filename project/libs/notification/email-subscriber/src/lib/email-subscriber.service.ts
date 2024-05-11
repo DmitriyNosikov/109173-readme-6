@@ -28,6 +28,16 @@ export class EmailSubscriberService {
     return subscriberEntity;
   }
 
+  public async getAllSubscribers(): Promise<EmailSubscriberEntity[] | null> {
+    const subscribers = await this.emailSubscriberRepository.findAll();
+
+    if(!subscribers) {
+      throw new NotFoundException(SubscriberMessage.ERROR.NOT_FOUND);
+    }
+
+    return subscribers;
+  }
+
   public async getSubscriber(subscriberId: string): Promise<EmailSubscriberEntity | null> {
     const subscriber = await this.emailSubscriberRepository.findById(subscriberId);
 
