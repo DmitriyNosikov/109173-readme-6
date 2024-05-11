@@ -3,6 +3,8 @@ import { PostNotifyService } from './post-notify.service';
 import { RabbitMQModule } from '@golevelup/nestjs-rabbitmq';
 import { getRabbitMQOptions } from '@project/shared/helpers';
 import { ConfigEnvironment } from '@project/shared/core';
+import { PostNotifyRepository } from './post-notify.repository';
+import { PostNotifyFactory } from './post-notify.factory';
 
 @Module({
   imports: [
@@ -12,7 +14,7 @@ import { ConfigEnvironment } from '@project/shared/core';
     ),
   ],
   controllers: [],
-  providers: [PostNotifyService],
+  providers: [PostNotifyService, PostNotifyRepository, PostNotifyFactory],
   exports: [PostNotifyService]
 })
 export class PostNotifyModule {}

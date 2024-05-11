@@ -1,7 +1,8 @@
 export const SortType = {
   CREATED_AT: 'createdAt',
+  PUBLISHED_AT: 'publishedAt',
   LIKES: 'likes',
-  COMMENTS: 'comments' // Возможно, не понадобится, т.к. непонятна сортировка по популярности
+  COMMENTS: 'comments'
 } as const;
 
 export const SortDirection = {

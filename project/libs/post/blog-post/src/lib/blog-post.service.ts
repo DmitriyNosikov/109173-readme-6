@@ -142,20 +142,35 @@ export class BlogPostService {
 
   // NOTIFICATION
   public async notifyAboutNewPosts() {
-    // TODO: Нужна новая таблица в Postgress с датами
-    // последней рассылки уведомлений, чтобы в дальнейшем
-    // выбирать не все посты, а только те, что вышли с даты
-    // последней рассылки
-    const newPosts = await this.findAllPosts();
+    // Получаем информацию о последней рассылке
+    const lastNotify = await this.postNotifyService.findLastNotify();
+    const findPostsCondition: BlogPostQuery = { sortDirection: 'desc' };
 
-    if(!newPosts) {
-      throw new NotFoundException(BlogPostMessage.ERROR.NEW_NOT_FOUND);
+    if(lastNotify) {
+      // Если найдена запись о последней рассылке, нужно
+      // выбрать только те посты, что равны или старше даты
+      // последней рассылки
+      findPostsCondition.publishedAt = lastNotify.createdAt;
     }
 
-    const postsToSend = newPosts.map((post) => post.toPOJO());
+    // Получаем посты (ВНИМАНИЕ: Возвращаются пагинированные посты,
+    // т.е. только определеное количество, а не все)
+    const newPosts = await this.basePostRepository.search(findPostsCondition);
+
+    if(newPosts.entities. length <= 0) {
+      console.log(`Didn't find new posts since last notification date: ${new Date(lastNotify.createdAt)}`);
+
+      // Если постов нет - просто ничего не делаем
+      return;
+    }
+
+    // Добавляем ExtraFields
+    await this.connectExtraFieldsToPosts(newPosts.entities);
+
+    const postsToSend = newPosts.entities.map((post) => post.toPOJO());
 
     // Уведомляем подписчиков о новых постах
-    await this.postNotifyService.sendPosts(postsToSend);
+    await this.postNotifyService.sendPostsNotify(postsToSend);
 
   }
 
