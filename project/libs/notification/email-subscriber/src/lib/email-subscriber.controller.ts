@@ -16,7 +16,7 @@ export class EmailSubscriberController {
   ){}
 
   // Декоратор RabbitSubscribe используется вместо декораторов @Post/@Get и т.д.
-  // по сути, имплементируем паттерн Publisher/SUbscriber
+  // по сути, имплементируем паттерн Publisher/Subscriber
   // подписываясь по определенному RoutingKey на очередь queue
 
   // Когда в обменнике Exchange, в очереди Queue появится сообщение

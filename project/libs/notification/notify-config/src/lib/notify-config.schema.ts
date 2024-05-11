@@ -1,6 +1,6 @@
-import { IsNumber, IsOptional, IsString, Max, Min, ValidationError, validateOrReject } from 'class-validator';
+import { IsEmail, IsNumber, IsOptional, IsString, Max, Min, ValidationError, validateOrReject } from 'class-validator';
 import { MAX_PORT, MIN_PORT } from '@project/shared/core';
-import { DEFAULT_PORT, DEFAULT_RABBITMQ_UI_PORT, DEFAULT_RAMMITMQ_PORT, NotifyMessage } from './notify-config constant';
+import { DEFAULT_PORT, DEFAULT_RABBITMQ_UI_PORT, DEFAULT_RAMMITMQ_PORT, DEFAULT_SMTP_FROM, DEFAULT_SMTP_PORT, NotifyMessage } from './notify-config constant';
 import { DEFAULT_MONGODB_EXPRESS_PORT, DEFAULT_MONGODB_PORT } from 'libs/shared/data-access/src/lib/repository/config/mongodb/mongodb.constant';
 
 export const NotifyConfigEnum = {
@@ -25,9 +25,16 @@ export const NotifyConfigEnum = {
   RABBITMQ_PASSWORD: 'rabbitmqPassword',
   RABBITMQ_QUEUE: 'rabbitmqQueue',
   RABBITMQ_EXCHANGE: 'rabbitmqExchange',
+
+  // SMTP
+  SMTP_HOST: 'smtpHost',
+  SMTP_PORT: 'smtpPort',
+  SMTP_USER: 'smtpUser',
+  SMTP_PASSWORD: 'smtpPassword',
+  SMTP_FROM: 'smtpFrom',
 } as const;
 
-export interface NotifConfigInterface {
+export interface NotifyConfigInterface {
   // SERVER
   [NotifyConfigEnum.HOST]: string;
   [NotifyConfigEnum.PORT]: number;
@@ -49,9 +56,16 @@ export interface NotifConfigInterface {
   [NotifyConfigEnum.RABBITMQ_PASSWORD]: string;
   [NotifyConfigEnum.RABBITMQ_QUEUE]: string;
   [NotifyConfigEnum.RABBITMQ_EXCHANGE]: string;
+
+  // SMTP
+  [NotifyConfigEnum.SMTP_HOST]: string;
+  [NotifyConfigEnum.SMTP_PORT]: number;
+  [NotifyConfigEnum.SMTP_USER]: string;
+  [NotifyConfigEnum.SMTP_PASSWORD]: string;
+  [NotifyConfigEnum.SMTP_FROM]: string;
 }
 
-export class NotifConfigSchema implements NotifConfigInterface {
+export class NotifyConfigSchema implements NotifyConfigInterface {
   // SERVER
   @IsString({ message: NotifyMessage.ERROR.NOTIFY_APP_HOST_REQUIRED })
   host: string;
@@ -117,6 +131,26 @@ export class NotifConfigSchema implements NotifConfigInterface {
 
   @IsString()
   public rabbitmqExchange: string;
+
+  // SMTP
+  @IsString({ message: NotifyMessage.ERROR.SMTP_HOST_REQUIRED })
+  public smtpHost: string;
+
+  @IsNumber()
+  @Max(MAX_PORT)
+  @Min(MIN_PORT)
+  @IsOptional()
+  public smtpPort: number = DEFAULT_SMTP_PORT;
+
+  @IsString({ message: NotifyMessage.ERROR.SMTP_USER_REQUIRED })
+  public smtpUser: string;
+
+  @IsString({ message: NotifyMessage.ERROR.SMTP_PASSWORD_REQUIRED })
+  public smtpPassword: string;
+
+  @IsEmail()
+  @IsString()
+  public smtpFrom: string = DEFAULT_SMTP_FROM;
 
   async validate() {
     return await validateOrReject(this).catch(errors => {

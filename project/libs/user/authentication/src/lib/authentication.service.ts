@@ -47,7 +47,11 @@ export class AuthenticationService {
 
     await this.blogUserRepository.create(userEntity);
 
-    // Подписываем пользователя на уведломления
+    // Через данный метод мы отправляем в RabbitMQ уведомление о том, что у нас
+    // зарегистрирован новый пользователь, далее, после появления в очереди
+    // RabbitMQ данного сообщения, в контроллере модуля EmailSubscriber срабатывает
+    // соответствующий роут на Create, что в свою очередь добавляет пользователя,
+    //  в базу подписчиков для дальнейшей возможности отправки ему уведомлений по email
     const registeredSubscriber = await this.notifyService.registerSubscriber({ email, firstName, lastName });
 
     if(registeredSubscriber) {

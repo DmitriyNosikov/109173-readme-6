@@ -20,7 +20,7 @@ import { getRabbitMQOptions } from '@project/shared/helpers';
     ]),
     RabbitMQModule.forRootAsync(
       RabbitMQModule,
-      getRabbitMQOptions(ConfigEnvironment.NOTIF)
+      getRabbitMQOptions(ConfigEnvironment.NOTIFY)
     )
   ],
   controllers: [EmailSubscriberController],

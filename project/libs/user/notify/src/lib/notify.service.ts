@@ -16,6 +16,7 @@ export class NotifyService {
   ) {}
 
   public async registerSubscriber(dto: CreateSubscriberDto) {
+    // Отправляем сообщение в обменник о регистрации нового пользователя
     return this.rabbitClient.publish<CreateSubscriberDto>(
       this.rabbiOptions.rabbitmqExchange,
       RabbitRouting.ADD_SUBSCRIBER,

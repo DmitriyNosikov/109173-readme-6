@@ -10,20 +10,30 @@ export const DEFAULT_MONGODB_EXPRESS_PORT = 8083;
 export const DEFAULT_RAMMITMQ_PORT = 5672;
 export const DEFAULT_RABBITMQ_UI_PORT = 1088;
 
+export const DEFAULT_SMTP_PORT = 25
+export const DEFAULT_SMTP_FROM = 'admin@readme.test'
+
 export const NotifyMessage: MessagesType = {
   ERROR: {
+    // SERVER
     NOTIFY_APP_HOST_REQUIRED: '[Notify App Config] host is required',
-
-    MONGODB_DBNAME_REQUIRED: '[MongoDB Config] database name is required',
-    MONGODB_HOST_REQUIRED: '[MongoDB Config] host is required',
-    MONGODB_USER_REQUIRED: '[MongoDB Config] user name is required',
-    MONGODB_PASSWORD_REQUIRED: '[MongoDB Config] user password is required',
-    MONGODB_AUTH_DATABASE_REQUIRED: '[MongoDB Config] auth database name is required',
-
-    RABBITMQ_HOST_REQUIRED: '[RabbitMQ Config] host is required',
-    RABBITMQ_USER_REQUIRED: '[RabbitMQ Config] user name is required',
-    RABBITMQ_PASSWORD_REQUIRED: '[RabbitMQ Config] user password is required',
-
     VALIDATION: '[Notification Config] Validation failed. Errors: ',
+
+    // MONGODB
+    MONGODB_DBNAME_REQUIRED: '[Notify App MongoDB Config] database name is required',
+    MONGODB_HOST_REQUIRED: '[Notify App MongoDB Config] host is required',
+    MONGODB_USER_REQUIRED: '[Notify App MongoDB Config] user name is required',
+    MONGODB_PASSWORD_REQUIRED: '[Notify App MongoDB Config] user password is required',
+    MONGODB_AUTH_DATABASE_REQUIRED: '[Notify App MongoDB Config] auth database name is required',
+
+    // RABBITMQ
+    RABBITMQ_HOST_REQUIRED: '[Notify App RabbitMQ Config] host is required',
+    RABBITMQ_USER_REQUIRED: '[Notify App RabbitMQ Config] user name is required',
+    RABBITMQ_PASSWORD_REQUIRED: '[Notify App RabbitMQ Config] user password is required',
+
+    // SMTP
+    SMTP_HOST_REQUIRED: '[Notify App SMTP Config] host is required',
+    SMTP_USER_REQUIRED: '[Notify App SMTP Config] user name is required',
+    SMTP_PASSWORD_REQUIRED: '[Notify App SMTP Config] user password is required',
   },
 } as const;

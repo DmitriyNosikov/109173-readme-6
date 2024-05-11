@@ -32,8 +32,8 @@ async function bootstrap() {
   const swaggerDocument = SwaggerModule.createDocument(app, swaggerConfig);
   SwaggerModule.setup('spec', app, swaggerDocument);
 
-  const host = configService.get(`${ConfigEnvironment.NOTIF}.${NotifyConfigEnum.HOST}`);
-  const port = configService.get(`${ConfigEnvironment.NOTIF}.${NotifyConfigEnum.PORT}`);
+  const host = configService.get(`${ConfigEnvironment.NOTIFY}.${NotifyConfigEnum.HOST}`);
+  const port = configService.get(`${ConfigEnvironment.NOTIFY}.${NotifyConfigEnum.PORT}`);
 
   await app.listen(port, host);
 
