@@ -28,6 +28,21 @@ enum PostType {
   photo
 }
 
+
+//////////////////// NOTIFICATIONS ////////////////////
+model PostNotification {
+  id        String @id @default(uuid())
+  createdAt DateTime? @default(now()) @map("created_at")
+  updatedAt DateTime? @updatedAt @map("updated_at")
+
+  // Сохраняем эту связь чтобы в дальнейшем иметь
+  // возможность проверять, по каким постам мы уже отсылали
+  // уведомления, а по каким - нет (возможно, не нужно)
+  posts     Post[]
+
+  @@map("posts_notifications")
+}
+
 //////////////////// POSTS & EXTRA-FIELDS RELATIONS ////////////////////
 model PostToExtraFields {
   id              String    @id @default(uuid())
@@ -64,6 +79,9 @@ model Post {
 
   // Связь с таблицей отношений постов и экстра-полей
   postToExtraFields PostToExtraFields[]
+
+  // Связь с таблицей уведомлений
+  postNotification PostNotification[]
 
   @@map("posts")
 }

@@ -1,11 +1,19 @@
 import { Module } from '@nestjs/common';
-
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
+import { MongooseModule } from '@nestjs/mongoose';
+import { NotifyConfigModule } from '@project/notify-config'
+import { EmailSubscriberModule } from '@project/email-subscriber'
+import { getMongooseOptions } from '@project/shared/helpers';
+import { ConfigEnvironment } from '@project/shared/core';
 
 @Module({
-  imports: [],
-  controllers: [AppController],
-  providers: [AppService],
+  imports: [
+    NotifyConfigModule,
+    MongooseModule.forRootAsync(
+      getMongooseOptions(ConfigEnvironment.NOTIFY_MONGODB)
+    ),
+    EmailSubscriberModule
+  ],
+  controllers: [],
+  providers: [],
 })
 export class AppModule {}

@@ -1,0 +1,9 @@
+{
+  "name": "notif",
+  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/notification/notif/src",
+  "projectType": "library",
+  "tags": [],
+  "// targets": "to see all targets run: nx show project notif --web",
+  "targets": {}
+}

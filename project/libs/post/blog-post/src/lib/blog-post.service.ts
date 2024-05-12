@@ -20,6 +20,7 @@ import { TagService } from '@project/tag';
 import { UpdateBasePostDTO } from './dto/update-base-post.dto';
 import { BlogPostQuery } from './blog-post.query';
 import { PostEntities } from './types/entities.enum';
+import { PostNotifyService } from '@project/post-notify';
 
 @Injectable()
 export class BlogPostService {
@@ -36,8 +37,24 @@ export class BlogPostService {
     private readonly postToExtraFieldsFactory: PostToExtraFieldsFactory,
     private readonly postToExtraFieldsRepository: PostToExtraFieldsRepository,
 
-    private readonly tagService: TagService
+    private readonly tagService: TagService,
+
+    private readonly postNotifyService: PostNotifyService
   ) {}
+
+  public async findAllPosts(): Promise<BasePostEntity[] | null> {
+    const newPosts = await this.basePostRepository.findAll();
+
+    await this.connectExtraFieldsToPosts(newPosts);
+
+    return newPosts;
+  }
+
+  public async findById(postId: string) {
+    const foundPost = await this.getPostWithExtraFields(postId);
+
+    return foundPost;
+  }
 
   public async create(dto: CreateBasePostDTO) {
     if(!this.checkPostType(dto.type)) {
@@ -57,12 +74,6 @@ export class BlogPostService {
     const createdPost  = await this.getPostWithExtraFields(this.basePost.id);
 
     return createdPost;
-  }
-
-  public async findById(postId: string) {
-    const foundPost = await this.getPostWithExtraFields(postId);
-
-    return foundPost;
   }
 
   public async getPaginatedPosts(query?: BlogPostQuery) {
@@ -129,6 +140,42 @@ export class BlogPostService {
     await this.basePostRepository.deleteById(post.id);
   }
 
+  // NOTIFICATION
+  public async notifyAboutNewPosts() {
+    // Получаем информацию о последней рассылке
+    const lastNotify = await this.postNotifyService.findLastNotify();
+    const findPostsCondition: BlogPostQuery = { sortDirection: 'desc' };
+
+    if(lastNotify) {
+      // Если найдена запись о последней рассылке, нужно
+      // выбрать только те посты, что равны или старше даты
+      // последней рассылки
+      findPostsCondition.publishedAt = lastNotify.createdAt;
+    }
+
+    // Получаем посты (ВНИМАНИЕ: Возвращаются пагинированные посты,
+    // т.е. только определеное количество, а не все)
+    const newPosts = await this.basePostRepository.search(findPostsCondition);
+
+    if(newPosts.entities. length <= 0) {
+      console.log(`Didn't find new posts since last notification date: ${new Date(lastNotify.createdAt)}`);
+
+      // Если постов нет - просто ничего не делаем
+      return;
+    }
+
+    // Добавляем ExtraFields
+    await this.connectExtraFieldsToPosts(newPosts.entities);
+
+    const postsToSend = newPosts.entities.map((post) => post.toPOJO());
+
+    // Уведомляем подписчиков о новых постах
+    await this.postNotifyService.sendPostsNotify(postsToSend);
+
+  }
+
+
+  // SERVICE METHODS
   private async getPostWithExtraFields(postId: string) {
     const post = await this.basePostRepository.findById(postId);
 

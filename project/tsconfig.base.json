@@ -17,12 +17,21 @@
     "paths": {
       "@project/blog-post": ["libs/post/blog-post/src/index.ts"],
       "@project/blog/models": ["libs/blog/models/src/index.ts"],
-      "@project/shared/configurations/jwt-config": ["libs/shared/configurations/src/index.ts"],
+      "@project/email-subscriber": [
+        "libs/notification/email-subscriber/src/index.ts"
+      ],
+      "@project/notify-config": [
+        "libs/notification/notify-config/src/index.ts"
+      ],
+      "@project/post-notify": ["libs/post/post-notify/src/index.ts"],
       "@project/post/comment": ["libs/post/comment/src/index.ts"],
       "@project/post/like": ["libs/post/like/src/index.ts"],
       "@project/post/post-config": ["libs/post/post-config/src/index.ts"],
       "@project/post/repost": ["libs/post/repost/src/index.ts"],
       "@project/post/search": ["libs/post/search/src/index.ts"],
+      "@project/shared/configurations/jwt-config": [
+        "libs/shared/configurations/src/index.ts"
+      ],
       "@project/shared/core": ["libs/shared/core/src/index.ts"],
       "@project/shared/data-access": ["libs/shared/data-access/src/index.ts"],
       "@project/shared/hasher": ["libs/shared/hasher/src/index.ts"],
@@ -32,6 +41,7 @@
       "@project/tag": ["libs/post/tag/src/index.ts"],
       "@project/user/authentication": ["libs/user/authentication/src/index.ts"],
       "@project/user/blog-user": ["libs/user/blog-user/src/index.ts"],
+      "@project/user/user-notify": ["libs/user/user-notify/src/index.ts"],
       "@project/user/password": ["libs/user/password/src/index.ts"],
       "@project/user/user-config": ["libs/user/user-config/src/index.ts"]
     }

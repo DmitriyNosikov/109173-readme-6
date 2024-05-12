@@ -7,7 +7,7 @@ import { BasePostInterface, PaginationResult, SortDirectionEnum, SortType, SortT
 import { BasePostEntity } from '../entities/base-post.entity';
 import { BasePostFactory } from '../factories/base-post.factory';
 import { BlogPostQuery } from '../blog-post.query';
-import { DEFAULT_SORT_DIRECTION, DEFAULT_SORT_TYPE, MAX_POSTS_PER_PAGE } from '../blog-post.constant';
+import { BlogPostMessage, DEFAULT_PAGE_NUMBER, DEFAULT_SORT_DIRECTION, DEFAULT_SORT_TYPE, MAX_POSTS_PER_PAGE } from '../blog-post.constant';
 
 @Injectable()
 export class BasePostRepository extends BasePostgresRepository<BasePostEntity, BasePostInterface> {
@@ -61,11 +61,18 @@ export class BasePostRepository extends BasePostgresRepository<BasePostEntity, B
 
   public async search(query?: BlogPostQuery): Promise<PaginationResult<BasePostEntity>> {
     const skip = query?.page && query?.limit ? (query.page - 1) * query.limit : undefined;
-    const take = (query?.limit && query?.limit > MAX_POSTS_PER_PAGE) ? MAX_POSTS_PER_PAGE : query.limit;
+    const take = (!query?.limit || query?.limit > MAX_POSTS_PER_PAGE) ? MAX_POSTS_PER_PAGE : query.limit;
     const where: Prisma.PostWhereInput = {};
     const orderBy: Prisma.PostOrderByWithRelationInput = {};
 
-    // where.isPublished = true; // Показываем только опубликованные посты
+    where.isPublished = true; // Показываем только опубликованные посты
+
+    // Поиск от определенной даты публикации
+    if(query?.publishedAt) {
+      where.publishedAt = {
+        gte: new Date(query?.publishedAt)
+      }
+    }
 
     // Поиск по тегам
     if(query?.tags) {
@@ -114,11 +121,34 @@ export class BasePostRepository extends BasePostgresRepository<BasePostEntity, B
 
     return {
       entities: postsEntities,
-      currentPage:  query?.page,
+      currentPage:  query?.page ?? 0,
       totalPages: this.calculatePostsPage(postsCount, take),
       totalItems: postsCount,
-      itemsPerPage: take,
+      itemsPerPage: take ?? postsCount,
     }
+  }
+
+  // Получение всех опубликованных постов без каких-либо доп. условий
+  public async findAll(): Promise<BasePostEntity[] | null> {
+    const documents = await this.dbClient.post.findMany({
+      where: {
+        isPublished: true
+      },
+      include: {
+        tags: true,
+        comments: true,
+        likes: true,
+        postToExtraFields: true
+      }
+    });
+
+    if(!documents) {
+      throw new NotFoundException(BlogPostMessage.ERROR.NOT_FOUND);
+    }
+
+    const posts = documents.map((document) => this.createEntityFromDocument(document));
+
+    return posts;
   }
 
   public async findById(entityId: string): Promise<BasePostEntity | null> {
@@ -215,7 +245,7 @@ export class BasePostRepository extends BasePostgresRepository<BasePostEntity, B
 
   private async getExtraFieldsIDsByTitle(title: string) {
     // TODO: Возможно, получится оптимизировать (позже)
-    // путем созжания доп. таблицы (индекса) для поиска  по title
+    // путем создания доп. таблицы (индекса) для поиска  по title
     // Сейчас - просто получаем ID всех ExtraFields, у которых Title = запросу
     const targetTitle = `%${title}%`;
     const getExtraFieldsByTitle: Record<"id", string>[] | null = await this.dbClient.$queryRaw`
@@ -236,6 +266,9 @@ export class BasePostRepository extends BasePostgresRepository<BasePostEntity, B
       case(SortType.CREATED_AT): {
         return { key: 'createdAt', value: sortDirection };
       }
+      case(SortType.PUBLISHED_AT): {
+        return { key: 'publishedAt', value: sortDirection };
+      }
       case(SortType.COMMENTS): {
         return { key: 'comments', value: { _count: sortDirection } }
       }
@@ -253,6 +286,7 @@ export class BasePostRepository extends BasePostgresRepository<BasePostEntity, B
   }
 
   private calculatePostsPage(totalCount: number, limit: number): number {
-    return Math.ceil(totalCount / limit);
+    const postsPages = Math.ceil(totalCount / limit);
+    return postsPages;
   }
 }

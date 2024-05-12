@@ -170,4 +170,14 @@ export class BlogPostController {
   public async delete(@Param('postId') postId: string): Promise<void> {
     await this.blogPostService.delete(postId);
   }
+
+  @Post('/notify')
+  @ApiOperation({ summary: BlogPostMessage.DESCRIPTION.NOTIFY })
+  @ApiResponse({
+    status: HttpStatus.NO_CONTENT,
+    description: BlogPostMessage.SUCCESS.NOTIFIED
+  })
+  public async notifyAboutNewPosts(): Promise<void> {
+    await this.blogPostService.notifyAboutNewPosts();
+  }
 }

@@ -1,0 +1,68 @@
+# Compose: docker compose --file=./apps/notification/docker-compose.dev.yml --project-name "readme-notification" --env-file=./apps/notification/notification.env up -d
+# curl smtp://localhost:8025 --mail-from iron-man@stark-industries.ai --mail-rcpt ai@jarvis.local --upload-file ./email.txt
+version: '3.9'
+services:
+  readme.notification.fakesmtp:
+    image: gessnerfl/fake-smtp-server:2.2.0
+    container_name: "readme.notification.fakesmtp"
+    hostname: "readme.notification.fakesmtp"
+    ports:
+      - ${FAKE_SMTP_SERVER_PORT}:8025
+      - ${FAKE_SMTP_UI_PORT}:8080
+
+  readme.notification.rabbitmq:
+    image: rabbitmq:3.11-management
+    container_name: readme.notification.rabbitmq
+
+    ports:
+      - ${RABBITMQ_PORT}:5672
+      - ${RABBITMQ_UI_PORT}:15672
+
+    environment:
+      RABBITMQ_DEFAULT_USER: ${RABBITMQ_USER}
+      RABBITMQ_DEFAULT_PASS: ${RABBITMQ_PASSWORD}
+
+    healthcheck:
+      test: rabbitmq-diagnostics -q ping
+      interval: 10s
+      timeout: 5s
+
+  readme.notification.mongodb:
+    image: mongo:4.4
+    restart: always
+    container_name: readme.notification.mongodb
+
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ${MONGODB_USER}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGODB_PASSWORD}
+      MONGO_INITDB_DATABASE: ${MONGODB}
+
+    ports:
+      - ${MONGODB_PORT}:27017
+
+    volumes:
+      - readme.notification.mongodb:/data/db
+
+    healthcheck:
+      test: echo 'db.runCommand("ping").ok' | mongosh localhost:${MONGODB_PORT}/typoteka-notify --quiet
+      interval: 10s
+      timeout: 10s
+      retries: 5
+
+  readme.notification.mongodb.ui:
+    image: mongo-express:1.0.2-20
+    restart: always
+    container_name: readme.notification.mongodb.ui
+    ports:
+      - ${MONGODB_EXPRESS_PORT}:8081
+    depends_on:
+      - readme.notification.mongodb
+    environment:
+      ME_CONFIG_MONGODB_ADMINUSERNAME: ${MONGODB_USER}
+      ME_CONFIG_MONGODB_ADMINPASSWORD: ${MONGODB_PASSWORD}
+      ME_CONFIG_BASICAUTH_USERNAME: ${MONGODB_USER}
+      ME_CONFIG_BASICAUTH_PASSWORD: ${MONGODB_PASSWORD}
+      ME_CONFIG_MONGODB_URL: mongodb://${MONGODB_USER}:${MONGODB_PASSWORD}@readme.notification.mongodb:${MONGODB_PORT}/
+
+volumes:
+  readme.notification.mongodb:

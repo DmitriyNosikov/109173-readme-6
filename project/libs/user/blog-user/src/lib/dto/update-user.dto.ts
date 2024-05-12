@@ -13,7 +13,7 @@ export class UpdateUserDTO {
 
   @ApiProperty({
     description: 'User first name',
-    example: 'Tony Stark',
+    example: 'Tony',
     minimum: BlogUserValidation.FIRST_NAME.MIN_LENGTH,
     maximum: BlogUserValidation.FIRST_NAME.MAX_LENGTH
   })
@@ -25,7 +25,7 @@ export class UpdateUserDTO {
 
   @ApiProperty({
     description: 'User last name',
-    example: 'Tony Stark',
+    example: 'Stark',
     minimum: BlogUserValidation.FIRST_NAME.MIN_LENGTH,
     maximum: BlogUserValidation.FIRST_NAME.MAX_LENGTH
   })
