@@ -37,3 +37,8 @@ Content-Type: application/json
   "password": "jarvis-123"
 }
 ###
+
+# Refresh JWT Token (get new JWT pait: Token + Refresh-token)
+GET  {{baseUrl}}/auth/refresh/ HTTP/1.1
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NjNmYTE0YzU1MDgyZjJkMTdjM2VlNzAiLCJlbWFpbCI6Imlyb24tbWFuQHN0YXJraW5kdXN0cmllcy5pdCIsImZpcnN0bmFtZSI6IlRvbnkiLCJsYXN0bmFtZSI6IlN0YXJrIiwiaWF0IjoxNzE1NTI2MTAxLCJleHAiOjE3MTU1MjY0MDF9.DufKrxYu1orCr2qyiPEP8wyNUi1Wx6OqPdkACn7iFZI
+###

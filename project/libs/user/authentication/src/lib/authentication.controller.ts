@@ -1,11 +1,12 @@
 import { ApiResponse} from '@nestjs/swagger';
-import { Body, Controller, Post, HttpStatus, UseGuards, Req } from '@nestjs/common';
+import { Body, Controller, Post, HttpStatus, UseGuards, Req, Get } from '@nestjs/common';
 import { CreateUserDTO, LoggedUserRDO, LoginUserDTO, UserRDO } from '@project/user/blog-user';
 import { AuthenticationService } from './authentication.service';
 import { AuthenticationMessage } from './authentication.constant';
 import { fillDTO } from '@project/shared/helpers';
 import { LocalAuthGuard } from './guards/local-auth.guard';
 import { RequestWithUser } from './interfaces/request-with-user.interface';
+import { JWTRefreshGuard } from './guards/jwt-refresh.guard';
 @Controller('auth')
 export class AuthenticationController {
   constructor(
@@ -47,6 +48,29 @@ export class AuthenticationController {
 
     const loggedUserWithPayload = {
       ...loggedUser.toPOJO(),
+      ...userToken
+    };
+
+    return fillDTO(LoggedUserRDO, loggedUserWithPayload);
+  }
+
+  @Get('refresh')
+  @UseGuards(JWTRefreshGuard)
+  @ApiResponse({
+    type: UserRDO,
+    status: HttpStatus.OK,
+    description: AuthenticationMessage.SUCCESS.NEW_TOKENS
+  })
+  @ApiResponse({
+    type: UserRDO,
+    status: HttpStatus.INTERNAL_SERVER_ERROR,
+    description: AuthenticationMessage.SUCCESS.CANT_CREATE_TOKENS
+  })
+  public async refreshToken(@Req() { user }: RequestWithUser) {
+    const userToken = await this.authService.createToken(user);
+
+    const loggedUserWithPayload = {
+      ...user.toPOJO(),
       ...userToken
     };
 

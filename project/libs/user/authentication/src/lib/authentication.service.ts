@@ -1,11 +1,14 @@
 import { ConflictException, HttpException, HttpStatus, Inject, Injectable, Logger, NotFoundException, UnauthorizedException } from '@nestjs/common'
+import { JwtService } from '@nestjs/jwt';
+import { ConfigType } from '@nestjs/config';
+
 import { BlogUserEntity, BlogUserFactory, BlogUserRepository, CreateUserDTO, LoginUserDTO } from '@project/user/blog-user';
 
 import { AuthenticationMessage } from './authentication.constant';
 
+import { userJWTConfig } from '@project/user/user-config'
 import { HasherInterface } from '@project/shared/hasher';
 import { UserInterface, TokenPayload } from '@project/shared/core';
-import { JwtService } from '@nestjs/jwt';
 import { UserNotifyService } from '@project/user/user-notify';
 @Injectable()
 export class AuthenticationService {
@@ -17,6 +20,9 @@ export class AuthenticationService {
 
     @Inject('Hasher')
     private readonly hasher: HasherInterface,
+
+    @Inject(userJWTConfig.KEY)
+    private readonly jwtOptions: ConfigType<typeof userJWTConfig>,
 
     private readonly jwtService: JwtService,
 
@@ -60,6 +66,16 @@ export class AuthenticationService {
     return userEntity;
   }
 
+  public async getUserByEmail(email: string): Promise<BlogUserEntity | null> {
+    const existUser = await this.blogUserRepository.findByEmail(email);
+
+    if(!existUser) {
+      throw new NotFoundException(`User with email ${email} not found`);
+    }
+
+    return existUser;
+  }
+
   public async verify(dto: LoginUserDTO): Promise<BlogUserEntity> {
     const { email, password } = dto;
     const user = await this.blogUserRepository.findByEmail(email);
@@ -87,13 +103,18 @@ export class AuthenticationService {
 
 
     try {
-      const accessToken = await this.jwtService.signAsync(payload);
 
-      return { accessToken };
+      const accessToken = await this.jwtService.signAsync(payload);
+      const refreshToken = await this.jwtService.signAsync(payload, {
+        secret: this.jwtOptions.refreshTokenSecret,
+        expiresIn: this.jwtOptions.accessTokenExpiresIn
+      });
+
+      return { accessToken, refreshToken };
     } catch (error) {
       this.logger.error('[Token generation error]: ' + error.message);
 
-      throw new HttpException('Can`t create JWT-Token.', HttpStatus.INTERNAL_SERVER_ERROR);
+      throw new HttpException('Can`t create JWT Tokens.', HttpStatus.INTERNAL_SERVER_ERROR);
     }
   }
 }

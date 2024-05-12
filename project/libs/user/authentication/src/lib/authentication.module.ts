@@ -11,6 +11,7 @@ import { getJWTOptions } from '@project/shared/helpers';
 import { JWTAccessStrategy } from './strategies/jwt-access.strategy';
 import { LocalStrategy } from './strategies/local.strategy';
 import { ConfigEnvironment } from '@project/shared/core';
+import { JWTRefreshStrategy } from './strategies/jwt-refresh.strategy';
 @Module({
   imports: [
     // Импортируем модуль управления пользователями блога
@@ -31,6 +32,7 @@ import { ConfigEnvironment } from '@project/shared/core';
 
     // Стратегии авторизации (PassportJS)
     JWTAccessStrategy,
+    JWTRefreshStrategy,
     LocalStrategy,
 
     // Инжектируем модуль для работы с хешированием
