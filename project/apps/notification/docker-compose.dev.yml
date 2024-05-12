@@ -4,6 +4,7 @@ version: '3.9'
 services:
   readme.notification.fakesmtp:
     image: gessnerfl/fake-smtp-server:2.2.0
+    restart: always
     container_name: "readme.notification.fakesmtp"
     hostname: "readme.notification.fakesmtp"
     ports:
@@ -12,6 +13,7 @@ services:
 
   readme.notification.rabbitmq:
     image: rabbitmq:3.11-management
+    restart: always
     container_name: readme.notification.rabbitmq
 
     ports:

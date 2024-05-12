@@ -1,7 +1,9 @@
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
+
 import { PassportStrategy } from '@nestjs/passport';
 import { ExtractJwt, Strategy } from 'passport-jwt';
+
 import { ConfigEnvironment, TokenPayload } from '@project/shared/core';
 import { JWTConfigEnum } from '@project/shared/configurations/jwt-config';
 

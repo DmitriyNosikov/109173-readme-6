@@ -35,8 +35,6 @@ async function bootstrap() {
   const host = configService.get(`${ConfigEnvironment.USER}.${UserConfigEnum.HOST}`);
   const port = configService.get(`${ConfigEnvironment.USER}.${UserConfigEnum.PORT}`);
 
-  console.log('PROCESS ENV: ', ConfigEnvironment.USER, UserConfigEnum.HOST, host);
-
   await app.listen(port, host);
 
   Logger.log(`🚀 Application is running on: http://${host}:${port}/${globalPrefix}`);

@@ -11,25 +11,31 @@ import { UserNotifyModule } from '@project/user/user-notify';
 import { JwtModule } from '@nestjs/jwt';
 import { getJWTOptions } from '@project/shared/configurations/jwt-config';
 import { JWTAccessStrategy } from './strategies/jwt-access.strategy';
+import { LocalStrategy } from './strategies/local.strategy';
 @Module({
   imports: [
-    // Модуль для работы с JWT-токенами
-    JwtModule.registerAsync({
-      inject: [ConfigService],
-      useFactory: getJWTOptions,
-    }),
+    // Импортируем модуль управления пользователями блога
+    // для дальнейшей возможности пользоваться его провайдерами
+    BlogUserModule,
 
     // Модуль для работы с уведомлениями
     UserNotifyModule,
 
-    // Импортируем модуль управления пользователями блога
-    // для дальнейшей возможности пользоваться его провайдерами
-    BlogUserModule
+    // Модуль для работы с JWT-токенами
+    JwtModule.registerAsync({
+      inject: [ConfigService],
+      useFactory: getJWTOptions,
+    })
   ],
   controllers: [AuthenticationController],
   providers: [
-    JWTAccessStrategy,
     AuthenticationService,
+
+    // Стратегии авторизации (PassportJS)
+    JWTAccessStrategy,
+    LocalStrategy,
+
+    // Инжектируем модуль для работы с хешированием
     {
       provide: 'Hasher',
       useClass: BCryptHasher

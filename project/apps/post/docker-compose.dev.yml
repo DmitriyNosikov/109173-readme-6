@@ -4,6 +4,7 @@ version: '3.9'
 services:
   readme.post.postgres:
     image: postgres:14-alpine
+    restart: always
     container_name: readme.post.postgres
     environment:
       POSTGRES_USER: ${POSTGRES_USER}
@@ -32,6 +33,7 @@ services:
 
   readme.post.pgadmin:
     image: dpage/pgadmin4
+    restart: always
     container_name: readme.post.pgadmin
     environment:
       PGADMIN_DEFAULT_EMAIL: ${PGADMIN_DEFAULT_EMAIL}

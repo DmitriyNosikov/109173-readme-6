@@ -1,14 +1,12 @@
 import { ConflictException, HttpException, HttpStatus, Inject, Injectable, Logger, NotFoundException, UnauthorizedException } from '@nestjs/common'
-import { BlogUserFactory, BlogUserRepository, CreateUserDTO, LoginUserDTO } from '@project/user/blog-user';
+import { BlogUserEntity, BlogUserFactory, BlogUserRepository, CreateUserDTO, LoginUserDTO } from '@project/user/blog-user';
 
 import { AuthenticationMessage } from './authentication.constant';
 
 import { HasherInterface } from '@project/shared/hasher';
 import { UserInterface, TokenPayload } from '@project/shared/core';
 import { JwtService } from '@nestjs/jwt';
-import { NotifyService } from 'libs/user/user-notify/src';
-
-type BlogUserEntity = ReturnType<BlogUserFactory['create']>;
+import { UserNotifyService } from '@project/user/user-notify';
 @Injectable()
 export class AuthenticationService {
   private readonly logger = new Logger(AuthenticationService.name);
@@ -21,7 +19,8 @@ export class AuthenticationService {
     private readonly hasher: HasherInterface,
 
     private readonly jwtService: JwtService,
-    private readonly notifyService: NotifyService
+
+    private readonly notifyService: UserNotifyService
   ){}
 
   public async register(dto: CreateUserDTO): Promise<BlogUserEntity> {
