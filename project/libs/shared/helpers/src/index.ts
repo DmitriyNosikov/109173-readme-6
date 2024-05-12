@@ -1,6 +1,18 @@
-export { fillDTO, omitUndefined, getDate, getMongoConnectionString } from './lib/common'
+export {
+  // Functions
+  fillDTO,
+  omitUndefined,
+  getDate,
+  parseTime,
+  getMongoConnectionString,
+  getRabbitMQConnectionString,
 
-export { getJWTOptions } from './lib/jwt'
+  // Types
+  DateTimeUnit,
+  TimeAndUnit
+} from './lib/common'
+
+export { getJWTOptions, getJWTPayload } from './lib/jwt'
 export { getRabbitMQOptions } from './lib/brokers'
 export { getMailerAsyncOptions } from './lib/mailer'
 export { getMongooseOptions } from './lib/mongoose'

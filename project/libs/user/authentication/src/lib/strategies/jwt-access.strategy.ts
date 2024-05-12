@@ -4,7 +4,7 @@ import { ConfigService } from '@nestjs/config';
 import { PassportStrategy } from '@nestjs/passport';
 import { ExtractJwt, Strategy } from 'passport-jwt';
 
-import { ConfigEnvironment, TokenPayload } from '@project/shared/core';
+import { ConfigEnvironment, TokenPayloadInterface } from '@project/shared/core';
 import { JWTConfigEnum } from '@project/user/user-config';
 
 
@@ -20,7 +20,7 @@ export class JWTAccessStrategy extends PassportStrategy(Strategy) {
     });
   }
 
-  public async validate(payload: TokenPayload) {
+  public async validate(payload: TokenPayloadInterface) {
     return payload;
   }
 }

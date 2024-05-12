@@ -19,7 +19,9 @@ export { StorableEntity } from './lib/interfaces/storable-entity.interface'
 export { EntityFactory } from './lib/interfaces/entity-factory.interface'
 
 export { TokenInterface } from './lib/interfaces/token.interface'
-export { TokenPayload } from './lib/interfaces/token-payload.interface'
+export { TokenPayloadInterface } from './lib/interfaces/token-payload.interface'
+export { RefreshTokenPayloadInterface } from './lib/interfaces/refresh-token-payload.interface'
+export { StorableJWTTokenInterface } from './lib/interfaces/storable-jwt-token.interface'
 
 export { SubscriberInterface } from './lib/interfaces/subscriber.interface'
 

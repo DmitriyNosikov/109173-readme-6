@@ -8,8 +8,10 @@ import { AuthenticationMessage } from './authentication.constant';
 
 import { userJWTConfig } from '@project/user/user-config'
 import { HasherInterface } from '@project/shared/hasher';
-import { UserInterface, TokenPayload } from '@project/shared/core';
+import { UserInterface, TokenPayloadInterface } from '@project/shared/core';
 import { UserNotifyService } from '@project/user/user-notify';
+import { getJWTPayload } from '@project/shared/helpers';
+import { RefreshTokenService } from '@project/refresh-token';
 @Injectable()
 export class AuthenticationService {
   private readonly logger = new Logger(AuthenticationService.name);
@@ -23,8 +25,8 @@ export class AuthenticationService {
 
     @Inject(userJWTConfig.KEY)
     private readonly jwtOptions: ConfigType<typeof userJWTConfig>,
-
     private readonly jwtService: JwtService,
+    private readonly refreshTokenService: RefreshTokenService,
 
     private readonly notifyService: UserNotifyService
   ){}
@@ -94,21 +96,18 @@ export class AuthenticationService {
   }
 
   public async createToken(user: UserInterface) {
-    const payload: TokenPayload = {
-      userId: user.id,
-      email: user.email,
-      firstname: user.firstName,
-      lastname: user.lastName
-    }
-
+    const accessTokenPayload = getJWTPayload(user);
+    const refreshTokenPayload = { ...accessTokenPayload, tokenId: crypto.randomUUID() };
 
     try {
-
-      const accessToken = await this.jwtService.signAsync(payload);
-      const refreshToken = await this.jwtService.signAsync(payload, {
+      const accessToken = await this.jwtService.signAsync(accessTokenPayload);
+      const refreshToken = await this.jwtService.signAsync(refreshTokenPayload, {
         secret: this.jwtOptions.refreshTokenSecret,
         expiresIn: this.jwtOptions.accessTokenExpiresIn
       });
+
+      // Сохраняем refresh-токен в MongoDB
+      await this.refreshTokenService.createRefreshSession(refreshTokenPayload);
 
       return { accessToken, refreshToken };
     } catch (error) {

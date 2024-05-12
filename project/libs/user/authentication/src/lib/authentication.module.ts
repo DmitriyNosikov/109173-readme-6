@@ -1,10 +1,13 @@
 import { Module } from '@nestjs/common';
 import { BlogUserModule } from '@project/user/blog-user';
+import { UserNotifyModule } from '@project/user/user-notify';
+import { RefreshTokenModule } from '@project/refresh-token'
+
 import { AuthenticationController } from './authentication.controller';
 import { AuthenticationService } from './authentication.service';
+
 import { BCryptHasher } from '@project/shared/hasher'
 
-import { UserNotifyModule } from '@project/user/user-notify';
 
 import { JwtModule } from '@nestjs/jwt';
 import { getJWTOptions } from '@project/shared/helpers';
@@ -21,10 +24,13 @@ import { JWTRefreshStrategy } from './strategies/jwt-refresh.strategy';
     // Модуль для работы с уведомлениями
     UserNotifyModule,
 
+    // Модуль для работы с refresh-токенами
+    RefreshTokenModule,
+
     // Модуль для работы с JWT-токенами
     JwtModule.registerAsync(
       getJWTOptions(ConfigEnvironment.USER_JWT)
-    )
+    ),
   ],
   controllers: [AuthenticationController],
   providers: [

@@ -1,5 +1,8 @@
 import { plainToClass, ClassConstructor, ClassTransformOptions } from 'class-transformer';
 
+export type DateTimeUnit = 's' | 'h' | 'd' | 'm' | 'y';
+export type TimeAndUnit = { value: number; unit: DateTimeUnit };
+
 type PlainObject<T> = Partial<Record<keyof T, unknown>>;
 
 export function fillDTO<T, O>(
@@ -31,6 +34,25 @@ export function omitUndefined(value: Record<string, unknown>) {
 
 export function getDate(): string {
   return new Date().toISOString();
+}
+
+export function parseTime(time: string): TimeAndUnit {
+  const regex = /^(\d+)([shdmy])/;
+  const match = regex.exec(time);
+
+  if (!match) {
+    throw new Error(`[parseTime] Incorrect time string: ${time}`);
+  }
+
+  const [, valueRaw, unitRaw] = match;
+  const value = parseInt(valueRaw, 10);
+  const unit = unitRaw as DateTimeUnit;
+
+  if (isNaN(value)) {
+    throw new Error(`[parseTime] Can't parse value count. Result is NaN.`);
+  }
+
+  return { value, unit }
 }
 
 export function getMongoConnectionString({ username, password, host, port, dbName, authDatabase }): string {
