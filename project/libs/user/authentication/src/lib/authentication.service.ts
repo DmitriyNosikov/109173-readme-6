@@ -8,7 +8,7 @@ import { AuthenticationMessage } from './authentication.constant';
 
 import { userJWTConfig } from '@project/user/user-config'
 import { HasherInterface } from '@project/shared/hasher';
-import { UserInterface, TokenPayloadInterface } from '@project/shared/core';
+import { UserInterface } from '@project/shared/core';
 import { UserNotifyService } from '@project/user/user-notify';
 import { getJWTPayload } from '@project/shared/helpers';
 import { RefreshTokenService } from '@project/refresh-token';
