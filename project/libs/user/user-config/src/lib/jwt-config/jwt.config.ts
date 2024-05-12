@@ -18,6 +18,6 @@ async function getConfig(): Promise<JWTConfigInterface> {
   return config;
 }
 
-export default registerAs(ConfigEnvironment.JWT, async (): PromisifiedConfig => {
+export default registerAs(ConfigEnvironment.USER_JWT, async (): PromisifiedConfig => {
   return getConfig();
 })

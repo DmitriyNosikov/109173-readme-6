@@ -5,7 +5,8 @@ import { PassportStrategy } from '@nestjs/passport';
 import { ExtractJwt, Strategy } from 'passport-jwt';
 
 import { ConfigEnvironment, TokenPayload } from '@project/shared/core';
-import { JWTConfigEnum } from '@project/shared/configurations/jwt-config';
+import { JWTConfigEnum } from '@project/user/user-config';
+
 
 @Injectable()
 export class JWTAccessStrategy extends PassportStrategy(Strategy) {
@@ -15,7 +16,7 @@ export class JWTAccessStrategy extends PassportStrategy(Strategy) {
     super({
       jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
       ignoreExpiration: false,
-      secretOrKey: configService.get<string>(`${ConfigEnvironment.JWT}.${JWTConfigEnum.JWT_ACCESS_TOKEN_SECRET}`)
+      secretOrKey: configService.get<string>(`${ConfigEnvironment.USER_JWT}.${JWTConfigEnum.JWT_ACCESS_TOKEN_SECRET}`)
     });
   }
 
@@ -23,3 +24,4 @@ export class JWTAccessStrategy extends PassportStrategy(Strategy) {
     return payload;
   }
 }
+

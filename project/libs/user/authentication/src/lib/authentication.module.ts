@@ -4,14 +4,13 @@ import { AuthenticationController } from './authentication.controller';
 import { AuthenticationService } from './authentication.service';
 import { BCryptHasher } from '@project/shared/hasher'
 
-import { ConfigService } from '@nestjs/config';
-
 import { UserNotifyModule } from '@project/user/user-notify';
 
 import { JwtModule } from '@nestjs/jwt';
-import { getJWTOptions } from '@project/shared/configurations/jwt-config';
+import { getJWTOptions } from '@project/shared/helpers';
 import { JWTAccessStrategy } from './strategies/jwt-access.strategy';
 import { LocalStrategy } from './strategies/local.strategy';
+import { ConfigEnvironment } from '@project/shared/core';
 @Module({
   imports: [
     // Импортируем модуль управления пользователями блога
@@ -22,10 +21,9 @@ import { LocalStrategy } from './strategies/local.strategy';
     UserNotifyModule,
 
     // Модуль для работы с JWT-токенами
-    JwtModule.registerAsync({
-      inject: [ConfigService],
-      useFactory: getJWTOptions,
-    })
+    JwtModule.registerAsync(
+      getJWTOptions(ConfigEnvironment.USER_JWT)
+    )
   ],
   controllers: [AuthenticationController],
   providers: [

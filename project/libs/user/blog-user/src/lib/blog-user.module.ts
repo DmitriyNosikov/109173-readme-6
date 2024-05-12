@@ -20,6 +20,7 @@ import { BlogUserModel, BlogUserSchema } from './blog-user.model';
     BlogUserService,
     BlogUserRepository,
     BlogUserFactory,
+
     {
       provide: 'Hasher',
       useClass: BCryptHasher

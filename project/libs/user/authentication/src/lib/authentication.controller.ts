@@ -1,6 +1,6 @@
 import { ApiResponse} from '@nestjs/swagger';
 import { Body, Controller, Post, HttpStatus, UseGuards, Req } from '@nestjs/common';
-import { CreateUserDTO, LoggedUSerRDO, LoginUserDTO, UserRDO } from '@project/user/blog-user';
+import { CreateUserDTO, LoggedUserRDO, LoginUserDTO, UserRDO } from '@project/user/blog-user';
 import { AuthenticationService } from './authentication.service';
 import { AuthenticationMessage } from './authentication.constant';
 import { fillDTO } from '@project/shared/helpers';
@@ -50,6 +50,6 @@ export class AuthenticationController {
       ...userToken
     };
 
-    return fillDTO(LoggedUSerRDO, loggedUserWithPayload);
+    return fillDTO(LoggedUserRDO, loggedUserWithPayload);
   }
 }

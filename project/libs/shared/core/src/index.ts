@@ -18,7 +18,7 @@ export { CreatedUpdatedDatesInterface } from './lib/interfaces/created-updated-d
 export { StorableEntity } from './lib/interfaces/storable-entity.interface'
 export { EntityFactory } from './lib/interfaces/entity-factory.interface'
 
-export { Token } from './lib/interfaces/token.interface'
+export { TokenInterface } from './lib/interfaces/token.interface'
 export { TokenPayload } from './lib/interfaces/token-payload.interface'
 
 export { SubscriberInterface } from './lib/interfaces/subscriber.interface'
