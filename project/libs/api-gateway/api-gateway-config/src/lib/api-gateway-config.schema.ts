@@ -1,7 +1,11 @@
-import { IsNumber, IsOptional, IsString, IsUrl, ValidationError, validateOrReject } from 'class-validator';
-import { ApiGatewayConfigMessage, DEFAULT_HTTP_CLIENT_MAX_REDIRECTS, DEFAULT_HTTP_CLIENT_TIMEOUTS } from './api-gateway-config.constant';
+import { IsNumber, IsOptional, IsString, IsUrl, Max, Min, ValidationError, validateOrReject } from 'class-validator';
+import { ApiGatewayConfigMessage, DEFAULT_HTTP_CLIENT_MAX_REDIRECTS, DEFAULT_HTTP_CLIENT_TIMEOUTS, DEFAULT_PORT } from './api-gateway-config.constant';
+import { MAX_PORT, MIN_PORT } from '@project/shared/core';
 
 export const ApiGatewayConfigEnum = {
+  HOST: 'host',
+  PORT: 'port',
+
   AUTHENTICATION_SERVICE_URL: 'authenticationServiceURL',
   USER_SERVICE_URL: 'userServiceURL',
   POST_SERVICE_URL: 'postServiceURL',
@@ -13,6 +17,9 @@ export const ApiGatewayConfigEnum = {
 } as const;
 
 export interface ApiGatewayConfigInterface {
+  [ApiGatewayConfigEnum.HOST]: string;
+  [ApiGatewayConfigEnum.PORT]: number;
+
   [ApiGatewayConfigEnum.AUTHENTICATION_SERVICE_URL]: string;
   [ApiGatewayConfigEnum.USER_SERVICE_URL]: string;
   [ApiGatewayConfigEnum.POST_SERVICE_URL]: string;
@@ -23,6 +30,15 @@ export interface ApiGatewayConfigInterface {
 }
 
 export class ApiGatewayConfigSchema implements ApiGatewayConfigInterface {
+  @IsString({ message: ApiGatewayConfigMessage.ERROR.USER_APP_HOST_REQUIRED })
+  host: string;
+
+  @IsNumber()
+  @Max(MAX_PORT)
+  @Min(MIN_PORT)
+  @IsOptional()
+  port: number = DEFAULT_PORT;
+
   @IsUrl()
   @IsString({ message: ApiGatewayConfigMessage.ERROR.AUTHENTICATION_SERVICE_URL_REQUIRED })
   authenticationServiceURL: string;

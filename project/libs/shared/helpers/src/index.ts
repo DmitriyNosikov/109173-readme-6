@@ -12,6 +12,7 @@ export {
   TimeAndUnit
 } from './lib/common'
 
+export { getHttpOptions } from './lib/http'
 export { getJWTOptions, getJWTPayload } from './lib/jwt'
 export { getRabbitMQOptions } from './lib/brokers'
 export { getMailerAsyncOptions } from './lib/mailer'
