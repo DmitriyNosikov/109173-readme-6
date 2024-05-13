@@ -176,8 +176,7 @@ export class BlogPostController {
     return posts;
   }
 
-  // TODO: Убрать описание метода (чтобы не светился в доке, т.к. он вспомогательный)
-  // @Get('/')
+  @Get('search')
   @ApiOperation({ summary: BlogPostMessage.DESCRIPTION.INDEX })
   @ApiQuery({
     name: "title",

@@ -70,8 +70,9 @@ export const BlogPostMessage: MessagesType = {
     LIST: `Show last ${MAX_POSTS_PER_PAGE} posts by passed query`,
     SEARCH: `Show last ${MAX_SEARCH_POSTS_LIMIT} posts by passed title`,
     DRAFTS: `Show current authorized user posts in 'Draft' state (not published)`,
-    INDEX: 'Show all posts by passed query',
+    INDEX: 'Show all posts by passed query (global search without limitation)',
     SHOW: 'Get detail info about post by id',
+
     CREATE: 'Create new post',
     UPDATE: 'Update exists post by id',
     DELETE: 'Delete exists post by id',
