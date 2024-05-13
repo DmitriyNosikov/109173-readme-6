@@ -1,18 +1,36 @@
 import { Transform } from 'class-transformer';
-import { ArrayMaxSize, IsArray, IsDateString, IsIn, IsNumber, IsOptional, IsString, Max, MaxLength, MinLength } from 'class-validator';
+import { ArrayMaxSize, IsArray, IsBoolean, IsDateString, IsIn, IsMongoId, IsNumber, IsOptional, IsString, Max, MaxLength, MinLength } from 'class-validator';
 
-import { SortDirection, SortDirectionEnum, SortType, SortTypeEnum } from '@project/shared/core';
+import { PostTypeEnum, SortDirection, SortDirectionEnum, SortType, SortTypeEnum } from '@project/shared/core';
 
-import { BlogPostValidation, DEFAULT_PAGE_NUMBER, DEFAULT_SORT_DIRECTION, DEFAULT_SORT_TYPE, MAX_SEARCH_POSTS_LIMIT } from './blog-post.constant';
+import {
+  BlogPostValidation,
+  DEFAULT_PAGE_NUMBER,
+  DEFAULT_SORT_DIRECTION,
+  DEFAULT_SORT_TYPE,
+  MAX_POSTS_PER_PAGE
+} from '../../blog-post.constant';
 
 export class BlogPostQuery {
   @IsString()
   @IsOptional()
   public title?: string;
 
+  @IsString()
+  @IsOptional()
+  public type?: PostTypeEnum;
+
+  @IsBoolean()
+  @IsOptional()
+  public isPublished?: boolean;
+
   @IsDateString()
   @IsOptional()
   public publishedAt?: Date;
+
+  @IsMongoId()
+  @IsOptional()
+  public authorId?: string;
 
   @MinLength(BlogPostValidation.TAG.MIN_LENGTH, { each: true })
   @MaxLength(BlogPostValidation.TAG.MAX_LENGTH, { each: true })
@@ -22,11 +40,11 @@ export class BlogPostQuery {
   @IsOptional()
   public tags?: string[];
 
-  @Transform(({ value }) => Number(value) || MAX_SEARCH_POSTS_LIMIT)
-  @Max(MAX_SEARCH_POSTS_LIMIT)
+  @Transform(({ value }) => Number(value) || MAX_POSTS_PER_PAGE)
+  @Max(MAX_POSTS_PER_PAGE)
   @IsNumber()
   @IsOptional()
-  public limit?: number = MAX_SEARCH_POSTS_LIMIT;
+  public limit?: number = MAX_POSTS_PER_PAGE;
 
   @IsIn(Object.values(SortType))
   @IsOptional()

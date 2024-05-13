@@ -1,4 +1,4 @@
-import { ApiBody, ApiOperation, ApiParam, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger'
+import { ApiBody, ApiHideProperty, ApiOperation, ApiParam, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger'
 import { Controller, Get, Post, Body, Param, Patch, Delete, HttpStatus, Query, HttpCode } from '@nestjs/common';
 
 import { CreateBasePostDTO } from './dto/create-base-post.dto'
@@ -7,10 +7,12 @@ import { fillDTO } from '@project/shared/helpers';
 
 import { BlogPostService } from './blog-post.service';
 import { BlogPostMessage } from './blog-post.constant';
-import { BlogPostQuery } from './blog-post.query';
+import { BlogPostQuery } from './types/queries/blog-post.query';
 import { BasePostWithPaginationRDO } from './rdo/base-post-with-pagination.rdo';
 import { BasePostWithExtraFieldsRDO } from './rdo/base-post-with-extra-fields';
 import { SortDirection, SortType } from '@project/shared/core';
+import { GetPostsListQuery } from './types/queries/get-posts-list.query';
+import { SearchPostsQuery } from './types/queries/search-posts.query';
 
 @ApiTags('posts')
 @Controller('posts')
@@ -18,7 +20,164 @@ export class BlogPostController {
   constructor(
     private readonly blogPostService: BlogPostService
   ){}
+
+  // TODO: Проверить (работоспособность и описание)
+  // Получение списка публикаций (ТЗ п.3)
   @Get('/')
+  @ApiOperation({ summary: BlogPostMessage.DESCRIPTION.LIST })
+  @ApiQuery({
+    name: "tag",
+    description: BlogPostMessage.DESCRIPTION.POST_TAG,
+    example: "/?tag=headline",
+    required: false
+  })
+  @ApiQuery({
+    name: "authorId",
+    description: BlogPostMessage.DESCRIPTION.AUTHOR_ID,
+    example: "/?authorId=66224f68a3f9a165a1ab5fbd",
+    required: false
+  })
+  @ApiQuery({
+    name: "limit",
+    description: `${BlogPostMessage.DESCRIPTION.LIMIT}. ${BlogPostMessage.DESCRIPTION.DEFAULT_POSTS_LIST_LIMIT}`,
+    example: "/?limit=10",
+    required: false
+  })
+  @ApiQuery({
+    name: "page",
+    description: `${BlogPostMessage.DESCRIPTION.PAGE}. ${BlogPostMessage.DESCRIPTION.DEFAULT_PAGE}`,
+    example: "/?page=1",
+    required: false
+  })
+  @ApiQuery({
+    name: "sortType",
+    description: `${BlogPostMessage.DESCRIPTION.SORT_TYPE}. ${BlogPostMessage.DESCRIPTION.DEFAULT_SORT_TYPE}`,
+    enum: SortType,
+    example: "/?sortType=createdAt",
+    required: false
+  })
+  @ApiQuery({
+    name: "sortDirection",
+    description: `${BlogPostMessage.DESCRIPTION.SORT_DIRECTION}. ${BlogPostMessage.DESCRIPTION.DEFAULT_SORT_DIRECTION}`,
+    enum: SortDirection,
+    example: "/?sortDirection=desc",
+    required: false
+  })
+  @ApiResponse({
+    status: HttpStatus.OK,
+    description: BlogPostMessage.SUCCESS.FOUND,
+    type: BasePostWithPaginationRDO
+  })
+  @ApiResponse({
+    status: HttpStatus.NOT_FOUND,
+    description: BlogPostMessage.ERROR.NOT_FOUND
+  })
+  public async getList(@Query() query: GetPostsListQuery, isPublished = true): Promise<BasePostWithPaginationRDO | null> {
+    const searchQuery: BlogPostQuery = query;
+
+    // Возможность использовать данный метод для поска по черновикам
+    searchQuery.isPublished = isPublished;
+
+    // Искать можно только по одному тегу за раз
+    if(query?.tag) {
+      searchQuery.tags = [query.tag]
+    }
+
+    const foundPosts = await this.index(searchQuery);
+
+    return foundPosts;
+  }
+
+  // TODO: Проверить (работоспособность и описание)
+  @Get('drafts')
+  // @UseGuards(JWTAuthGuard)
+  @Get('/')
+  @ApiOperation({ summary: BlogPostMessage.DESCRIPTION.DRAFTS })
+  @ApiQuery({
+    name: "tag",
+    description: BlogPostMessage.DESCRIPTION.POST_TAG,
+    example: "/?tag=headline",
+    required: false
+  })
+  @ApiQuery({
+    name: "authorId",
+    description: BlogPostMessage.DESCRIPTION.AUTHOR_ID,
+    example: "/?authorId=66224f68a3f9a165a1ab5fbd",
+    required: false
+  })
+  @ApiQuery({
+    name: "limit",
+    description: `${BlogPostMessage.DESCRIPTION.LIMIT}. ${BlogPostMessage.DESCRIPTION.DEFAULT_POSTS_LIST_LIMIT}`,
+    example: "/?limit=10",
+    required: false
+  })
+  @ApiQuery({
+    name: "page",
+    description: `${BlogPostMessage.DESCRIPTION.PAGE}. ${BlogPostMessage.DESCRIPTION.DEFAULT_PAGE}`,
+    example: "/?page=1",
+    required: false
+  })
+  @ApiQuery({
+    name: "sortType",
+    description: `${BlogPostMessage.DESCRIPTION.SORT_TYPE}. ${BlogPostMessage.DESCRIPTION.DEFAULT_SORT_TYPE}`,
+    enum: SortType,
+    example: "/?sortType=createdAt",
+    required: false
+  })
+  @ApiQuery({
+    name: "sortDirection",
+    description: `${BlogPostMessage.DESCRIPTION.SORT_DIRECTION}. ${BlogPostMessage.DESCRIPTION.DEFAULT_SORT_DIRECTION}`,
+    enum: SortDirection,
+    example: "/?sortDirection=desc",
+    required: false
+  })
+  @ApiResponse({
+    status: HttpStatus.OK,
+    description: BlogPostMessage.SUCCESS.FOUND,
+    type: BasePostWithPaginationRDO
+  })
+  @ApiResponse({
+    status: HttpStatus.NOT_FOUND,
+    description: BlogPostMessage.ERROR.NOT_FOUND
+  })
+  // Получение черновиков (только для авторизованного пользователя)
+  public async getDrafts(@Query() query: GetPostsListQuery): Promise<BasePostWithPaginationRDO | null> {
+    return await this.getList(query, false);
+  }
+
+  // TODO: Проверить (работоспособность и описание)
+  // Поиск по заголовку (ТЗ п.8)
+  @Get('search-by-title')
+  @ApiOperation({ summary: BlogPostMessage.DESCRIPTION.SEARCH })
+  @ApiQuery({
+    name: "title",
+    description: BlogPostMessage.DESCRIPTION.POST_TITLE,
+    example: "/?title=headline",
+    required: false
+  })
+  @ApiQuery({
+    name: "limit",
+    description: `${BlogPostMessage.DESCRIPTION.LIMIT}. ${BlogPostMessage.DESCRIPTION.DEFAULT_LIMIT}`,
+    example: "/?limit=10",
+    required: false
+  })
+  @ApiResponse({
+    status: HttpStatus.OK,
+    description: BlogPostMessage.SUCCESS.FOUND,
+    type: BasePostWithPaginationRDO
+  })
+  @ApiResponse({
+    status: HttpStatus.NOT_FOUND,
+    description: BlogPostMessage.ERROR.NOT_FOUND
+  })
+  public async search(@Query() query: SearchPostsQuery): Promise<BasePostWithPaginationRDO | null> {
+    const posts = await this.index(query);
+
+    return posts;
+  }
+
+  // TODO: Убрать описание метода (чтобы не светился в доке, т.к. он вспомогательный)
+  // @Get('/')
   @ApiOperation({ summary: BlogPostMessage.DESCRIPTION.INDEX })
   @ApiQuery({
     name: "title",
@@ -33,6 +192,12 @@ export class BlogPostController {
     required: false
   })
   @ApiQuery({
+    name: "authorId",
+    description: BlogPostMessage.DESCRIPTION.AUTHOR_ID,
+    example: "/?authorId=66224f68a3f9a165a1ab5fbd",
+    required: false
+  })
+  @ApiQuery({
     name: "limit",
     description: `${BlogPostMessage.DESCRIPTION.LIMIT}. ${BlogPostMessage.DESCRIPTION.DEFAULT_LIMIT}`,
     example: "/?limit=10",
@@ -40,20 +205,20 @@ export class BlogPostController {
   })
   @ApiQuery({
     name: "page",
-    description: `${BlogPostMessage.DESCRIPTION.LIMIT}. ${BlogPostMessage.DESCRIPTION.DEFAULT_PAGE_NUMBER}`,
-    example: "/?limit=10",
+    description: `${BlogPostMessage.DESCRIPTION.PAGE}. ${BlogPostMessage.DESCRIPTION.DEFAULT_PAGE}`,
+    example: "/?page=1",
     required: false
   })
   @ApiQuery({
     name: "sortType",
-    description: `${BlogPostMessage.DESCRIPTION.LIMIT}. ${BlogPostMessage.DESCRIPTION.DEFAULT_SORT_TYPE}`,
+    description: `${BlogPostMessage.DESCRIPTION.SORT_TYPE}. ${BlogPostMessage.DESCRIPTION.DEFAULT_SORT_TYPE}`,
     enum: SortType,
     example: "/?sortType=createdAt",
     required: false
   })
   @ApiQuery({
     name: "sortDirection",
-    description: `${BlogPostMessage.DESCRIPTION.LIMIT}. ${BlogPostMessage.DESCRIPTION.DEFAULT_SORT_DIRECTION}`,
+    description: `${BlogPostMessage.DESCRIPTION.SORT_DIRECTION}. ${BlogPostMessage.DESCRIPTION.DEFAULT_SORT_DIRECTION}`,
     enum: SortDirection,
     example: "/?sortDirection=desc",
     required: false
@@ -67,6 +232,7 @@ export class BlogPostController {
     status: HttpStatus.NOT_FOUND,
     description: BlogPostMessage.ERROR.NOT_FOUND
   })
+  // Общий метод поиска (без каких-либо ограничений)
   public async index(@Query() query: BlogPostQuery): Promise<BasePostWithPaginationRDO | null> {
     const paginatedPosts = await this.blogPostService.getPaginatedPosts(query);
     const result = {

@@ -18,7 +18,7 @@ import { BlogPostMessage } from './blog-post.constant';
 import { BasePostEntity } from './entities/base-post.entity';
 import { TagService } from '@project/tag';
 import { UpdateBasePostDTO } from './dto/update-base-post.dto';
-import { BlogPostQuery } from './blog-post.query';
+import { BlogPostQuery } from './types/queries/blog-post.query';
 import { PostEntities } from './types/entities.enum';
 import { PostNotifyService } from '@project/post-notify';
 
