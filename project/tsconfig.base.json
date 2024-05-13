@@ -16,11 +16,15 @@
     "baseUrl": ".",
     "esModuleInterop": true,
     "paths": {
+      "@project/api-gateway-config": [
+        "libs/api-gateway/api-gateway-config/src/index.ts"
+      ],
       "@project/blog-post": ["libs/post/blog-post/src/index.ts"],
       "@project/blog/models": ["libs/blog/models/src/index.ts"],
       "@project/email-subscriber": [
         "libs/notification/email-subscriber/src/index.ts"
       ],
+      "@project/interceprots": ["libs/shared/interceptors/src/index.ts"],
       "@project/notify-config": [
         "libs/notification/notify-config/src/index.ts"
       ],
