@@ -39,19 +39,15 @@ export class ApiGatewayConfigSchema implements ApiGatewayConfigInterface {
   @IsOptional()
   port: number = DEFAULT_PORT;
 
-  @IsUrl()
   @IsString({ message: ApiGatewayConfigMessage.ERROR.AUTHENTICATION_SERVICE_URL_REQUIRED })
   authenticationServiceURL: string;
 
-  @IsUrl()
   @IsString({ message: ApiGatewayConfigMessage.ERROR.USER_SERVICE_URL_REQUIRED })
   userServiceURL: string;
 
-  @IsUrl()
   @IsString({ message: ApiGatewayConfigMessage.ERROR.POST_SERVICE_URL_REQUIRED })
   postServiceURL: string;
 
-  @IsUrl()
   @IsString({ message: ApiGatewayConfigMessage.ERROR.NOTIFY_SERVICE_URL_REQUIRED })
   notifyServiceURL: string;
 

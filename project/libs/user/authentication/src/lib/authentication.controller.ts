@@ -1,5 +1,5 @@
 import { ApiResponse} from '@nestjs/swagger';
-import { Body, Controller, Post, HttpStatus, UseGuards, Req, Get } from '@nestjs/common';
+import { Body, Controller, Post, HttpStatus, UseGuards, Req } from '@nestjs/common';
 import { CreateUserDTO, LoggedUserRDO, LoginUserDTO, UserRDO } from '@project/user/blog-user';
 import { AuthenticationService } from './authentication.service';
 import { AuthenticationMessage } from './authentication.constant';
@@ -24,8 +24,8 @@ export class AuthenticationController {
     status: HttpStatus.CONFLICT,
     description: AuthenticationMessage.ERROR.ALREADY_EXISTS
   })
-  public async create(@Body() dto: CreateUserDTO) {
-    const newUser = await this.authService.register(dto);
+  public async create(@Body() registerUserDto: CreateUserDTO) {
+    const newUser = await this.authService.register(registerUserDto);
 
     return fillDTO(UserRDO, newUser.toPOJO());
   }
@@ -61,7 +61,7 @@ export class AuthenticationController {
     return tokenPayload;
   }
 
-  @Get('refresh')
+  @Post('refresh')
   @UseGuards(JWTRefreshGuard)
   @ApiResponse({
     type: UserRDO,

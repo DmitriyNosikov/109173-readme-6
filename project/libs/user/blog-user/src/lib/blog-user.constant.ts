@@ -26,5 +26,8 @@ export const BlogUserMessage: MessagesType = {
     FOUND: 'User found',
     UPDATED: 'User has been successfully updated',
     DELETED: 'User has been successfully deleted',
+  },
+  DESCRIPTION: {
+    USER_DETAIL: 'Get detail info about user'
   }
 } as const;

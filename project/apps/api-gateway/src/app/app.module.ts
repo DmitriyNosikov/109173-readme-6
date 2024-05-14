@@ -6,6 +6,7 @@ import { getHttpOptions } from '@project/shared/helpers';
 import { ApiGatewayConfigModule } from '@project/api-gateway-config'
 
 import { CheckAuthGuard } from './guards/check-auth.guard';
+import { UsersController } from './controllers/users.controller';
 @Module({
   imports: [
     ApiGatewayConfigModule,
@@ -15,7 +16,9 @@ import { CheckAuthGuard } from './guards/check-auth.guard';
       getHttpOptions(ConfigEnvironment.API_GATEWAY)
     )
   ],
-  controllers: [],
+  controllers: [
+    UsersController
+  ],
   providers: [ CheckAuthGuard ],
 })
 export class AppModule {}

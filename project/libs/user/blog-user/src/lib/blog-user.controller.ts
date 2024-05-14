@@ -1,5 +1,5 @@
 import { Body, Controller, Delete, Get, Param, Patch, HttpStatus } from '@nestjs/common';
-import { ApiResponse, ApiTags } from '@nestjs/swagger'
+import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger'
 
 import { fillDTO } from '@project/shared/helpers'
 import { MongoIdValidationPipe } from '@project/shared/pipes'
@@ -19,6 +19,7 @@ export class BlogUserController {
   ){}
 
   @Get(':userId')
+  @ApiOperation({ summary: BlogUserMessage.DESCRIPTION.USER_DETAIL })
   @ApiResponse({
     type: UserRDO,
     status: HttpStatus.OK,
