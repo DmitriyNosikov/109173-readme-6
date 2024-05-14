@@ -48,10 +48,6 @@ Content-Type: application/json
 }
 ###
 
-############# GETTING POSTS LIST (Technical task, paragraph 3 ) ############
-
-################### SEARCH (Technical task, paragraph 8 ) ##################
-
 ################################# PAGINATE #################################
 
 # Get paginated posts list (without parameters)
@@ -86,6 +82,26 @@ Content-Type: application/json
 
 # Get posts list (equal or later then passed date + sorted by published date)
 GET {{baseUrl}}/posts?&publishedAt=2024-05-09&sortType=publishedAt&sortDirection=desc HTTP/1.1
+Content-Type: application/json
+###
+
+############# GETTING POSTS LIST (Technical task, paragraph 3 ) ############
+# LIST
+GET {{baseUrl}}/posts/?type=link HTTP/1.1
+Content-Type: application/json
+###
+
+# DRAFTS
+GET {{baseUrl}}/posts/drafts HTTP/1.1
+Content-Type: application/json
+###
+
+GET {{baseUrl}}/posts/drafts?authorId=66224f68a3f9a165a1ab5fbd HTTP/1.1
+Content-Type: application/json
+###
+
+################### SEARCH (Technical task, paragraph 8 ) ##################
+GET {{baseUrl}}/posts/search?title=inter&limit=19 HTTP/1.1
 Content-Type: application/json
 ###
 

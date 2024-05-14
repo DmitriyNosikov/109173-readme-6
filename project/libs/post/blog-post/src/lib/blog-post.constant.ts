@@ -1,4 +1,5 @@
 import { MessagesType, SortDirection, SortType } from '@project/shared/core';
+import { postTypeList } from 'libs/shared/core/src/lib/types/post/post-type.enum';
 
 export const MAX_POSTS_PER_PAGE = 25; // Максимальное количество постов при запросе списка
 export const POST_ONLY_PUBLISHED = true; // В список публикаций попадают только посты со статусом 'Опубликовано' (isPublished)
@@ -51,7 +52,7 @@ export const BlogPostValidation = {
 
 export const BlogPostMessage: MessagesType = {
   ERROR: {
-    POST_TYPE: 'Received invalid post type',
+    POST_TYPE: `Received invalid post type. Allowed types: ${postTypeList}`,
     CANT_UPDATE: 'Can`t update post. Possible reason: Object with fields to update are empty',
     UNAUTHORIZED: 'Post can be created only by authorized user',
     NOT_FOUND: 'Posts not found. Possible reason: Request is incorrect or Database is empty',
@@ -83,6 +84,8 @@ export const BlogPostMessage: MessagesType = {
     POST_TAG: 'Post tag',
     POST_TAGS: 'Post tags',
     AUTHOR_ID: 'Correct MongoDB author id',
+    IS_PUBLISHED: 'Flag allow search by Published (true) / Draft (false) posts',
+    PUBLISHED_AT: 'Correct ISO Published At date string',
 
     // PAGINATION
     LIMIT: '[Pagination] Limit posts count for 1 page',

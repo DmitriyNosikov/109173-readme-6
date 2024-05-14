@@ -1,6 +1,9 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { BadRequestException } from '@nestjs/common';
 
+import { fillDTO, omitUndefined } from '@project/shared/helpers';
+import { PostNotifyService } from '@project/post-notify';
+
 import { CreateBasePostDTO } from './dto/create-base-post.dto';
 import { BlogPostRepositoryDeterminant } from './repositories/blog-post-determinant.repository';
 
@@ -20,7 +23,6 @@ import { TagService } from '@project/tag';
 import { UpdateBasePostDTO } from './dto/update-base-post.dto';
 import { BlogPostQuery } from './types/queries/blog-post.query';
 import { PostEntities } from './types/entities.enum';
-import { PostNotifyService } from '@project/post-notify';
 
 @Injectable()
 export class BlogPostService {
@@ -77,10 +79,20 @@ export class BlogPostService {
   }
 
   public async getPaginatedPosts(query?: BlogPostQuery) {
-    const paginatedPosts = await this.basePostRepository.search(query);
+    // Проверка типа поста
+    if(query?.type) {
+      this.checkPostType(query.type);
+    }
+
+    //  + фильтруем от лишних параметров, которые мог передать юзер
+    const searchQuery = fillDTO(BlogPostQuery, query);
+    // Очищаем запрос от undefined-значений
+    const omitedQuery = omitUndefined(searchQuery as Record<string, unknown>);
+    // Запрос
+    const paginatedPosts = await this.basePostRepository.search(omitedQuery);
 
     if(!paginatedPosts || paginatedPosts.entities.length <= 0) {
-      const queryParams = Object.entries(query).join('; ').replace(/,/g, '=');
+      const queryParams = Object.entries(omitedQuery).join('; ').replace(/,/g, ' = ');
 
       throw new NotFoundException(`Can't find published posts by requested params: ${queryParams}`);
     }
@@ -250,7 +262,7 @@ export class BlogPostService {
     const postRepository = this.blogPostRepositoryDeterminant.getRepository(postType);
 
     if(!postRepository) {
-      throw new BadRequestException(BlogPostMessage.ERROR.POST_TYPE);
+      throw new BadRequestException(`${BlogPostMessage.ERROR.POST_TYPE}: Passed: ${postType}`);
     }
 
     return true;

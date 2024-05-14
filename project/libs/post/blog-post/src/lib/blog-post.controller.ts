@@ -1,5 +1,5 @@
 import { ApiBody, ApiHideProperty, ApiOperation, ApiParam, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger'
-import { Controller, Get, Post, Body, Param, Patch, Delete, HttpStatus, Query, HttpCode } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, Patch, Delete, HttpStatus, Query, HttpCode, BadRequestException } from '@nestjs/common';
 
 import { CreateBasePostDTO } from './dto/create-base-post.dto'
 import { UpdateBasePostDTO } from './dto/update-base-post.dto';
@@ -13,7 +13,6 @@ import { BasePostWithExtraFieldsRDO } from './rdo/base-post-with-extra-fields';
 import { SortDirection, SortType } from '@project/shared/core';
 import { GetPostsListQuery } from './types/queries/get-posts-list.query';
 import { SearchPostsQuery } from './types/queries/search-posts.query';
-
 @ApiTags('posts')
 @Controller('posts')
 export class BlogPostController {
@@ -21,7 +20,6 @@ export class BlogPostController {
     private readonly blogPostService: BlogPostService
   ){}
 
-  // TODO: Проверить (работоспособность и описание)
   // Получение списка публикаций (ТЗ п.3)
   @Get('/')
   @ApiOperation({ summary: BlogPostMessage.DESCRIPTION.LIST })
@@ -73,7 +71,7 @@ export class BlogPostController {
     description: BlogPostMessage.ERROR.NOT_FOUND
   })
   public async getList(@Query() query: GetPostsListQuery, isPublished = true): Promise<BasePostWithPaginationRDO | null> {
-    const searchQuery: BlogPostQuery = query;
+    const searchQuery: BlogPostQuery = fillDTO(GetPostsListQuery, query);
 
     // Возможность использовать данный метод для поска по черновикам
     searchQuery.isPublished = isPublished;
@@ -88,10 +86,9 @@ export class BlogPostController {
     return foundPosts;
   }
 
-  // TODO: Проверить (работоспособность и описание)
+  // Черновики авторизованного пользователя
   @Get('drafts')
   // @UseGuards(JWTAuthGuard)
-  @Get('/')
   @ApiOperation({ summary: BlogPostMessage.DESCRIPTION.DRAFTS })
   @ApiQuery({
     name: "tag",
@@ -140,14 +137,21 @@ export class BlogPostController {
     status: HttpStatus.NOT_FOUND,
     description: BlogPostMessage.ERROR.NOT_FOUND
   })
-  // Получение черновиков (только для авторизованного пользователя)
+  // TODO: Исправить проверку авторизации:
+  // - Мы должны получать UserId из JWT Token Payload
+  // и подставлять его в query.authorId
   public async getDrafts(@Query() query: GetPostsListQuery): Promise<BasePostWithPaginationRDO | null> {
-    return await this.getList(query, false);
+    if(!query?.authorId) {
+      throw new BadRequestException('Drafts can be required only by authorized users');
+    }
+
+    const searchQuery = fillDTO(GetPostsListQuery, query);
+
+    return await this.getList(searchQuery, false);
   }
 
-  // TODO: Проверить (работоспособность и описание)
   // Поиск по заголовку (ТЗ п.8)
-  @Get('search-by-title')
+  @Get('search')
   @ApiOperation({ summary: BlogPostMessage.DESCRIPTION.SEARCH })
   @ApiQuery({
     name: "title",
@@ -171,12 +175,14 @@ export class BlogPostController {
     description: BlogPostMessage.ERROR.NOT_FOUND
   })
   public async search(@Query() query: SearchPostsQuery): Promise<BasePostWithPaginationRDO | null> {
-    const posts = await this.index(query);
+    const searchQuery = fillDTO(SearchPostsQuery, query);
+    const posts = await this.index(searchQuery);
 
     return posts;
   }
 
-  @Get('search')
+    // Общий метод поиска (без каких-либо ограничений)
+  @Get('search-global')
   @ApiOperation({ summary: BlogPostMessage.DESCRIPTION.INDEX })
   @ApiQuery({
     name: "title",
@@ -196,6 +202,20 @@ export class BlogPostController {
     example: "/?authorId=66224f68a3f9a165a1ab5fbd",
     required: false
   })
+
+  @ApiQuery({
+    name: "publishedAt",
+    description: BlogPostMessage.DESCRIPTION.IS_PUBLISHED,
+    example: "/?isPublished=true",
+    required: false
+  })
+  @ApiQuery({
+    name: "publishedAt",
+    description: BlogPostMessage.DESCRIPTION.PUBLISHED_AT,
+    example: "/?publishedAt=2024-05-09",
+    required: false
+  })
+
   @ApiQuery({
     name: "limit",
     description: `${BlogPostMessage.DESCRIPTION.LIMIT}. ${BlogPostMessage.DESCRIPTION.DEFAULT_LIMIT}`,
@@ -231,7 +251,6 @@ export class BlogPostController {
     status: HttpStatus.NOT_FOUND,
     description: BlogPostMessage.ERROR.NOT_FOUND
   })
-  // Общий метод поиска (без каких-либо ограничений)
   public async index(@Query() query: BlogPostQuery): Promise<BasePostWithPaginationRDO | null> {
     const paginatedPosts = await this.blogPostService.getPaginatedPosts(query);
     const result = {

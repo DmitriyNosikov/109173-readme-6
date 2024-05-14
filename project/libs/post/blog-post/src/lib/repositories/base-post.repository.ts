@@ -214,7 +214,8 @@ export class BasePostRepository extends BasePostgresRepository<BasePostEntity, B
 
     // Возможность искать по неопубликованным постам
     // Показываем только опубликованные посты (по дефолту)
-    where.isPublished = query.isPublished ?? true;
+    const isPublished = query.isPublished ?? true;
+    where.isPublished = Boolean(isPublished);
 
     // Поиск публикаций определенного пользователя
     if(query?.authorId) {
