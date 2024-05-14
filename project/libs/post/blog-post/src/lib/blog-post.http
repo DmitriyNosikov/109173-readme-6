@@ -91,7 +91,7 @@ Authorization: Bearer {{userToken}}
 
 {
   "type": "text",
-  "tags": ["test1", "test2", "news", "other"],
+  "tags": ["test", "test", "news", "other"],
   "isPublished": true,
   "isRepost": false,
   "authorId": "66224f68a3f9a165a1ab5fbd",
