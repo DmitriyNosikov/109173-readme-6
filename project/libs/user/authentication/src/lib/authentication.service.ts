@@ -32,7 +32,7 @@ export class AuthenticationService {
   ){}
 
   public async register(dto: CreateUserDTO): Promise<BlogUserEntity> {
-    const { email, firstName, lastName, avatar, password } = dto;
+    const { email, firstName, lastName, avatar, subscriptions, password } = dto;
     const user = await this.blogUserRepository.findByEmail(email);
 
     if(user) { // Если пользователь уже есть в системе - не регистрируем
@@ -44,6 +44,7 @@ export class AuthenticationService {
       firstName,
       lastName,
       avatar,
+      subscriptions,
       passwordHash: ''
     };
 

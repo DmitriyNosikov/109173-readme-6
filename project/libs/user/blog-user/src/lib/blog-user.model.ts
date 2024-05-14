@@ -26,8 +26,8 @@ export class BlogUserModel extends Document implements AuthUserInterface {
   @Prop()
   avatar: string;
 
-  // @Prop()
-  // date: string;
+  @Prop()
+  subscriptions: string[];
 
   @Prop({
     required: true

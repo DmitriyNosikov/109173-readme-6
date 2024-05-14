@@ -11,10 +11,11 @@ POST {{baseUrl}}/register/ HTTP/1.1
 Content-Type: application/json
 
 {
-  "email": "iron-man33@starkindustries.it",
+  "email": "iron-man@starkindustries.it",
   "firstName": "Tony",
   "lastName": "Stark",
   "avatar": "/playboy/millioner/philanthropist.jpeg",
+  "subscriptions": [],
   "password": "jarvis-123"
 }
 

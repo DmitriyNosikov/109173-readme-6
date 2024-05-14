@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Param, Patch, HttpStatus } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Patch, HttpStatus, Post } from '@nestjs/common';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger'
 
 import { fillDTO } from '@project/shared/helpers'
@@ -84,6 +84,54 @@ export class BlogUserController {
   ): Promise<UserRDO | UserRDO[]> {
     const { password, newPassword } = dto;
     const updatedUser = await this.blogUserService.changePassword(userId, password, newPassword);
+
+    return fillDTO(UserRDO, updatedUser.toPOJO());
+  }
+
+  @Post('/:userId/subscribe/:targetUserId')
+  @ApiOperation({ summary: BlogUserMessage.DESCRIPTION.SUBSCRIBE })
+  @ApiResponse({
+    type: UserRDO,
+    status: HttpStatus.CREATED,
+    description: BlogUserMessage.SUCCESS.UPDATED
+  })
+  @ApiResponse({
+    status: HttpStatus.UNAUTHORIZED,
+    description: BlogUserMessage.ERROR.INCORRECT_CREDENTIALS
+  })
+  @ApiResponse({
+    status: HttpStatus.NOT_FOUND,
+    description: BlogUserMessage.ERROR.NOT_FOUND
+  })
+  public async subscribe(
+    @Param('userId', MongoIdValidationPipe) userId: string,
+    @Param('targetUserId', MongoIdValidationPipe) targetUserId: string,
+  ): Promise<UserRDO | UserRDO[]> {
+    const updatedUser = await this.blogUserService.addSubscription(userId, targetUserId);
+
+    return fillDTO(UserRDO, updatedUser.toPOJO());
+  }
+
+  @Post('/:userId/unsubscribe/:targetUserId')
+  @ApiOperation({ summary: BlogUserMessage.DESCRIPTION.UNSUBSCRIBE })
+  @ApiResponse({
+    type: UserRDO,
+    status: HttpStatus.CREATED,
+    description: BlogUserMessage.SUCCESS.UPDATED
+  })
+  @ApiResponse({
+    status: HttpStatus.UNAUTHORIZED,
+    description: BlogUserMessage.ERROR.INCORRECT_CREDENTIALS
+  })
+  @ApiResponse({
+    status: HttpStatus.NOT_FOUND,
+    description: BlogUserMessage.ERROR.NOT_FOUND
+  })
+  public async unsubscribe(
+    @Param('userId', MongoIdValidationPipe) userId: string,
+    @Param('targetUserId', MongoIdValidationPipe) targetUserId: string,
+  ): Promise<UserRDO | UserRDO[]> {
+    const updatedUser = await this.blogUserService.removeSubscription(userId, targetUserId);
 
     return fillDTO(UserRDO, updatedUser.toPOJO());
   }

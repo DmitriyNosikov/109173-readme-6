@@ -4,6 +4,7 @@ import { BlogUserMessage } from './blog-user.constant';
 import { BlogUserEntity } from './blog-user.entity';
 import { BCryptHasher } from '@project/shared/hasher';
 import { omitUndefined } from '@project/shared/helpers';
+import { UpdateUserDTO } from './dto/update-user.dto';
 
 @Injectable()
 export class BlogUserService {
@@ -24,14 +25,14 @@ export class BlogUserService {
     return user;
   }
 
-  public async updateUser(userId: string, updatedFields: Partial<BlogUserEntity>): Promise<BlogUserEntity | null> {
+  public async updateUser(userId: string, updatedFields: UpdateUserDTO): Promise<BlogUserEntity | null> {
     const isUserExists = await this.blogUserRepository.exists(userId);
 
     if(!isUserExists) {
       throw new NotFoundException(BlogUserMessage.ERROR.NOT_FOUND);
     }
 
-    updatedFields = omitUndefined(updatedFields);
+    updatedFields = omitUndefined(updatedFields as Record<string, unknown>);
 
     if(Object.keys(updatedFields).length <= 0) {
       throw new BadRequestException(BlogUserMessage.ERROR.CANT_UPDATE);
@@ -69,5 +70,36 @@ export class BlogUserService {
     }
 
     return await this.blogUserRepository.deleteById(userId);
+  }
+
+  public async addSubscription(userId: string, targetUserId: string): Promise<BlogUserEntity | null> {
+    await this.checkSubscribtionUsers(userId, targetUserId);
+
+    return await this.blogUserRepository.addSubscription(userId, targetUserId);
+  }
+
+  public async removeSubscription(userId: string, targetUserId: string):Promise<BlogUserEntity | null> {
+    await this.checkSubscribtionUsers(userId, targetUserId);
+
+    return await this.blogUserRepository.removeSubscription(userId, targetUserId);
+  }
+
+  private async checkSubscribtionUsers(userId: string, targetUserId: string) {
+    if(userId === targetUserId) {
+      throw new BadRequestException(BlogUserMessage.ERROR.SAME_SUBSCRIPTIONS);
+    }
+
+    const isCurentUserExists = await this.blogUserRepository.exists(userId);
+    const isTargetUserExists = await this.blogUserRepository.exists(targetUserId);
+
+    if(!isCurentUserExists) {
+      throw new NotFoundException(`${BlogUserMessage.ERROR.NOT_FOUND}: ${userId}`);
+    }
+
+    if(!isTargetUserExists) {
+      throw new NotFoundException(`${BlogUserMessage.ERROR.NOT_FOUND}: ${targetUserId}`);
+    }
+
+    return true;
   }
 }

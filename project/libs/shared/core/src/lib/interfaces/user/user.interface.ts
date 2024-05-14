@@ -3,5 +3,6 @@ export interface UserInterface {
   email: string;
   firstName: string;
   lastName: string;
-  avatar: string;
+  avatar?: string;
+  subscriptions?: string[];
 }

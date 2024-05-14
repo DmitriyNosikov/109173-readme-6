@@ -49,4 +49,11 @@ export class UserRDO {
   })
   @Expose()
   avatar?: string;
+
+  @ApiProperty({
+    description: 'User subscriptions to other users',
+    example: '[ "6643e2ad76870c402e3e1019", "6643e2ad76870c402e3e1019" ]'
+  })
+  @Expose()
+  subscriptions?: string[];
 }

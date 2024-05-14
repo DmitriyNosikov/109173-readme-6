@@ -5,6 +5,7 @@ export class BlogUserEntity extends Entity implements StorableEntity<AuthUserInt
   public firstName: string;
   public lastName: string;
   public avatar: string;
+  public subscriptions?: string[];
   public passwordHash: string;
 
   constructor(user?: AuthUserInterface) {
@@ -22,6 +23,7 @@ export class BlogUserEntity extends Entity implements StorableEntity<AuthUserInt
     this.firstName = user.firstName;
     this.lastName = user.lastName;
     this.avatar = user.avatar ?? '';
+    this.subscriptions = user.subscriptions ?? [];
     this.passwordHash = user.passwordHash;
   }
 
@@ -36,6 +38,7 @@ export class BlogUserEntity extends Entity implements StorableEntity<AuthUserInt
       firstName: this.firstName,
       lastName: this.lastName,
       avatar: this.avatar,
+      subscriptions: this.subscriptions,
       passwordHash: this.passwordHash
     };
   }
