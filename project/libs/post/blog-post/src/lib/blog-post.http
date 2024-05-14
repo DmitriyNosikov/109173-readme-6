@@ -30,6 +30,15 @@ GET {{baseUrl}}/search?title=inter&limit=19 HTTP/1.1
 Content-Type: application/json
 ###
 
+############################# COUNT USER POSTS #############################
+POST {{baseUrl}}/count HTTP/1.1
+Content-Type: application/json
+
+{
+  "authorId": "66224f68a3f9a165a1ab5fbd"
+}
+###
+
 ################################# PAGINATE #################################
 # Get paginated posts list (without parameters)
 GET {{baseUrl}}/{{searchType}} HTTP/1.1

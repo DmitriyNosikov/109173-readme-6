@@ -71,9 +71,9 @@ export class BlogPostService {
   }
 
   public async respost(dto: CreateRepostDTO) {
-    const userId = Types.ObjectId.isValid(dto.authorId);
+    const authorId = Types.ObjectId.isValid(dto.authorId);
 
-    if(!userId) {
+    if(!authorId) {
       throw new BadRequestException(`User Id must be a valid MongoDB id. Passed: ${dto.authorId}`);
     }
 
@@ -132,6 +132,16 @@ export class BlogPostService {
     await this.connectExtraFieldsToPosts(paginatedPosts.entities);
 
     return paginatedPosts;
+  }
+
+  public async getUserPostsCount(authorId: string) {
+    const userPostsCount = await this.basePostRepository.getUserPostsCount(authorId);
+
+    if(!userPostsCount) {
+      throw new NotFoundException(`Can't find user (${authorId}) posts. Possible reason: User not found | User haven't post anything yet`)
+    }
+
+    return userPostsCount;
   }
 
   public async update(postId: string, updatedFields: Partial<UpdateBasePostDTO>) {

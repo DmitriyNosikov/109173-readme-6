@@ -73,6 +73,7 @@ export const BlogPostMessage: MessagesType = {
     DRAFTS: `Show current authorized user posts in 'Draft' state (not published)`,
     INDEX: 'Show all posts by passed query (global search without limitation)',
     SHOW: 'Get detail info about post by id',
+    POSTS_COUNT: 'Get user published posts count',
 
     CREATE: 'Create new post',
     UPDATE: 'Update exists post by id',

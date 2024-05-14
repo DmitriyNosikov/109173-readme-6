@@ -116,6 +116,17 @@ export class BasePostRepository extends BasePostgresRepository<BasePostEntity, B
     }
   }
 
+  public async getUserPostsCount(authorId: string) {
+    const postsCount = await this.dbClient.post.count({
+      where: {
+        authorId,
+        isPublished: true
+      }
+    });
+
+    return postsCount;
+  }
+
   // Получение всех опубликованных постов без каких-либо доп. условий
   public async findAll(): Promise<BasePostEntity[] | null> {
     const documents = await this.dbClient.post.findMany({

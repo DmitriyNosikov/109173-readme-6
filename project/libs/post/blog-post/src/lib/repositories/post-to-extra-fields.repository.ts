@@ -34,7 +34,8 @@ export class PostToExtraFieldsRepository extends BasePostgresRepository<PostToEx
   public async getExtraFields(postId: string, postType: PostTypeEnum) {
     const postToExtraFields = await this.dbClient.postToExtraFields.findFirst({
       where: {
-        AND: { postId, postType }
+        postId,
+        postType
       }
     });
     const extraFieldsRepository = await this.blogPostRepositoryDeterminant.getRepository(postType)
