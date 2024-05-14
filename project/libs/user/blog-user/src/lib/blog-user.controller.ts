@@ -88,6 +88,29 @@ export class BlogUserController {
     return fillDTO(UserRDO, updatedUser.toPOJO());
   }
 
+  @Get('/:userId/subscribers')
+  @ApiOperation({ summary: BlogUserMessage.DESCRIPTION.USER_SUBSCRIBERS })
+  @ApiResponse({
+    type: UserRDO,
+    status: HttpStatus.OK,
+    description: BlogUserMessage.SUCCESS.FOUND
+  })
+  @ApiResponse({
+    status: HttpStatus.UNAUTHORIZED,
+    description: BlogUserMessage.ERROR.INCORRECT_CREDENTIALS
+  })
+  @ApiResponse({
+    status: HttpStatus.NOT_FOUND,
+    description: BlogUserMessage.ERROR.NOT_FOUND
+  })
+  public async getSubscribers( @Param('userId', MongoIdValidationPipe) userId: string ): Promise<UserRDO | UserRDO[]> {
+    const subscribers = await this.blogUserService.getUserSubscribers(userId);
+    const userSunscribers = subscribers.map((subscriber) => subscriber.toPOJO());
+
+
+    return fillDTO(UserRDO, userSunscribers);
+  }
+
   @Post('/:userId/subscribe/:targetUserId')
   @ApiOperation({ summary: BlogUserMessage.DESCRIPTION.SUBSCRIBE })
   @ApiResponse({

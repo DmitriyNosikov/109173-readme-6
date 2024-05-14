@@ -30,6 +30,7 @@ export const BlogUserMessage: MessagesType = {
   },
   DESCRIPTION: {
     USER_DETAIL: 'Get detail info about user',
+    USER_SUBSCRIBERS: 'Get all user subscribers',
     SUBSCRIBE: 'Add subscribtion to target user',
     UNSUBSCRIBE: 'Remove target user from subscription',
   }

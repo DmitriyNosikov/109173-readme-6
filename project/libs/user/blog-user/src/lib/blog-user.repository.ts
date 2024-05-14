@@ -70,4 +70,11 @@ export class BlogUserRepository extends BaseMongoDbRepository<BlogUserEntity, Bl
 
     return userEntity;
   }
+
+  public async getSubscribers(userId: string): Promise<BlogUserEntity[] | null> {
+    const subscribers = await this.model.find({ subscriptions: userId });
+    const userSubscribers = subscribers.map((subscriber) => this.createEntityFromDocument(subscriber));
+
+    return userSubscribers;
+  }
 }

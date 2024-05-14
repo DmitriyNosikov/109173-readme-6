@@ -72,6 +72,18 @@ export class BlogUserService {
     return await this.blogUserRepository.deleteById(userId);
   }
 
+  public async getUserSubscribers(userId: string): Promise<BlogUserEntity[] | null> {
+    const isUserExists = await this.blogUserRepository.exists(userId);
+
+    if(!isUserExists) {
+      throw new NotFoundException(BlogUserMessage.ERROR.NOT_FOUND);
+    }
+
+    const userSubscribers = await this.blogUserRepository.getSubscribers(userId);
+
+    return userSubscribers;
+  }
+
   public async addSubscription(userId: string, targetUserId: string): Promise<BlogUserEntity | null> {
     await this.checkSubscribtionUsers(userId, targetUserId);
 
