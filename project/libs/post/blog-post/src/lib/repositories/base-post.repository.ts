@@ -71,7 +71,6 @@ export class BasePostRepository extends BasePostgresRepository<BasePostEntity, B
     const { where, orderBy } = this.getSearchFilters(query);
 
     // Запрос на получение постов
-    // TODO: Добавить получение количества лайков и комментариев
     const [posts, totalPostsCount] = await Promise.all([
       this.dbClient.post.findMany({
         where,
@@ -79,7 +78,11 @@ export class BasePostRepository extends BasePostgresRepository<BasePostEntity, B
           tags: true,
           comments: true,
           likes: true,
-          postToExtraFields: true
+          postToExtraFields: true,
+
+          _count: {
+            select: { comments: true, likes: true }
+          }
         },
 
         // Pagination
@@ -90,7 +93,15 @@ export class BasePostRepository extends BasePostgresRepository<BasePostEntity, B
       this.getPostCount(where)
     ]);
 
-    let postsEntities = posts.map((post) => this.createEntityFromDocument(post));
+    let postsEntities = posts.map((post) => {
+      const postPOJO = this.createEntityFromDocument(post);
+
+      // Добавляем количество лайков и комментариев
+      postPOJO.likesCount = post._count.likes;
+      postPOJO.commentsCount = post._count.comments;
+
+      return postPOJO;
+    });
     let postsCount = totalPostsCount;
 
     // Фильтрация (поиск) по заголовку

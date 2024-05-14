@@ -15,7 +15,6 @@ import { LikeFactory } from 'libs/post/like/src/lib/like.factory';
 import { PostToExtraFieldsEntity } from './post-to-extra-fields.entity';
 import { PostToExtraFieldsFactory } from '../factories/post-to-extra-fields';
 import { PostEntities } from '../types/entities.enum';
-
 export class BasePostEntity extends Entity implements BasePostInterface, StorableEntity<BasePostInterface> {
   public createdAt: Date;
   public updatedAt: Date;
@@ -41,6 +40,9 @@ export class BasePostEntity extends Entity implements BasePostInterface, Storabl
   // Поле введено для корректной отдачи поста
   // с доп. полями при конвертации в toPOJO()
   public extraFields?: PostEntities[] | undefined;
+
+  public likesCount?: number | undefined;
+  public commentsCount?: number | undefined;
 
   constructor(post?: BasePostInterface) {
     super();
@@ -68,6 +70,9 @@ export class BasePostEntity extends Entity implements BasePostInterface, Storabl
     this.comments = [];
     this.likes = [];
     this.postToExtraFields = [];
+
+    this.likesCount = post.likesCount;
+    this.commentsCount = post.commentsCount;
 
     // Заполняем теги
     if(post.tags) {
@@ -108,6 +113,9 @@ export class BasePostEntity extends Entity implements BasePostInterface, Storabl
       comments: this.comments.map((comment) => comment.toPOJO()),
       likes: this.likes.map((like) => like.toPOJO()),
       postToExtraFields: this.postToExtraFields.map((item) => item.toPOJO()),
+
+      likesCount: this.likesCount,
+      commentsCount: this.commentsCount,
     };
 
     if(this.extraFields) {

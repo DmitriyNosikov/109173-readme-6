@@ -182,7 +182,7 @@ export class BlogPostController {
   }
 
     // Общий метод поиска (без каких-либо ограничений)
-  @Get('search-global')
+  @Get('global-search')
   @ApiOperation({ summary: BlogPostMessage.DESCRIPTION.INDEX })
   @ApiQuery({
     name: "title",

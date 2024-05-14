@@ -16,6 +16,8 @@ import { VideoPostInterface } from './video-post.interface';
 
 
 export type ExtraFields = TextPostInterface| QuotePostInterface | LinkPostInterface | PhotoPostInterface | VideoPostInterface;
+
+export type LikesCommentsCount = { comments: number, likes: number };
 export interface BasePostInterface extends CreatedUpdatedDatesInterface{
   id?: string;
   publishedAt?: Date;
@@ -33,4 +35,7 @@ export interface BasePostInterface extends CreatedUpdatedDatesInterface{
   likes: LikeInterface[] | undefined;
   postToExtraFields?: PostToExtraFieldsInterface[] | undefined;
   extraFields?: ExtraFields[] | undefined;
+
+  likesCount?: number;
+  commentsCount?: number;
 }
