@@ -127,7 +127,7 @@ export class BasePostWithExtraFieldsRDO {
   @Expose()
   @ApiProperty({
     description: 'Post comments count',
-    example: 3
+    example: 3,
   })
   public commentsCount: number;
 }

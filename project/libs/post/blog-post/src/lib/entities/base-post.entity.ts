@@ -41,8 +41,8 @@ export class BasePostEntity extends Entity implements BasePostInterface, Storabl
   // с доп. полями при конвертации в toPOJO()
   public extraFields?: PostEntities[] | undefined;
 
-  public likesCount?: number | undefined;
-  public commentsCount?: number | undefined;
+  public likesCount?: number;
+  public commentsCount?: number;
 
   constructor(post?: BasePostInterface) {
     super();
@@ -54,7 +54,7 @@ export class BasePostEntity extends Entity implements BasePostInterface, Storabl
       return;
     }
 
-    this.id = post.id;
+    this.id = post.id ?? '';
     this.createdAt = post.createdAt;
     this.updatedAt = post.updatedAt;
     this.publishedAt = post.publishedAt;

@@ -9,8 +9,6 @@ import { BasePostEntity } from '../entities/base-post.entity';
 import { BasePostFactory } from '../factories/base-post.factory';
 
 import { BlogPostQuery } from '../types/queries/blog-post.query';
-import { GetPostsListQuery } from '../types/queries/get-posts-list.query';
-import { SearchPostsQuery } from '../types/queries/search-posts.query';
 import { SearchFilters } from '../types/search-filters';
 
 
@@ -63,7 +61,6 @@ export class BasePostRepository extends BasePostgresRepository<BasePostEntity, B
 
     return post;
   }
-
 
   public async search(query?: BlogPostQuery): Promise<PaginationResult<BasePostEntity>> {
     const skip = query?.page && query?.limit ? (query.page - 1) * query.limit : undefined;
@@ -150,7 +147,8 @@ export class BasePostRepository extends BasePostgresRepository<BasePostEntity, B
       include: {
         tags: true,
         comments: true,
-        likes: true
+        likes: true,
+        postToExtraFields: true,
       }
     });
 

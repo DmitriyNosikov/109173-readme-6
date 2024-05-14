@@ -16,13 +16,15 @@ import { PostToExtraFieldsEntity } from './entities/post-to-extra-fields.entity'
 import { PostToExtraFieldsFactory } from './factories/post-to-extra-fields';
 import { PostToExtraFieldsRepository } from './repositories/post-to-extra-fields.repository';
 
-import { PostTypeEnum } from '@project/shared/core';
+import { PostToExtraFieldsInterface, PostTypeEnum } from '@project/shared/core';
 import { BlogPostMessage } from './blog-post.constant';
 import { BasePostEntity } from './entities/base-post.entity';
 import { TagService } from '@project/tag';
 import { UpdateBasePostDTO } from './dto/update-base-post.dto';
 import { BlogPostQuery } from './types/queries/blog-post.query';
 import { PostEntities } from './types/entities.enum';
+import { CreateRepostDTO } from './dto/create-repost.dto';
+import { Types } from 'mongoose';
 
 @Injectable()
 export class BlogPostService {
@@ -43,21 +45,6 @@ export class BlogPostService {
 
     private readonly postNotifyService: PostNotifyService
   ) {}
-
-  public async findAllPosts(): Promise<BasePostEntity[] | null> {
-    const newPosts = await this.basePostRepository.findAll();
-
-    await this.connectExtraFieldsToPosts(newPosts);
-
-    return newPosts;
-  }
-
-  public async findById(postId: string) {
-    const foundPost = await this.getPostWithExtraFields(postId);
-
-    return foundPost;
-  }
-
   public async create(dto: CreateBasePostDTO) {
     if(!this.checkPostType(dto.type)) {
       return;
@@ -71,11 +58,60 @@ export class BlogPostService {
 
     // Сохраняем все части нашего поста
     // (базовая + дополнительная) в связующую таблицу
-    await this.createPostToExtraFields();
+    const postToExtraFieldsRelation = {
+      postId: this.basePost.id,
+      postType: this.basePost.type,
+      extraFieldsId: this.extraFieldsPost.id,
+    };
+    await this.createPostToExtraFields(postToExtraFieldsRelation);
 
     const createdPost  = await this.getPostWithExtraFields(this.basePost.id);
 
     return createdPost;
+  }
+
+  public async respost(dto: CreateRepostDTO) {
+    console.log('Trying to create repost', dto);
+
+    const userId = Types.ObjectId.isValid(dto.authorId);
+
+    if(!userId) {
+      throw new BadRequestException(`User Id must be a valid MongoDB id. Passed: ${dto.authorId}`);
+    }
+
+    const post = await this.basePostRepository.findById(dto.postId);
+
+    if(!post) {
+      throw new BadRequestException(`Can't find post with passed id: ${dto.postId}`);
+    }
+
+    const excludeFields = ['_id', 'postToExtraFields']
+    const filteredPostFields = Object.entries(post).filter(([key, ]) => {
+      return !excludeFields.includes(key);
+    });
+    const repostFields = Object.fromEntries(filteredPostFields);
+
+    console.log('EXCLUDED: ', repostFields);
+
+    const repostEntity = this.basePostFactory.create({
+      ...post,
+      authorId: dto.authorId,
+      originAuthorId: post.authorId,
+      originPostId: post.id,
+      isRepost: true,
+
+      createdAt: undefined,
+      updatedAt: undefined,
+      extraFields: undefined,
+      postToExtraFields: undefined
+    });
+
+    // console.log('REPOST: ', repostEntity);
+
+    // Сохраняем в БД
+    // const repost = await this.basePostRepository.create(repostEntity);
+
+    // console.log('REPOST: ', repost);
   }
 
   public async getPaginatedPosts(query?: BlogPostQuery) {
@@ -152,7 +188,20 @@ export class BlogPostService {
     await this.basePostRepository.deleteById(post.id);
   }
 
-  // NOTIFICATION
+  public async findAllPosts(): Promise<BasePostEntity[] | null> {
+    const newPosts = await this.basePostRepository.findAll();
+
+    await this.connectExtraFieldsToPosts(newPosts);
+
+    return newPosts;
+  }
+
+  public async findById(postId: string) {
+    const foundPost = await this.getPostWithExtraFields(postId);
+
+    return foundPost;
+  }
+  //////////////////// NOTIFICATION ////////////////////
   public async notifyAboutNewPosts() {
     // Получаем информацию о последней рассылке
     const lastNotify = await this.postNotifyService.findLastNotify();
@@ -186,8 +235,7 @@ export class BlogPostService {
 
   }
 
-
-  // SERVICE METHODS
+  ////////////////////// SERVICE METHODS //////////////////////
   private async getPostWithExtraFields(postId: string) {
     const post = await this.basePostRepository.findById(postId);
 
@@ -268,7 +316,6 @@ export class BlogPostService {
     return true;
   }
 
-
   private async createBasePost(dto: CreateBasePostDTO): Promise<void> {
     const basePostTags = await this.tagService.getOrCreate(dto.tags);
     const basePostEntity = this.basePostFactory.create({
@@ -294,13 +341,8 @@ export class BlogPostService {
     this.extraFieldsPost = await extraFieldsRepository.create(extraFieldsEntity);
   }
 
-  private async createPostToExtraFields(): Promise<void> {
-    const allPostRelationFields = {
-      postId: this.basePost.id,
-      postType: this.basePost.type,
-      extraFieldsId: this.extraFieldsPost.id,
-    };
-    const postToExtraFieldsEntity: PostToExtraFieldsEntity = this.postToExtraFieldsFactory.create(allPostRelationFields);
+  private async createPostToExtraFields(relation: PostToExtraFieldsInterface): Promise<void> {
+    const postToExtraFieldsEntity: PostToExtraFieldsEntity = this.postToExtraFieldsFactory.create(relation);
 
     await this.postToExtraFieldsRepository.create(postToExtraFieldsEntity);
   }

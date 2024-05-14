@@ -1,4 +1,4 @@
-import { ApiBody, ApiHideProperty, ApiOperation, ApiParam, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger'
+import { ApiBody, ApiOperation, ApiParam, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger'
 import { Controller, Get, Post, Body, Param, Patch, Delete, HttpStatus, Query, HttpCode, BadRequestException } from '@nestjs/common';
 
 import { CreateBasePostDTO } from './dto/create-base-post.dto'
@@ -13,6 +13,7 @@ import { BasePostWithExtraFieldsRDO } from './rdo/base-post-with-extra-fields';
 import { SortDirection, SortType } from '@project/shared/core';
 import { GetPostsListQuery } from './types/queries/get-posts-list.query';
 import { SearchPostsQuery } from './types/queries/search-posts.query';
+
 @ApiTags('posts')
 @Controller('posts')
 export class BlogPostController {
@@ -306,8 +307,16 @@ export class BlogPostController {
     return fillDTO(BasePostWithExtraFieldsRDO, createdPost);
   }
 
+  @Post('/:postId/repost/')
   // @UseGuards(JWTAuthGuard)
+  public async repost(@Param('postId') postId: string, @Body('userId') userId: string): Promise<BasePostWithExtraFieldsRDO | void> {
+    const createdRepost = await this.blogPostService.respost({ postId, authorId: userId });
+
+    return fillDTO(BasePostWithExtraFieldsRDO, createdRepost);
+  }
+
   @Patch(':postId')
+  // @UseGuards(JWTAuthGuard)
   @ApiOperation({ summary: BlogPostMessage.DESCRIPTION.UPDATE })
   @ApiResponse({
     status: HttpStatus.CREATED,
@@ -333,8 +342,8 @@ export class BlogPostController {
     return fillDTO(BasePostWithExtraFieldsRDO, updatedPost);
   }
 
-  // @UseGuards(JWTAuthGuard)
   @Delete(':postId')
+  // @UseGuards(JWTAuthGuard)
   @ApiOperation({ summary: BlogPostMessage.DESCRIPTION.DELETE })
   @ApiParam({
     name: "postId",

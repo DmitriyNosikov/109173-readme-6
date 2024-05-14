@@ -6,9 +6,9 @@
 
 # Environment
 @searchType=global-search
-@userId = 6dd03634-9785-49b8-a403-9ab61bb5656e
+@userId = 662253e794534cbee6562f7d
 @userToken = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NjM4ZDIzZDgyNGQ3ZTdkNzQ3NzNjYmIiLCJlbWFpbCI6Imlyb24tbWFuM0BzdGFya2luZHVzdHJpZXMuaXQiLCJmaXJzdG5hbWUiOiJUb255IiwibGFzdG5hbWUiOiJTdGFyazEyMyIsImlhdCI6MTcxNTAwNTE4MCwiZXhwIjoxNzE1MDA1NDgwfQ.ICvT_awGBKungmnqBCp3_1is0qwGgDJMW61IG7SmksM
-@postId = 4d31acc4-4c2a-448c-bb5e-c4da437a1f96
+@postId = 25a05639-5a27-41bc-b28a-894f8b5babd5
 
 ############# GETTING POSTS LIST (Technical task, paragraph 3 ) ############
 # LIST
@@ -112,6 +112,13 @@ Content-Type: application/json
 }
 ###
 
+################################# REPOST #################################
+POST {{baseUrl}}/{{postId}}/repost HTTP/1.1
+Content-Type: application/json
+
+{
+  "userId": "66224f68a3f9a165a1ab5fbd"
+}
 ################################# UPDATING #################################
 
 # Update video post (extra fields) - Wrong fields for special (to check validation)
