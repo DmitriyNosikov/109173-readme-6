@@ -18,9 +18,7 @@ export class BaseMongoDbRepository<
       return null;
     }
 
-    const plainObject = document.toObject({ versionKey: false });
-
-    plainObject.id = plainObject._id.toString();
+    const plainObject = document.toObject({ getters: true, versionKey: false, flattenObjectIds: true });
 
     return this.entityFactory.create(plainObject);
   }

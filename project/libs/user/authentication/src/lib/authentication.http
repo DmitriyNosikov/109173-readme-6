@@ -11,20 +11,12 @@ POST {{baseUrl}}/auth/register/ HTTP/1.1
 Content-Type: application/json
 
 {
-  "email": "iron-man@starkindustries.it",
+  "email": "iron-man33@starkindustries.it",
   "firstName": "Tony",
   "lastName": "Stark",
   "avatar": "/playboy/millioner/philanthropist.jpeg",
   "password": "jarvis-123"
 }
-
-# {
-#   "email": "ilon-mask@tesla.model",
-#   "firstName": "Ilon",
-#   "lastName": "Mask",
-#   "avatar": "/playboy/millioner/philanthropist.jpeg",
-#   "password": "jarvis-iron-hearth123"
-# }
 
 ###
 
@@ -36,6 +28,11 @@ Content-Type: application/json
   "email": "iron-man@starkindustries.it",
   "password": "jarvis-123"
 }
+###
+
+# Check JWT Token & get token payload
+POST {{baseUrl}}/auth/check/ HTTP/1.1
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NjNmYTE0YzU1MDgyZjJkMTdjM2VlNzAiLCJlbWFpbCI6Imlyb24tbWFuQHN0YXJraW5kdXN0cmllcy5pdCIsImZpcnN0bmFtZSI6IlRvbnkiLCJsYXN0bmFtZSI6IlN0YXJrIiwiaWF0IjoxNzE1NzExNTgxLCJleHAiOjE3MTU3MTE4ODF9.052w0X0K2FbFdL0jxIBQfQQggFj9C1OYccfLqnbyG9k
 ###
 
 # Refresh JWT Token (get new JWT pait: Token + Refresh-token)

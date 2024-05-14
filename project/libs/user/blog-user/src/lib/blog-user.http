@@ -3,24 +3,14 @@
 @port = 8000
 @baseUrl = http://{{host}}:{{port}}/api
 # Environment
-@userId = 6638932ef7a446eb78cb2f06
+@userId = 663fa14c55082f2d17c3ee70
 
 # Get detail info about user
-GET {{baseUrl}}/users/{{userId}}
-###
-
-# Change user password
-PATCH {{baseUrl}}/users/password/{{userId}}
-Content-Type: application/json
-
-{
-  "password": "jarvis-123",
-  "newPassword": "123456"
-}
+GET {{baseUrl}}/users/{{userId}} HTTP/1.1
 ###
 
 # Update user info
-PATCH  {{baseUrl}}/users/{{userId}}
+PATCH  {{baseUrl}}/users/{{userId}} HTTP/1.1
 Content-Type: application/json
 
 {
@@ -29,5 +19,15 @@ Content-Type: application/json
 ###
 
 # Delete user
-DELETE {{baseUrl}}/users/{{userId}}
+DELETE {{baseUrl}}/users/{{userId}} HTTP/1.1
+###
+
+# Change user password
+PATCH {{baseUrl}}/users/{{userId}}/password/ HTTP/1.1
+Content-Type: application/json
+
+{
+  "password": "jarvis-123",
+  "newPassword": "123456"
+}
 ###

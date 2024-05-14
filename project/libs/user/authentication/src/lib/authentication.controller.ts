@@ -7,6 +7,7 @@ import { fillDTO } from '@project/shared/helpers';
 import { LocalAuthGuard } from './guards/local-auth.guard';
 import { RequestWithUser } from './interfaces/request-with-user.interface';
 import { JWTRefreshGuard } from './guards/jwt-refresh.guard';
+import { JWTAuthGuard } from './guards/jwt-auth.guard';
 @Controller('auth')
 export class AuthenticationController {
   constructor(
@@ -52,6 +53,12 @@ export class AuthenticationController {
     };
 
     return fillDTO(LoggedUserRDO, loggedUserWithPayload);
+  }
+
+  @Post('check')
+  @UseGuards(JWTAuthGuard)
+  public async checkToken(@Req() { user: tokenPayload }: RequestWithUser) {
+    return tokenPayload;
   }
 
   @Get('refresh')

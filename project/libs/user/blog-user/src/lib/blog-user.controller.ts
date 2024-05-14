@@ -18,6 +18,7 @@ export class BlogUserController {
     private readonly blogUserService: BlogUserService
   ){}
 
+  @Get(':userId')
   @ApiResponse({
     type: UserRDO,
     status: HttpStatus.OK,
@@ -27,13 +28,13 @@ export class BlogUserController {
     status: HttpStatus.NOT_FOUND,
     description: BlogUserMessage.ERROR.NOT_FOUND
   })
-  @Get(':userId')
   public async show(@Param('userId', MongoIdValidationPipe) userId: string): Promise<UserRDO | UserRDO[]> {
     const user = await this.blogUserService.getUser(userId);
 
     return fillDTO(UserRDO, user.toPOJO());
   }
 
+  @Patch(':userId')
   @ApiResponse({
     type: UserRDO,
     status: HttpStatus.CREATED,
@@ -43,7 +44,6 @@ export class BlogUserController {
     status: HttpStatus.BAD_REQUEST,
     description: BlogUserMessage.ERROR.CANT_UPDATE
   })
-  @Patch(':userId')
   public async updateUser(
     @Param('userId', MongoIdValidationPipe) userId: string,
     @Body() dto: UpdateUserDTO
@@ -54,15 +54,16 @@ export class BlogUserController {
     return fillDTO(UserRDO, updatedUser.toPOJO());
   }
 
+  @Delete(':userId')
   @ApiResponse({
     status: HttpStatus.OK,
     description: BlogUserMessage.SUCCESS.DELETED
   })
-  @Delete(':userId')
   public async deleteUser(@Param('userId', MongoIdValidationPipe) userId: string): Promise<void> {
     await this.blogUserService.deleteUser(userId);
   }
 
+  @Patch('/:userId/password/')
   @ApiResponse({
     type: UserRDO,
     status: HttpStatus.CREATED,
@@ -76,7 +77,6 @@ export class BlogUserController {
     status: HttpStatus.NOT_FOUND,
     description: BlogUserMessage.ERROR.NOT_FOUND
   })
-  @Patch('password/:userId')
   public async changePassword(
     @Param('userId', MongoIdValidationPipe) userId: string,
     @Body() dto: ChangePasswordDTO
