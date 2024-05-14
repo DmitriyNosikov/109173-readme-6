@@ -71,8 +71,6 @@ export class BlogPostService {
   }
 
   public async respost(dto: CreateRepostDTO) {
-    console.log('Trying to create repost', dto);
-
     const userId = Types.ObjectId.isValid(dto.authorId);
 
     if(!userId) {
@@ -84,14 +82,6 @@ export class BlogPostService {
     if(!post) {
       throw new BadRequestException(`Can't find post with passed id: ${dto.postId}`);
     }
-
-    const excludeFields = ['_id', 'postToExtraFields']
-    const filteredPostFields = Object.entries(post).filter(([key, ]) => {
-      return !excludeFields.includes(key);
-    });
-    const repostFields = Object.fromEntries(filteredPostFields);
-
-    console.log('EXCLUDED: ', repostFields);
 
     const repostEntity = this.basePostFactory.create({
       ...post,
@@ -106,12 +96,17 @@ export class BlogPostService {
       postToExtraFields: undefined
     });
 
-    // console.log('REPOST: ', repostEntity);
+    // Сохраняем в БД репост
+    const repost = await this.basePostRepository.create(repostEntity);
 
-    // Сохраняем в БД
-    // const repost = await this.basePostRepository.create(repostEntity);
-
-    // console.log('REPOST: ', repost);
+    // Сохраняем в БД связи для репоста
+    for(const postToExtraFields of post.postToExtraFields) {
+      await this.createPostToExtraFields({
+        postId: repost.id,
+        postType: repost.type,
+        extraFieldsId: postToExtraFields.extraFieldsId
+      });
+    }
   }
 
   public async getPaginatedPosts(query?: BlogPostQuery) {

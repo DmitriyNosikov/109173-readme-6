@@ -54,7 +54,7 @@ export class BasePostEntity extends Entity implements BasePostInterface, Storabl
       return;
     }
 
-    this.id = post.id ?? '';
+    this.id = post.id;
     this.createdAt = post.createdAt;
     this.updatedAt = post.updatedAt;
     this.publishedAt = post.publishedAt;
