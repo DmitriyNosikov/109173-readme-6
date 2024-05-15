@@ -24,6 +24,8 @@ import { UpdateBasePostDTO } from 'libs/post/blog-post/src/lib/dto/update-base-p
 import { CommentMessage } from '@project/post/comment';
 import { CreateCommentRDO } from 'libs/post/comment/src/lib/rdo/create-comment.rdo';
 import { CreateCommentDTO } from 'libs/post/comment/src/lib/dto/create-comment.dto';
+import { get } from 'http';
+import { CommentQuery } from 'libs/post/comment/src/lib/dto/comment.query';
 
 
 @ApiTags('Api-gateway: posts')
@@ -369,6 +371,45 @@ export class PostsController {
   ) {
     const serviceUrl = `${this.servicesURLs.comments}/posts/${postId}/comments`;
     const { data } = await this.httpService.axiosRef.post(serviceUrl, { ...dto, authorId: dto.userId });
+
+    return data;
+  }
+
+  @Get(':postId/comments')
+  @ApiOperation({ summary: CommentMessage.DESCRIPTION.INDEX })
+  @ApiResponse({
+    status: HttpStatus.OK,
+    description: CommentMessage.SUCCESS.FOUND,
+    type: CreateCommentRDO
+  })
+  @ApiResponse({
+    status: HttpStatus.NOT_FOUND,
+    description: CommentMessage.ERROR.NOT_FOUND
+  })
+  @ApiParam({
+    name: "postId",
+    example: 'b0103f3e-a6ac-4719-94bc-60c8294c08c6',
+    description: CommentMessage.DESCRIPTION.POST_ID,
+    required: true
+  })
+  @ApiQuery({
+    name: "limit",
+    description: `${CommentMessage.DESCRIPTION.LIMIT}. ${CommentMessage.DESCRIPTION.DEFAULT_LIMIT}`,
+    example: "/?limit=10",
+    required: false
+  })
+  @ApiQuery({
+    name: "page",
+    description: `${CommentMessage.DESCRIPTION.PAGE}. ${CommentMessage.DESCRIPTION.DEFAULT_PAGE}`,
+    example: "/?page=1",
+    required: false
+  })
+  public async getPaginatedComments(
+    @Param('postId') postId: string,
+    @Query() query: CommentQuery
+  ) {
+    const serviceUrl = `${this.servicesURLs.comments}/posts/${postId}/comments`;
+    const { data } = await this.httpService.axiosRef.get(serviceUrl, { params: query });
 
     return data;
   }
