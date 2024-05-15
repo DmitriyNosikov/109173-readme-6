@@ -1,7 +1,7 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { BadRequestException } from '@nestjs/common';
 
-import { fillDTO, omitUndefined } from '@project/shared/helpers';
+import { fillDTO, getDate, omitUndefined } from '@project/shared/helpers';
 import { PostNotifyService } from '@project/post-notify';
 
 import { CreateBasePostDTO } from './dto/create-base-post.dto';
@@ -90,8 +90,8 @@ export class BlogPostService {
       originPostId: post.id,
       isRepost: true,
 
-      createdAt: undefined,
-      updatedAt: undefined,
+      createdAt: new Date(),
+      updatedAt: new Date(),
       extraFields: undefined,
       postToExtraFields: undefined
     });
@@ -137,10 +137,6 @@ export class BlogPostService {
   public async getUserPostsCount(authorId: string) {
     const userPostsCount = await this.basePostRepository.getUserPostsCount(authorId);
 
-    if(!userPostsCount) {
-      throw new NotFoundException(`Can't find user (${authorId}) posts. Possible reason: User not found | User haven't post anything yet`)
-    }
-
     return userPostsCount;
   }
 
@@ -161,7 +157,6 @@ export class BlogPostService {
     }
 
     // Обновление тегов
-    // TODO: по хорошему, надо сверять и удалять связи лишние, а новые добавлять
     let updatedTags = undefined;
 
     if(updatedFields.tags && updatedFields.tags.length > 0) {
@@ -206,6 +201,7 @@ export class BlogPostService {
 
     return foundPost;
   }
+
   //////////////////// NOTIFICATION ////////////////////
   public async notifyAboutNewPosts() {
     // Получаем информацию о последней рассылке

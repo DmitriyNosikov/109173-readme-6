@@ -12,18 +12,30 @@ import { AxiosExceptionFilter } from '../filters/axios-exception.filter';
 import { CreateUserDTO, LoginUserDTO, UserRDO } from '@project/user/blog-user';
 import { AuthenticationMessage } from '@project/user/authentication'
 
-
+type ServicesURLs = {
+  auth: string,
+  users: string,
+  posts: string,
+}
 
 @ApiTags('Api-gateway: Users')
 @Controller('users')
 @UseFilters(AxiosExceptionFilter)
 export class UsersController {
+  public servicesURLs: ServicesURLs;
+
   constructor(
     private readonly httpService: HttpService,
 
     @Inject(apiGatewayConfig.KEY)
     private readonly config: ConfigType<typeof apiGatewayConfig>
-  ) {}
+  ) {
+    this.servicesURLs = {
+      auth: this.config.authenticationServiceURL,
+      users: this.config.userServiceURL,
+      posts: this.config.postServiceURL,
+    }
+  }
 
   @Post('register')
   @ApiResponse({
@@ -36,7 +48,7 @@ export class UsersController {
     description: AuthenticationMessage.ERROR.ALREADY_EXISTS
   })
   public async create(@Body() registerUserDto: CreateUserDTO) {
-    const serviceUrl = `${this.config.authenticationServiceURL}/register`;
+    const serviceUrl = `${this.servicesURLs.auth}/register`;
 
     const { data } = await this.httpService.axiosRef.post(serviceUrl, registerUserDto);
 
@@ -54,7 +66,7 @@ export class UsersController {
     description: AuthenticationMessage.ERROR.INCORRECT_CREDENTIALS
   })
   public async login(@Body() loginUserDto: LoginUserDTO) {
-    const serviceUrl = `${this.config.authenticationServiceURL}/login`;
+    const serviceUrl = `${this.servicesURLs.auth}/login`;
 
     const { data } = await this.httpService.axiosRef.post(serviceUrl, loginUserDto);
     return data;
@@ -72,9 +84,7 @@ export class UsersController {
     description: AuthenticationMessage.SUCCESS.CANT_CREATE_TOKENS
   })
   public async refreshToken(@Req() req: Request) {
-    const serviceUrl = `${this.config.authenticationServiceURL}/refresh`;
-
-    console.log('Тут: ', serviceUrl);
+    const serviceUrl = `${this.servicesURLs.auth}/refresh`;
 
     const { data } = await this.httpService.axiosRef.post(serviceUrl, null, {
       headers: {
@@ -99,15 +109,21 @@ export class UsersController {
     description: AuthenticationMessage.SUCCESS.CANT_CREATE_TOKENS
   })
   public async gerUserDetail(@Body() dto: string, @Req() req: Request) {
-    // TODO: Нужно получение количества публикаций юзера
-    const serviceUrl = `${this.config.userServiceURL}/`;
+    const userServiceUrl = `${this.servicesURLs.users}/`;
+    const postServiceUrl = `${this.servicesURLs.posts}/count`;
 
-    const { data } = await this.httpService.axiosRef.post(serviceUrl, dto, {
+    const { data: userData } = await this.httpService.axiosRef.post(userServiceUrl, dto, {
       headers: {
         'Authorization': req.headers['authorization']
       },
     });
 
-    return data;
+    const { data: userPostsCount } = await this.httpService.axiosRef.post(postServiceUrl, dto, {
+      headers: {
+        'Authorization': req.headers['authorization']
+      },
+    });
+
+    return { ...userData, userPostsCount: userPostsCount };
   }
 }

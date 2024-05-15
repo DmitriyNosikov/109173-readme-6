@@ -370,8 +370,8 @@ export class BlogPostController {
     status: HttpStatus.NO_CONTENT,
     description: BlogPostMessage.SUCCESS.FOUND
   })
-  public async getUserPostsCount(@Body('authorId') authorId: string): Promise<number> {
-    const userPostsCount = await this.blogPostService.getUserPostsCount(authorId);
+  public async getUserPostsCount(@Body('userId') userId: string): Promise<number> {
+    const userPostsCount = await this.blogPostService.getUserPostsCount(userId);
 
     return userPostsCount;
   }

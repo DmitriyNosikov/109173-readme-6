@@ -39,5 +39,5 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NjNmY
 ////////////////////////////// USER //////////////////////////////
 # Get detail info about user
 POST {{baseUrl}}/detail/ HTTP/1.1
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NjQzZTg5ZGMwZTQwNjZlNWJhM2Q3YzIiLCJlbWFpbCI6Imlyb24tbWFuQHN0YXJraW5kdXN0cmllcy5pdCIsImZpcnN0bmFtZSI6IlRvbnkiLCJsYXN0bmFtZSI6IlN0YXJrIiwiaWF0IjoxNzE1NzMxODgwLCJleHAiOjE3MTU3MzIxODB9.Ir_Ci-wGAxTBC_lrqbnvyaFlmbdgm59GQ8xGEUU9u3A
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NjQ0NWNkMzZiM2I0YjkyMzQ0MWQ3ZWYiLCJlbWFpbCI6Imlyb24tbWFuQHN0YXJraW5kdXN0cmllcy5pdCIsImZpcnN0bmFtZSI6IlRvbnkiLCJsYXN0bmFtZSI6IlN0YXJrIiwiaWF0IjoxNzE1NzU3NTc5LCJleHAiOjE3MTU3NTc4Nzl9.QuOL_D6eJS_nedYizIrD9xEeqSb5bfbgEL5XvMtdf_I
 ###

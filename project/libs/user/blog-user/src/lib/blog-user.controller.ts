@@ -31,7 +31,6 @@ export class BlogUserController {
     description: BlogUserMessage.ERROR.NOT_FOUND
   })
   public async show(@Body('userId') userId: string): Promise<UserWithSubscribersRDO> {
-    console.log('USER ID: ', userId);
     const userDetail = await this.blogUserService.getUserDetail(userId);
     const userWithSubscribersCount = {
       ...userDetail.user.toPOJO(),
