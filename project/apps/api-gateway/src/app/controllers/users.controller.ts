@@ -1,6 +1,6 @@
 import { HttpService } from '@nestjs/axios';
 import { ConfigType } from '@nestjs/config';
-import { Body, Controller, Get, HttpStatus, Inject, Post, Req, UseFilters, UseGuards, UseInterceptors } from '@nestjs/common';
+import { Body, Controller, Get, HttpStatus, Inject, Patch, Post, Req, UseFilters, UseGuards, UseInterceptors } from '@nestjs/common';
 import { ApiResponse, ApiTags } from '@nestjs/swagger';
 
 import { CheckAuthGuard } from '../guards/check-auth.guard';
@@ -9,7 +9,7 @@ import { apiGatewayConfig } from '@project/api-gateway-config';
 
 import { AxiosExceptionFilter } from '../filters/axios-exception.filter';
 
-import { CreateUserDTO, LoginUserDTO, UserRDO } from '@project/user/blog-user';
+import { ChangePasswordDTO, CreateUserDTO, LoginUserDTO, UserRDO } from '@project/user/blog-user';
 import { AuthenticationMessage } from '@project/user/authentication'
 
 type ServicesURLs = {
@@ -72,6 +72,26 @@ export class UsersController {
     return data;
   }
 
+  @Patch('password')
+  @UseGuards(CheckAuthGuard)
+  @UseInterceptors(InjectUserIdInterceptor)
+  @ApiResponse({
+    type: UserRDO,
+    status: HttpStatus.OK,
+    description: AuthenticationMessage.SUCCESS.LOGGED_IN
+  })
+  @ApiResponse({
+    status: HttpStatus.UNAUTHORIZED,
+    description: AuthenticationMessage.ERROR.INCORRECT_CREDENTIALS
+  })
+  public async changePassword(@Body() dto: ChangePasswordDTO & { userId }) {
+    const serviceUrl = `${this.servicesURLs.users}/${dto.userId}/password`;
+
+    const { data } = await this.httpService.axiosRef.patch(`${serviceUrl}`, dto);
+
+    return data;
+  }
+
   @Post('refresh')
   @ApiResponse({
     type: UserRDO,
@@ -108,21 +128,13 @@ export class UsersController {
     status: HttpStatus.INTERNAL_SERVER_ERROR,
     description: AuthenticationMessage.SUCCESS.CANT_CREATE_TOKENS
   })
-  public async gerUserDetail(@Body() dto: string, @Req() req: Request) {
+  public async gerUserDetail(@Body() dto: string) {
     const userServiceUrl = `${this.servicesURLs.users}/`;
     const postServiceUrl = `${this.servicesURLs.posts}/count`;
 
-    const { data: userData } = await this.httpService.axiosRef.post(userServiceUrl, dto, {
-      headers: {
-        'Authorization': req.headers['authorization']
-      },
-    });
+    const { data: userData } = await this.httpService.axiosRef.post(userServiceUrl, dto);
 
-    const { data: userPostsCount } = await this.httpService.axiosRef.post(postServiceUrl, dto, {
-      headers: {
-        'Authorization': req.headers['authorization']
-      },
-    });
+    const { data: userPostsCount } = await this.httpService.axiosRef.post(postServiceUrl, dto);
 
     return { ...userData, userPostsCount: userPostsCount };
   }
