@@ -9,8 +9,9 @@ import { ConfigType } from '@nestjs/config';
 import { CheckAuthGuard } from '../guards/check-auth.guard';
 import { InjectUserIdInterceptor } from '@project/interceprots';
 
-import { BlogPostMessage } from '@project/blog-post';
 import { SortDirection, SortType, TokenPayloadInterface } from '@project/shared/core';
+
+import { BlogPostMessage } from '@project/blog-post';
 import { BasePostWithPaginationRDO } from 'libs/post/blog-post/src/lib/rdo/base-post-with-pagination.rdo';
 import { GetPostsListQuery } from 'libs/post/blog-post/src/lib/types/queries/get-posts-list.query';
 import { ServicesURLs } from '../types/services-urls';
@@ -19,6 +20,10 @@ import { BasePostWithExtraFieldsRDO } from 'libs/post/blog-post/src/lib/rdo/base
 import { CreateBasePostDTO } from 'libs/post/blog-post/src/lib/dto/create-base-post.dto';
 import { CreateRepostDTO } from 'libs/post/blog-post/src/lib/dto/create-repost.dto';
 import { UpdateBasePostDTO } from 'libs/post/blog-post/src/lib/dto/update-base-post.dto';
+
+import { CommentMessage } from '@project/post/comment';
+import { CreateCommentRDO } from 'libs/post/comment/src/lib/rdo/create-comment.rdo';
+import { CreateCommentDTO } from 'libs/post/comment/src/lib/dto/create-comment.dto';
 
 
 @ApiTags('Api-gateway: posts')
@@ -37,6 +42,8 @@ export class PostsController {
       auth: this.config.authenticationServiceURL,
       users: this.config.userServiceURL,
       posts: this.config.postServiceURL,
+      comments: this.config.commentServiceURL,
+      tags: this.config.tagServiceURL,
     }
   }
 
@@ -333,17 +340,72 @@ export class PostsController {
   }
 
   // Comments
-  @Post('comments')
+  @Post(':postId/comments')
   @UseGuards(CheckAuthGuard)
   @UseInterceptors(InjectUserIdInterceptor)
-  public async addComment() {
+  @ApiOperation({ summary: CommentMessage.DESCRIPTION.CREATE })
+  @ApiResponse({
+    status: HttpStatus.CREATED,
+    description: CommentMessage.SUCCESS.CREATED,
+    type: CreateCommentRDO
+  })
+  @ApiResponse({
+    status: HttpStatus.UNAUTHORIZED,
+    description: CommentMessage.ERROR.UNAUTHORIZED
+  })
+  @ApiParam({
+    name: "postId",
+    example: 'b0103f3e-a6ac-4719-94bc-60c8294c08c6',
+    description: CommentMessage.DESCRIPTION.POST_ID,
+    required: true
+  })
+  @ApiBody({
+    type: CreateCommentDTO,
+    required: true
+  })
+  public async addComment(
+    @Param('postId') postId: string,
+    @Body() dto: CreateCommentDTO & TokenPayloadInterface
+  ) {
+    const serviceUrl = `${this.servicesURLs.comments}/posts/${postId}/comments`;
+    const { data } = await this.httpService.axiosRef.post(serviceUrl, { ...dto, authorId: dto.userId });
 
+    return data;
   }
 
-  @Delete('comments')
+  @Delete(':postId/comments/:commentId')
   @UseGuards(CheckAuthGuard)
   @UseInterceptors(InjectUserIdInterceptor)
-  public async deleteComment() {
+  @ApiOperation({ summary: CommentMessage.DESCRIPTION.DELETE })
+  @ApiParam({
+    name: "postId",
+    example: 'b0103f3e-a6ac-4719-94bc-60c8294c08c6',
+    description: CommentMessage.DESCRIPTION.POST_ID,
+    required: true
+  })
+  @ApiParam({
+    name: "commentId",
+    example: 'b0103f3e-a6ac-4719-94bc-60c8294c08c6',
+    description: CommentMessage.DESCRIPTION.POST_ID,
+    required: true
+  })
+  @ApiResponse({
+    status: HttpStatus.NO_CONTENT,
+    description: CommentMessage.SUCCESS.DELETED
+  })
+  @ApiResponse({
+    status: HttpStatus.NOT_FOUND,
+    description: CommentMessage.ERROR.NOT_FOUND
+  })
+  @HttpCode(HttpStatus.NO_CONTENT)
+  public async deleteComment(
+    @Param('postId') postId: string,
+    @Param('commentId') commentId: string,
+    @Body('userId') userId: string
+  ) {
+    const serviceUrl = `${this.servicesURLs.comments}/posts/${postId}/comments/${commentId}`;
+    const { data } = await this.httpService.axiosRef.delete(serviceUrl, { data: { userId } });
 
+    return data;
   }
 }

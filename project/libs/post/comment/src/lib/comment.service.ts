@@ -2,7 +2,7 @@ import { BadRequestException, Injectable, NotFoundException } from '@nestjs/comm
 import { CommentRepository } from './comment.repository';
 import { CommentFactory } from './comment.factory';
 import { CreateCommentDTO } from './dto/create-comment.dto';
-import { omitUndefined } from '@project/shared/helpers';
+import { omitUndefined, validateMongoID } from '@project/shared/helpers';
 import { CommentEntity } from './comment.entity';
 import { CommentMessage } from './comment.constant';
 
@@ -61,11 +61,17 @@ export class CommentService {
     return comments;
   }
 
-  async delete(commentId: string): Promise<void> {
+  async delete(commentId: string, userId: string): Promise<void> {
+    await validateMongoID(userId);
+
     const isCommentExists = await this.commentRepository.findById(commentId);
 
     if(!isCommentExists) {
       throw new NotFoundException(`Comment with ID ${commentId} not found`);
+    }
+
+    if(isCommentExists.authorId !== userId) {
+      throw new BadRequestException(`You can't delete comment with ID ${commentId}`);
     }
 
     await this.commentRepository.deleteById(commentId);

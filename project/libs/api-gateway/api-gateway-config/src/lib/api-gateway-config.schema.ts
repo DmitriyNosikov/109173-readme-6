@@ -9,6 +9,8 @@ export const ApiGatewayConfigEnum = {
   AUTHENTICATION_SERVICE_URL: 'authenticationServiceURL',
   USER_SERVICE_URL: 'userServiceURL',
   POST_SERVICE_URL: 'postServiceURL',
+  COMMENT_SERVICE_URL: 'commentServiceURL',
+  TAG_SERVICE_URL: 'tagServiceURL',
   NOTIFY_SERVICE_URL: 'notifyServiceURL',
 
   HTTP_CLIENT_MAX_REDIRECTS: 'httpClientMaxRedirects',
@@ -23,6 +25,8 @@ export interface ApiGatewayConfigInterface {
   [ApiGatewayConfigEnum.AUTHENTICATION_SERVICE_URL]: string;
   [ApiGatewayConfigEnum.USER_SERVICE_URL]: string;
   [ApiGatewayConfigEnum.POST_SERVICE_URL]: string;
+  [ApiGatewayConfigEnum.COMMENT_SERVICE_URL]: string;
+  [ApiGatewayConfigEnum.TAG_SERVICE_URL]: string;
   [ApiGatewayConfigEnum.NOTIFY_SERVICE_URL]: string;
 
   [ApiGatewayConfigEnum.HTTP_CLIENT_MAX_REDIRECTS]: number;
@@ -47,6 +51,12 @@ export class ApiGatewayConfigSchema implements ApiGatewayConfigInterface {
 
   @IsString({ message: ApiGatewayConfigMessage.ERROR.POST_SERVICE_URL_REQUIRED })
   postServiceURL: string;
+
+  @IsString({ message: ApiGatewayConfigMessage.ERROR.COMMENT_SERVICE_URL_REQUIRED })
+  commentServiceURL: string;
+
+  @IsString({ message: ApiGatewayConfigMessage.ERROR.TAG_SERVICE_URL_REQUIRED })
+  tagServiceURL: string;
 
   @IsString({ message: ApiGatewayConfigMessage.ERROR.NOTIFY_SERVICE_URL_REQUIRED })
   notifyServiceURL: string;

@@ -17,6 +17,8 @@ async function getConfig(): Promise<ApiGatewayConfigInterface> {
     authenticationServiceURL: process.env.AUTHENTICATION_SERVICE_URL,
     userServiceURL: process.env.USER_SERVICE_URL,
     postServiceURL: process.env.POST_SERVICE_URL,
+    commentServiceURL: process.env.COMMENT_SERVICE_URL,
+    tagServiceURL: process.env.TAG_SERVICE_URL,
     notifyServiceURL: process.env.NOTIFY_SERVICE_URL,
 
     httpClientMaxRedirects: parseInt(process.env.HTTP_CLIENT_MAX_REDIRECTS, 10),

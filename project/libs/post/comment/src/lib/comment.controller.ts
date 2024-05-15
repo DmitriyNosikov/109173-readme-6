@@ -16,28 +16,31 @@ export class CommentController {
   ){}
 
   @Post('/')
-    // @UseGuards(JWTAuthGuard)
-    @ApiOperation({ summary: CommentMessage.DESCRIPTION.CREATE })
-    @ApiResponse({
-      status: HttpStatus.CREATED,
-      description: CommentMessage.SUCCESS.CREATED,
-      type: CreateCommentRDO
-    })
-    @ApiResponse({
-      status: HttpStatus.UNAUTHORIZED,
-      description: CommentMessage.ERROR.UNAUTHORIZED
-    })
-    @ApiParam({
-      name: "postId",
-      example: 'b0103f3e-a6ac-4719-94bc-60c8294c08c6',
-      description: CommentMessage.DESCRIPTION.POST_ID,
-      required: true
-    })
-    @ApiBody({
-      type: CreateCommentDTO,
-      required: true
-    })
-  public async create(@Param('postId') postId: string, @Body() dto: CreateCommentDTO) {
+  // @UseGuards(JWTAuthGuard)
+  @ApiOperation({ summary: CommentMessage.DESCRIPTION.CREATE })
+  @ApiResponse({
+    status: HttpStatus.CREATED,
+    description: CommentMessage.SUCCESS.CREATED,
+    type: CreateCommentRDO
+  })
+  @ApiResponse({
+    status: HttpStatus.UNAUTHORIZED,
+    description: CommentMessage.ERROR.UNAUTHORIZED
+  })
+  @ApiParam({
+    name: "postId",
+    example: 'b0103f3e-a6ac-4719-94bc-60c8294c08c6',
+    description: CommentMessage.DESCRIPTION.POST_ID,
+    required: true
+  })
+  @ApiBody({
+    type: CreateCommentDTO,
+    required: true
+  })
+  public async create(
+    @Param('postId') postId: string,
+    @Body() dto: CreateCommentDTO
+  ) {
     const comment = await this.commentService.create(postId, dto);
 
     return fillDTO(CreateCommentRDO, comment.toPOJO());
@@ -128,7 +131,10 @@ export class CommentController {
     description: CommentMessage.ERROR.NOT_FOUND
   })
   @HttpCode(HttpStatus.NO_CONTENT)
-  async delete(@Param('commentId') commentId: string): Promise<void> {
-    await this.commentService.delete(commentId);
+  async delete(
+    @Param('commentId') commentId: string,
+    @Body('userId') userId: string,
+  ): Promise<void> {
+    await this.commentService.delete(commentId, userId);
   }
 }
