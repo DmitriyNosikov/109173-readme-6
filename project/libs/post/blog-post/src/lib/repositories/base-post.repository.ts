@@ -3,11 +3,14 @@ import { BasePostgresRepository } from '@project/shared/data-access'
 import { PrismaClientService } from '@project/blog/models';
 import { Prisma } from '@prisma/client';
 
+import { BlogPostMessage, DEFAULT_SORT_DIRECTION, DEFAULT_SORT_TYPE, MAX_POSTS_PER_PAGE } from '../blog-post.constant';
 import { BasePostInterface, PaginationResult, SortDirectionEnum, SortType, SortTypeEnum } from '@project/shared/core';
 import { BasePostEntity } from '../entities/base-post.entity';
 import { BasePostFactory } from '../factories/base-post.factory';
-import { BlogPostQuery } from '../blog-post.query';
-import { BlogPostMessage, DEFAULT_PAGE_NUMBER, DEFAULT_SORT_DIRECTION, DEFAULT_SORT_TYPE, MAX_POSTS_PER_PAGE } from '../blog-post.constant';
+
+import { BlogPostQuery } from '../types/queries/blog-post.query';
+import { SearchFilters } from '../types/search-filters';
+
 
 @Injectable()
 export class BasePostRepository extends BasePostgresRepository<BasePostEntity, BasePostInterface> {
@@ -62,37 +65,9 @@ export class BasePostRepository extends BasePostgresRepository<BasePostEntity, B
   public async search(query?: BlogPostQuery): Promise<PaginationResult<BasePostEntity>> {
     const skip = query?.page && query?.limit ? (query.page - 1) * query.limit : undefined;
     const take = (!query?.limit || query?.limit > MAX_POSTS_PER_PAGE) ? MAX_POSTS_PER_PAGE : query.limit;
-    const where: Prisma.PostWhereInput = {};
-    const orderBy: Prisma.PostOrderByWithRelationInput = {};
+    const { where, orderBy } = this.getSearchFilters(query);
 
-    where.isPublished = true; // Показываем только опубликованные посты
-
-    // Поиск от определенной даты публикации
-    if(query?.publishedAt) {
-      where.publishedAt = {
-        gte: new Date(query?.publishedAt)
-      }
-    }
-
-    // Поиск по тегам
-    if(query?.tags) {
-      where.tags = {
-        some: {
-          name: {
-            in: query.tags,
-            mode: 'insensitive'
-          }
-        },
-      }
-    }
-
-    // Сортировка и направление сортировки
-    if (query?.sortType && query?.sortDirection) {
-      const { key, value } = this.getSortKeyValue(query.sortType, query.sortDirection);
-
-      orderBy[key] = value;
-    }
-
+    // Запрос на получение постов
     const [posts, totalPostsCount] = await Promise.all([
       this.dbClient.post.findMany({
         where,
@@ -100,7 +75,11 @@ export class BasePostRepository extends BasePostgresRepository<BasePostEntity, B
           tags: true,
           comments: true,
           likes: true,
-          postToExtraFields: true
+          postToExtraFields: true,
+
+          _count: {
+            select: { comments: true, likes: true }
+          }
         },
 
         // Pagination
@@ -111,9 +90,18 @@ export class BasePostRepository extends BasePostgresRepository<BasePostEntity, B
       this.getPostCount(where)
     ]);
 
-    let postsEntities = posts.map((post) => this.createEntityFromDocument(post));
+    let postsEntities = posts.map((post) => {
+      const postPOJO = this.createEntityFromDocument(post);
+
+      // Добавляем количество лайков и комментариев
+      postPOJO.likesCount = post._count.likes;
+      postPOJO.commentsCount = post._count.comments;
+
+      return postPOJO;
+    });
     let postsCount = totalPostsCount;
 
+    // Фильтрация (поиск) по заголовку
     if (query?.title) {
       postsEntities = await this.filterPostsByTitle(postsEntities, query.title);
       postsCount = postsEntities.length;
@@ -126,6 +114,29 @@ export class BasePostRepository extends BasePostgresRepository<BasePostEntity, B
       totalItems: postsCount,
       itemsPerPage: take ?? postsCount,
     }
+  }
+
+  public async findAuthorRepost(postId: string, authorId: string) {
+    const repost = await this.dbClient.post.findFirst({
+      where: {
+        isRepost: true,
+        authorId,
+        originPostId: postId,
+      }
+    });
+
+    return repost;
+  }
+
+  public async getUserPostsCount(authorId: string) {
+    const postsCount = await this.dbClient.post.count({
+      where: {
+        authorId,
+        isPublished: true
+      }
+    });
+
+    return postsCount;
   }
 
   // Получение всех опубликованных постов без каких-либо доп. условий
@@ -159,7 +170,8 @@ export class BasePostRepository extends BasePostgresRepository<BasePostEntity, B
       include: {
         tags: true,
         comments: true,
-        likes: true
+        likes: true,
+        postToExtraFields: true,
       }
     });
 
@@ -228,6 +240,52 @@ export class BasePostRepository extends BasePostgresRepository<BasePostEntity, B
   }
 
   //////////////////// Вспомогательные методы поиска и пагинации ////////////////////
+  private getSearchFilters(query: BlogPostQuery): SearchFilters {
+    const where: Prisma.PostWhereInput = {};
+    const orderBy: Prisma.PostOrderByWithRelationInput = {};
+
+    // Возможность искать по неопубликованным постам
+    // Показываем только опубликованные посты (по дефолту)
+    const isPublished = query.isPublished ?? true;
+    where.isPublished = Boolean(isPublished);
+
+    // Поиск публикаций определенного пользователя
+    if(query?.authorId) {
+      where.authorId = query.authorId;
+    }
+
+    // Поиск по определенному типу
+    if(query?.type) {
+      where.type = query.type;
+    }
+
+    // Поиск от определенной даты публикации
+    if(query?.publishedAt) {
+      where.publishedAt = {
+        gte: new Date(query?.publishedAt)
+      }
+    }
+
+    // Поиск по тегам
+    if(query?.tags) {
+      where.tags = {
+        some: {
+          name: {
+            in: query.tags,
+            mode: 'insensitive'
+          }
+        },
+      }
+    }
+
+    // Сортировка и направление сортировки
+    const { key, value } = this.getSortKeyValue(query.sortType, query.sortDirection);
+
+    orderBy[key] = value;
+
+    return { where, orderBy };
+  }
+
   private async filterPostsByTitle(posts, title: string) {
     const extraFieldsIDs = await this.getExtraFieldsIDsByTitle(title)
 

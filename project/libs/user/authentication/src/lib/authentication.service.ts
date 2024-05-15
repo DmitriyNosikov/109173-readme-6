@@ -1,14 +1,17 @@
 import { ConflictException, HttpException, HttpStatus, Inject, Injectable, Logger, NotFoundException, UnauthorizedException } from '@nestjs/common'
-import { BlogUserFactory, BlogUserRepository, CreateUserDTO, LoginUserDTO } from '@project/user/blog-user';
+import { JwtService } from '@nestjs/jwt';
+import { ConfigType } from '@nestjs/config';
+
+import { BlogUserEntity, BlogUserFactory, BlogUserRepository, CreateUserDTO, LoginUserDTO } from '@project/user/blog-user';
 
 import { AuthenticationMessage } from './authentication.constant';
 
+import { userJWTConfig } from '@project/user/user-config'
 import { HasherInterface } from '@project/shared/hasher';
-import { UserInterface, TokenPayload } from '@project/shared/core';
-import { JwtService } from '@nestjs/jwt';
-import { NotifyService } from 'libs/user/user-notify/src';
-
-type BlogUserEntity = ReturnType<BlogUserFactory['create']>;
+import { UserInterface } from '@project/shared/core';
+import { UserNotifyService } from '@project/user/user-notify';
+import { getJWTPayload } from '@project/shared/helpers';
+import { RefreshTokenService } from '@project/refresh-token';
 @Injectable()
 export class AuthenticationService {
   private readonly logger = new Logger(AuthenticationService.name);
@@ -20,12 +23,16 @@ export class AuthenticationService {
     @Inject('Hasher')
     private readonly hasher: HasherInterface,
 
+    @Inject(userJWTConfig.KEY)
+    private readonly jwtOptions: ConfigType<typeof userJWTConfig>,
     private readonly jwtService: JwtService,
-    private readonly notifyService: NotifyService
+    private readonly refreshTokenService: RefreshTokenService,
+
+    private readonly notifyService: UserNotifyService
   ){}
 
   public async register(dto: CreateUserDTO): Promise<BlogUserEntity> {
-    const { email, firstName, lastName, avatar, password } = dto;
+    const { email, firstName, lastName, avatar, subscriptions, password } = dto;
     const user = await this.blogUserRepository.findByEmail(email);
 
     if(user) { // Если пользователь уже есть в системе - не регистрируем
@@ -37,6 +44,7 @@ export class AuthenticationService {
       firstName,
       lastName,
       avatar,
+      subscriptions,
       passwordHash: ''
     };
 
@@ -61,6 +69,16 @@ export class AuthenticationService {
     return userEntity;
   }
 
+  public async getUserByEmail(email: string): Promise<BlogUserEntity | null> {
+    const existUser = await this.blogUserRepository.findByEmail(email);
+
+    if(!existUser) {
+      throw new NotFoundException(`User with email ${email} not found`);
+    }
+
+    return existUser;
+  }
+
   public async verify(dto: LoginUserDTO): Promise<BlogUserEntity> {
     const { email, password } = dto;
     const user = await this.blogUserRepository.findByEmail(email);
@@ -79,22 +97,24 @@ export class AuthenticationService {
   }
 
   public async createToken(user: UserInterface) {
-    const payload: TokenPayload = {
-      userId: user.id,
-      email: user.email,
-      firstname: user.firstName,
-      lastname: user.lastName
-    }
-
+    const accessTokenPayload = getJWTPayload(user);
+    const refreshTokenPayload = { ...accessTokenPayload, tokenId: crypto.randomUUID() };
 
     try {
-      const accessToken = await this.jwtService.signAsync(payload);
+      const accessToken = await this.jwtService.signAsync(accessTokenPayload);
+      const refreshToken = await this.jwtService.signAsync(refreshTokenPayload, {
+        secret: this.jwtOptions.refreshTokenSecret,
+        expiresIn: this.jwtOptions.accessTokenExpiresIn
+      });
 
-      return { accessToken };
+      // Сохраняем refresh-токен в MongoDB
+      await this.refreshTokenService.createRefreshSession(refreshTokenPayload);
+
+      return { accessToken, refreshToken };
     } catch (error) {
       this.logger.error('[Token generation error]: ' + error.message);
 
-      throw new HttpException('Can`t create JWT-Token.', HttpStatus.INTERNAL_SERVER_ERROR);
+      throw new HttpException('Can`t create JWT Tokens.', HttpStatus.INTERNAL_SERVER_ERROR);
     }
   }
 }

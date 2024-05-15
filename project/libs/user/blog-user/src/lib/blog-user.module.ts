@@ -7,7 +7,6 @@ import { BCryptHasher } from '@project/shared/hasher'
 import { MongooseModule } from '@nestjs/mongoose';
 import { BlogUserModel, BlogUserSchema } from './blog-user.model';
 
-
 @Module({
   imports: [
     MongooseModule.forFeature([
@@ -20,6 +19,7 @@ import { BlogUserModel, BlogUserSchema } from './blog-user.model';
     BlogUserService,
     BlogUserRepository,
     BlogUserFactory,
+
     {
       provide: 'Hasher',
       useClass: BCryptHasher

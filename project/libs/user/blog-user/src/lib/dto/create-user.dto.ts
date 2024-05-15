@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger'
-import { IsEmail, IsOptional, IsString, MaxLength, MinLength } from 'class-validator';
+import { IsArray, IsEmail, IsMongoId, IsOptional, IsString, MaxLength, MinLength } from 'class-validator';
 import { BlogUserValidation } from '../blog-user.constant';
 
 export class CreateUserDTO {
@@ -38,6 +38,15 @@ export class CreateUserDTO {
   })
   @IsOptional()
   avatar?: string;
+
+  @ApiProperty({
+    description: 'User subscriptions to other users',
+    example: '[ "6643e2ad76870c402e3e1019", "6643e2ad76870c402e3e1019" ]'
+  })
+  @IsArray()
+  @IsMongoId({ each: true })
+  @IsOptional()
+  subscriptions?: string[];
 
   @ApiProperty({
     description: 'User password',

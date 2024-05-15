@@ -11,10 +11,13 @@ export type EnvironmentType = typeof Environment[keyof typeof Environment];
 
 export const ConfigEnvironment = {
   DB: 'database',
-  JWT: 'jwt',
+
+  // API-GATEWAY
+  API_GATEWAY: 'api-gateway',
 
   // USER
   USER: 'user',
+  USER_JWT: 'user-jwt',
   USER_MONGODB: 'user-mongodb',
   USER_RABBIT: 'user-rabbit',
 

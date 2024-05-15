@@ -1,6 +1,9 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { BadRequestException } from '@nestjs/common';
 
+import { fillDTO, omitUndefined, validateMongoID } from '@project/shared/helpers';
+import { PostNotifyService } from '@project/post-notify';
+
 import { CreateBasePostDTO } from './dto/create-base-post.dto';
 import { BlogPostRepositoryDeterminant } from './repositories/blog-post-determinant.repository';
 
@@ -13,14 +16,14 @@ import { PostToExtraFieldsEntity } from './entities/post-to-extra-fields.entity'
 import { PostToExtraFieldsFactory } from './factories/post-to-extra-fields';
 import { PostToExtraFieldsRepository } from './repositories/post-to-extra-fields.repository';
 
-import { PostTypeEnum } from '@project/shared/core';
+import { PostToExtraFieldsInterface, PostTypeEnum } from '@project/shared/core';
 import { BlogPostMessage } from './blog-post.constant';
 import { BasePostEntity } from './entities/base-post.entity';
 import { TagService } from '@project/tag';
 import { UpdateBasePostDTO } from './dto/update-base-post.dto';
-import { BlogPostQuery } from './blog-post.query';
+import { BlogPostQuery } from './types/queries/blog-post.query';
 import { PostEntities } from './types/entities.enum';
-import { PostNotifyService } from '@project/post-notify';
+import { CreateRepostDTO } from './dto/create-repost.dto';
 
 @Injectable()
 export class BlogPostService {
@@ -41,25 +44,11 @@ export class BlogPostService {
 
     private readonly postNotifyService: PostNotifyService
   ) {}
-
-  public async findAllPosts(): Promise<BasePostEntity[] | null> {
-    const newPosts = await this.basePostRepository.findAll();
-
-    await this.connectExtraFieldsToPosts(newPosts);
-
-    return newPosts;
-  }
-
-  public async findById(postId: string) {
-    const foundPost = await this.getPostWithExtraFields(postId);
-
-    return foundPost;
-  }
-
   public async create(dto: CreateBasePostDTO) {
     if(!this.checkPostType(dto.type)) {
       return;
     }
+
     // Сохраняем в БД основу для поста
     await this.createBasePost(dto);
 
@@ -69,20 +58,83 @@ export class BlogPostService {
 
     // Сохраняем все части нашего поста
     // (базовая + дополнительная) в связующую таблицу
-    await this.createPostToExtraFields();
+    const postToExtraFieldsRelation = {
+      postId: this.basePost.id,
+      postType: this.basePost.type,
+      extraFieldsId: this.extraFieldsPost.id,
+    };
+    await this.createPostToExtraFields(postToExtraFieldsRelation);
 
     const createdPost  = await this.getPostWithExtraFields(this.basePost.id);
 
     return createdPost;
   }
 
+  public async respost(dto: CreateRepostDTO) {
+    await validateMongoID(dto.authorId);
+
+    const post = await this.basePostRepository.findById(dto.postId);
+
+    if(!post) {
+      throw new BadRequestException(`Can't find post with passed id: ${dto.postId}`);
+    }
+
+    const isRepostExists = await this.basePostRepository.findAuthorRepost(dto.postId, dto.authorId);
+
+    if(isRepostExists) {
+      throw new BadRequestException(`You have already repost post with id: ${dto.postId}`);
+    }
+
+    const repostEntity = this.basePostFactory.create({
+      ...post,
+      authorId: dto.authorId,
+      originAuthorId: post.authorId,
+      originPostId: post.id,
+      isRepost: true,
+
+      publishedAt: new Date(),
+      createdAt: undefined,
+      updatedAt: undefined,
+      extraFields: undefined,
+      postToExtraFields: undefined
+    });
+
+    // Сохраняем в БД репост
+    const repost = await this.basePostRepository.create(repostEntity);
+
+    // Сохраняем в БД связи для репоста
+    for(const postToExtraFields of post.postToExtraFields) {
+      await this.createPostToExtraFields({
+        postId: repost.id,
+        postType: repost.type,
+        extraFieldsId: postToExtraFields.extraFieldsId
+      });
+    }
+
+    return repost;
+  }
+
   public async getPaginatedPosts(query?: BlogPostQuery) {
-    const paginatedPosts = await this.basePostRepository.search(query);
+    // Проверка типа поста
+    if(query?.type) {
+      this.checkPostType(query.type);
+    }
+
+    if(query?.authorId) {
+      await validateMongoID(query.authorId);
+    }
+
+    //  + фильтруем от лишних параметров, которые мог передать юзер
+    const searchQuery = fillDTO(BlogPostQuery, query);
+    // Очищаем запрос от undefined-значений
+    const omitedQuery = omitUndefined(searchQuery as Record<string, unknown>);
+    // Запрос
+    const paginatedPosts = await this.basePostRepository.search(omitedQuery);
 
     if(!paginatedPosts || paginatedPosts.entities.length <= 0) {
-      const queryParams = Object.entries(query).join('; ').replace(/,/g, '=');
+      const queryParams = Object.entries(omitedQuery).join('; ').replace(/,/g, ' = ');
 
-      throw new NotFoundException(`Can't find published posts by requested params: ${queryParams}`);
+      throw new NotFoundException(`Can't find posts by requested params: ${queryParams}`);
     }
 
     // Добавляем к полученным постам их ExtraFields
@@ -91,11 +143,29 @@ export class BlogPostService {
     return paginatedPosts;
   }
 
-  public async update(postId: string, updatedFields: Partial<UpdateBasePostDTO>) {
-    const basePost: BasePostEntity = await this.basePostRepository.findById(postId);
+  public async getUserPostsCount(authorId: string) {
+    await validateMongoID(authorId);
+
+    const userPostsCount = await this.basePostRepository.getUserPostsCount(authorId);
+
+    return userPostsCount;
+  }
+
+  public async update(postId: string, userId: string, updatedFields: UpdateBasePostDTO) {
+    await validateMongoID(userId);
+
+    if(updatedFields.authorId) {
+      await validateMongoID(updatedFields.authorId);
+    }
+
+    const basePost = await this.getPostAndCheckPermissions(postId, userId);
 
     if(!basePost) {
-      throw new NotFoundException(`Post with ID ${postId} not found`);
+      throw new NotFoundException(`Post with ID ${postId} not found.`);
+    }
+
+    if(basePost.authorId !== userId) {
+      throw new BadRequestException(`Only author can update post with id "${postId}". User "${userId}" can't.`);
     }
 
     // Пока подразумеваем, что тип поста не меняется
@@ -108,7 +178,6 @@ export class BlogPostService {
     }
 
     // Обновление тегов
-    // TODO: по хорошему, надо сверять и удалять связи лишние, а новые добавлять
     let updatedTags = undefined;
 
     if(updatedFields.tags && updatedFields.tags.length > 0) {
@@ -126,12 +195,8 @@ export class BlogPostService {
     return updatedPost;
   }
 
-  public async delete(postId: string): Promise<void> {
-    const post = await this.findById(postId);
-
-    if(!post) {
-      throw new NotFoundException(`Post with ID ${postId} not found`);
-    }
+  public async delete(postId: string, userId: string): Promise<void> {
+    const post = await this.getPostAndCheckPermissions(postId, userId);
 
     // Удаляем ExtraFields для Post
     await this.postToExtraFieldsRepository.deleteExtraFieldsByPost(post.id, post.type)
@@ -140,7 +205,21 @@ export class BlogPostService {
     await this.basePostRepository.deleteById(post.id);
   }
 
-  // NOTIFICATION
+  public async findAllPosts(): Promise<BasePostEntity[] | null> {
+    const newPosts = await this.basePostRepository.findAll();
+
+    await this.connectExtraFieldsToPosts(newPosts);
+
+    return newPosts;
+  }
+
+  public async findById(postId: string) {
+    const foundPost = await this.getPostWithExtraFields(postId);
+
+    return foundPost;
+  }
+
+  //////////////////// NOTIFICATION ////////////////////
   public async notifyAboutNewPosts() {
     // Получаем информацию о последней рассылке
     const lastNotify = await this.postNotifyService.findLastNotify();
@@ -174,8 +253,27 @@ export class BlogPostService {
 
   }
 
+  ////////////////////// SERVICE METHODS //////////////////////
+  private async getPostAndCheckPermissions(postId: string, userId: string): Promise<BasePostEntity | null> {
+    await validateMongoID(userId);
 
-  // SERVICE METHODS
+    if(!userId) {
+      throw new BadRequestException(`User id hasn't been passed. To update/delete post '${postId}' you have to pass user id`);
+    }
+
+    const post = await this.basePostRepository.findById(postId);
+
+    if(!post) {
+      throw new NotFoundException(`Post with ID ${postId} not found.`);
+    }
+
+    if(post.authorId !== userId) {
+      throw new BadRequestException(`Only author can update/delete post with id '${postId}'. User '${userId}' can't.`);
+    }
+
+    return post;
+  }
+
   private async getPostWithExtraFields(postId: string) {
     const post = await this.basePostRepository.findById(postId);
 
@@ -250,14 +348,15 @@ export class BlogPostService {
     const postRepository = this.blogPostRepositoryDeterminant.getRepository(postType);
 
     if(!postRepository) {
-      throw new BadRequestException(BlogPostMessage.ERROR.POST_TYPE);
+      throw new BadRequestException(`${BlogPostMessage.ERROR.POST_TYPE}: Passed: ${postType}`);
     }
 
     return true;
   }
 
-
   private async createBasePost(dto: CreateBasePostDTO): Promise<void> {
+    await validateMongoID(dto.authorId);
+
     const basePostTags = await this.tagService.getOrCreate(dto.tags);
     const basePostEntity = this.basePostFactory.create({
       ...dto,
@@ -282,13 +381,8 @@ export class BlogPostService {
     this.extraFieldsPost = await extraFieldsRepository.create(extraFieldsEntity);
   }
 
-  private async createPostToExtraFields(): Promise<void> {
-    const allPostRelationFields = {
-      postId: this.basePost.id,
-      postType: this.basePost.type,
-      extraFieldsId: this.extraFieldsPost.id,
-    };
-    const postToExtraFieldsEntity: PostToExtraFieldsEntity = this.postToExtraFieldsFactory.create(allPostRelationFields);
+  private async createPostToExtraFields(relation: PostToExtraFieldsInterface): Promise<void> {
+    const postToExtraFieldsEntity: PostToExtraFieldsEntity = this.postToExtraFieldsFactory.create(relation);
 
     await this.postToExtraFieldsRepository.create(postToExtraFieldsEntity);
   }

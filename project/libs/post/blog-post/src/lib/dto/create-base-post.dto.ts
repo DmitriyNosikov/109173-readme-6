@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger'
-import { ArrayMaxSize, IsArray, IsBoolean, IsIn, IsMongoId, IsNotEmpty, IsOptional, IsString, MaxLength, MinLength } from 'class-validator';
+import { ArrayMaxSize, IsAlphanumeric, IsArray, IsBoolean, IsIn, IsMongoId, IsNotEmpty, IsOptional, IsString, Matches, MaxLength, MinLength } from 'class-validator';
 
 import { BasePostInterface, PostType, PostTypeEnum, UserInterface } from '@project/shared/core';
 import { BlogPostValidation } from '../blog-post.constant';
@@ -37,10 +37,12 @@ export class CreateBasePostDTO {
     maxLength: BlogPostValidation.TAG.MAX_LENGTH,
     maxProperties: BlogPostValidation.TAG.MAX_СOUNT
   })
-  @MinLength(BlogPostValidation.TAG.MIN_LENGTH, { each: true })
-  @MaxLength(BlogPostValidation.TAG.MAX_LENGTH, { each: true })
   @ArrayMaxSize(BlogPostValidation.TAG.MAX_СOUNT)
   @IsArray()
+  @MinLength(BlogPostValidation.TAG.MIN_LENGTH, { each: true })
+  @MaxLength(BlogPostValidation.TAG.MAX_LENGTH, { each: true })
+  @IsAlphanumeric('en-US', { each: true })
+  @Matches(new RegExp('^[a-zA-Zа-яА-Я]', 'gmi'), { each: true , message: 'each value in tags must starts with letter'})
   @IsString({ each: true })
   @IsOptional()
   public tags: string[] | null;

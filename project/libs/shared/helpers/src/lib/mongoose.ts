@@ -1,6 +1,8 @@
+import { BadRequestException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { MongooseModuleAsyncOptions } from '@nestjs/mongoose';
 import { getMongoConnectionString } from '@project/shared/helpers'
+import { Types } from 'mongoose';
 
 export function getMongooseOptions(optionSpace: string): MongooseModuleAsyncOptions {
   return {
@@ -18,4 +20,18 @@ export function getMongooseOptions(optionSpace: string): MongooseModuleAsyncOpti
     },
     inject: [ConfigService]
   };
+}
+
+export function isValidMongoId(id: string) {
+  return Types.ObjectId.isValid(id);
+}
+
+export function validateMongoID(id: string) {
+  const isValid = isValidMongoId(id);
+
+  if(!isValid) {
+    throw new BadRequestException(`MongoID ${id} is not valid`);
+  }
+
+  return true;
 }

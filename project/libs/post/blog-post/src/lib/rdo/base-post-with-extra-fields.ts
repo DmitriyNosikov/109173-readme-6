@@ -116,4 +116,18 @@ export class BasePostWithExtraFieldsRDO {
     enum: [CreateTextPostRDO, CreateQuotePostRDO, CreateLinkPostRDO, CreatePhotoPostRDO, CreateVideoPostRDO]
   })
   public extraFields: ExtraFieldsRDO[]
+
+  @Expose()
+  @ApiProperty({
+    description: 'Post likes count',
+    example: 0
+  })
+  public likesCount: number;
+
+  @Expose()
+  @ApiProperty({
+    description: 'Post comments count',
+    example: 3,
+  })
+  public commentsCount: number;
 }

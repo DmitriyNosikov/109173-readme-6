@@ -20,11 +20,18 @@ export const BlogUserMessage: MessagesType = {
     ALREADY_EXISTS: 'User already exists',
     NOT_FOUND: 'User not found',
     INCORRECT_CREDENTIALS: 'Incorrect user email/password',
-    CANT_UPDATE: 'Can`t update user. Possible reason: Object with fields to update are empty'
+    CANT_UPDATE: 'Can`t update user. Possible reason: Object with fields to update are empty',
+    SAME_SUBSCRIPTIONS: 'User and subscribtion target can`t be the same person'
   },
   SUCCESS: {
     FOUND: 'User found',
     UPDATED: 'User has been successfully updated',
     DELETED: 'User has been successfully deleted',
+  },
+  DESCRIPTION: {
+    USER_DETAIL: 'Get detail info about user',
+    USER_SUBSCRIBERS: 'Get all user subscribers',
+    SUBSCRIBE: 'Add subscribtion to target user',
+    UNSUBSCRIBE: 'Remove target user from subscription',
   }
 } as const;
