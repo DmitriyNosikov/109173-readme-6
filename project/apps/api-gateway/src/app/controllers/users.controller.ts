@@ -1,23 +1,18 @@
 import { HttpService } from '@nestjs/axios';
 import { ConfigType } from '@nestjs/config';
-import { Body, Controller, Get, HttpStatus, Inject, Patch, Post, Req, UseFilters, UseGuards, UseInterceptors } from '@nestjs/common';
+import { Body, Controller, HttpStatus, Inject, Patch, Post, Req, UseFilters, UseGuards, UseInterceptors } from '@nestjs/common';
 import { ApiResponse, ApiTags } from '@nestjs/swagger';
 
+import { ServicesURLs } from '../types/services-urls';
+
+import { AxiosExceptionFilter } from '../filters/axios-exception.filter';
 import { CheckAuthGuard } from '../guards/check-auth.guard';
 import { InjectUserIdInterceptor } from '@project/interceprots'
 import { apiGatewayConfig } from '@project/api-gateway-config';
 
-import { AxiosExceptionFilter } from '../filters/axios-exception.filter';
-
 import { ChangePasswordDTO, CreateUserDTO, LoginUserDTO, UserRDO } from '@project/user/blog-user';
 import { AuthenticationMessage } from '@project/user/authentication'
 import { TokenPayloadInterface } from '@project/shared/core';
-
-type ServicesURLs = {
-  auth: string,
-  users: string,
-  posts: string,
-}
 
 @ApiTags('Api-gateway: Users')
 @Controller('users')

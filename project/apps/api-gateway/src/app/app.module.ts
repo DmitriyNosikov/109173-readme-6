@@ -7,6 +7,7 @@ import { ApiGatewayConfigModule } from '@project/api-gateway-config'
 
 import { CheckAuthGuard } from './guards/check-auth.guard';
 import { UsersController } from './controllers/users.controller';
+import { PostsController } from './controllers/posts.controller';
 @Module({
   imports: [
     ApiGatewayConfigModule,
@@ -17,7 +18,8 @@ import { UsersController } from './controllers/users.controller';
     )
   ],
   controllers: [
-    UsersController
+    UsersController,
+    PostsController
   ],
   providers: [ CheckAuthGuard ],
 })

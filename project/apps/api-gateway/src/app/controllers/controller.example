@@ -1,0 +1,23 @@
+import { Controller, Inject, UseFilters } from '@nestjs/common';
+import { HttpService } from '@nestjs/axios';
+import { ApiTags } from '@nestjs/swagger';
+
+import { AxiosExceptionFilter } from '../filters/axios-exception.filter';
+
+import { apiGatewayConfig } from '@project/api-gateway-config';
+import { ConfigType } from '@nestjs/config';
+
+
+@ApiTags('Api-gateway: posts')
+@Controller('posts')
+@UseFilters(AxiosExceptionFilter)
+export class PostsController {
+  constructor(
+    private readonly httpService: HttpService,
+
+    @Inject(apiGatewayConfig.KEY)
+    private readonly config: ConfigType<typeof apiGatewayConfig>
+  ){}
+
+
+}

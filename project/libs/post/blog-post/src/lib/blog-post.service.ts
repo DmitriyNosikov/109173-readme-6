@@ -1,7 +1,7 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { BadRequestException } from '@nestjs/common';
 
-import { fillDTO, omitUndefined } from '@project/shared/helpers';
+import { fillDTO, omitUndefined, validateMongoID } from '@project/shared/helpers';
 import { PostNotifyService } from '@project/post-notify';
 
 import { CreateBasePostDTO } from './dto/create-base-post.dto';
@@ -24,7 +24,6 @@ import { UpdateBasePostDTO } from './dto/update-base-post.dto';
 import { BlogPostQuery } from './types/queries/blog-post.query';
 import { PostEntities } from './types/entities.enum';
 import { CreateRepostDTO } from './dto/create-repost.dto';
-import { Types } from 'mongoose';
 
 @Injectable()
 export class BlogPostService {
@@ -49,6 +48,7 @@ export class BlogPostService {
     if(!this.checkPostType(dto.type)) {
       return;
     }
+
     // Сохраняем в БД основу для поста
     await this.createBasePost(dto);
 
@@ -71,11 +71,7 @@ export class BlogPostService {
   }
 
   public async respost(dto: CreateRepostDTO) {
-    const authorId = Types.ObjectId.isValid(dto.authorId);
-
-    if(!authorId) {
-      throw new BadRequestException(`User Id must be a valid MongoDB id. Passed: ${dto.authorId}`);
-    }
+    await validateMongoID(dto.authorId);
 
     const post = await this.basePostRepository.findById(dto.postId);
 
@@ -115,6 +111,10 @@ export class BlogPostService {
       this.checkPostType(query.type);
     }
 
+    if(query?.authorId) {
+      await validateMongoID(query.authorId);
+    }
+
     //  + фильтруем от лишних параметров, которые мог передать юзер
     const searchQuery = fillDTO(BlogPostQuery, query);
     // Очищаем запрос от undefined-значений
@@ -135,12 +135,20 @@ export class BlogPostService {
   }
 
   public async getUserPostsCount(authorId: string) {
+    await validateMongoID(authorId);
+
     const userPostsCount = await this.basePostRepository.getUserPostsCount(authorId);
 
     return userPostsCount;
   }
 
   public async update(postId: string, userId: string, updatedFields: UpdateBasePostDTO) {
+    await validateMongoID(userId);
+
+    if(updatedFields.authorId) {
+      await validateMongoID(updatedFields.authorId);
+    }
+
     const basePost = await this.getPostAndCheckPermissions(postId, userId);
 
     if(!basePost) {
@@ -238,6 +246,8 @@ export class BlogPostService {
 
   ////////////////////// SERVICE METHODS //////////////////////
   private async getPostAndCheckPermissions(postId: string, userId: string): Promise<BasePostEntity | null> {
+    await validateMongoID(userId);
+
     if(!userId) {
       throw new BadRequestException(`User id hasn't been passed. To update/delete post '${postId}' you have to pass user id`);
     }
@@ -336,6 +346,8 @@ export class BlogPostService {
   }
 
   private async createBasePost(dto: CreateBasePostDTO): Promise<void> {
+    await validateMongoID(dto.authorId);
+
     const basePostTags = await this.tagService.getOrCreate(dto.tags);
     const basePostEntity = this.basePostFactory.create({
       ...dto,
