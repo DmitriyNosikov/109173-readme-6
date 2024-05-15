@@ -13,6 +13,7 @@ import { BasePostWithExtraFieldsRDO } from './rdo/base-post-with-extra-fields';
 import { SortDirection, SortType, TokenPayloadInterface } from '@project/shared/core';
 import { GetPostsListQuery } from './types/queries/get-posts-list.query';
 import { SearchPostsQuery } from './types/queries/search-posts.query';
+import { CreateRepostDTO } from './dto/create-repost.dto';
 
 // TODO: Везде, где используются MongoID - было бы
 // неплохо добавить проверку на валидность, вне
@@ -79,7 +80,7 @@ export class BlogPostController {
   public async getList(@Query() query: GetPostsListQuery, isPublished = true): Promise<BasePostWithPaginationRDO | null> {
     const searchQuery: BlogPostQuery = fillDTO(GetPostsListQuery, query);
 
-    // Возможность использовать данный метод для поска по черновикам
+    // Возможность использовать данный метод для поиска по черновикам
     searchQuery.isPublished = isPublished;
 
     // Искать можно только по одному тегу за раз
@@ -314,7 +315,24 @@ export class BlogPostController {
 
   @Post('/:postId/repost/')
   // @UseGuards(JWTAuthGuard)
-  public async repost(@Param('postId') postId: string, @Body('authorId') authorId: string): Promise<BasePostWithExtraFieldsRDO | void> {
+  @ApiOperation({ summary: BlogPostMessage.DESCRIPTION.REPOST })
+  @ApiResponse({
+    status: HttpStatus.CREATED,
+    description: BlogPostMessage.SUCCESS.CREATED,
+    type: BasePostWithExtraFieldsRDO
+  })
+  @ApiResponse({
+    status: HttpStatus.UNAUTHORIZED,
+    description: BlogPostMessage.ERROR.UNAUTHORIZED
+  })
+  @ApiBody({
+    type: CreateRepostDTO,
+    required: true
+  })
+  public async repost(
+    @Param('postId') postId: string,
+    @Body('authorId') authorId: string
+  ): Promise<BasePostWithExtraFieldsRDO | void> {
     const createdRepost = await this.blogPostService.respost({ postId, authorId });
 
     return fillDTO(BasePostWithExtraFieldsRDO, createdRepost);

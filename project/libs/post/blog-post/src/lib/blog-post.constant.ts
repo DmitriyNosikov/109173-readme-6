@@ -76,6 +76,7 @@ export const BlogPostMessage: MessagesType = {
     POSTS_COUNT: 'Get user published posts count',
 
     CREATE: 'Create new post',
+    REPOST: 'Create exists posts repost',
     UPDATE: 'Update exists post by id',
     DELETE: 'Delete exists post by id',
     NOTIFY: 'Notify all subscribers about new posts',

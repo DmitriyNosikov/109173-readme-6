@@ -79,6 +79,12 @@ export class BlogPostService {
       throw new BadRequestException(`Can't find post with passed id: ${dto.postId}`);
     }
 
+    const isRepostExists = await this.basePostRepository.findAuthorRepost(dto.postId, dto.authorId);
+
+    if(isRepostExists) {
+      throw new BadRequestException(`You have already repost post with id: ${dto.postId}`);
+    }
+
     const repostEntity = this.basePostFactory.create({
       ...post,
       authorId: dto.authorId,
@@ -103,6 +109,8 @@ export class BlogPostService {
         extraFieldsId: postToExtraFields.extraFieldsId
       });
     }
+
+    return repost;
   }
 
   public async getPaginatedPosts(query?: BlogPostQuery) {
@@ -125,7 +133,7 @@ export class BlogPostService {
     if(!paginatedPosts || paginatedPosts.entities.length <= 0) {
       const queryParams = Object.entries(omitedQuery).join('; ').replace(/,/g, ' = ');
 
-      throw new NotFoundException(`Can't find published posts by requested params: ${queryParams}`);
+      throw new NotFoundException(`Can't find posts by requested params: ${queryParams}`);
     }
 
     // Добавляем к полученным постам их ExtraFields

@@ -13,3 +13,4 @@ export { PostToExtraFieldsRepository } from './lib/repositories/post-to-extra-fi
 export { RepositoryType } from './lib/types/repositories.enum'
 export { FactoryType } from './lib/types/factories.enum'
 export { BlogPostValidation } from './lib/blog-post.constant'
+export { BlogPostMessage } from './lib/blog-post.constant'

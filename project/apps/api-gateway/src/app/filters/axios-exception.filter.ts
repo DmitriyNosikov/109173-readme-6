@@ -20,7 +20,7 @@ export class AxiosExceptionFilter implements ExceptionFilter {
     const responseData: AsiosResponseData | undefined = error.response?.data;
     let message = error.response?.statusText || INTERNAL_SERVER_ERROR_MESSAGE;
 
-    message = responseData.message ?? message;
+    message = responseData?.message ? responseData.message : message;
 
     response
       .status(status)

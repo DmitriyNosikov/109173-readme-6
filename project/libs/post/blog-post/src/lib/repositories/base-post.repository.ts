@@ -116,6 +116,18 @@ export class BasePostRepository extends BasePostgresRepository<BasePostEntity, B
     }
   }
 
+  public async findAuthorRepost(postId: string, authorId: string) {
+    const repost = await this.dbClient.post.findFirst({
+      where: {
+        isRepost: true,
+        authorId,
+        originPostId: postId,
+      }
+    });
+
+    return repost;
+  }
+
   public async getUserPostsCount(authorId: string) {
     const postsCount = await this.dbClient.post.count({
       where: {
