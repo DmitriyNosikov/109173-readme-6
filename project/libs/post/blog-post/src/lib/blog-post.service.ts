@@ -92,8 +92,9 @@ export class BlogPostService {
       originPostId: post.id,
       isRepost: true,
 
-      createdAt: new Date(),
-      updatedAt: new Date(),
+      publishedAt: new Date(),
+      createdAt: undefined,
+      updatedAt: undefined,
       extraFields: undefined,
       postToExtraFields: undefined
     });

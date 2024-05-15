@@ -1,6 +1,6 @@
-import { Body, Controller, Delete, Get, HttpStatus, Inject, Param, Patch, Post, Query, UseFilters, UseGuards, UseInterceptors } from '@nestjs/common';
+import { Body, Controller, Delete, Get, HttpCode, HttpStatus, Inject, Param, Patch, Post, Query, UseFilters, UseGuards, UseInterceptors } from '@nestjs/common';
 import { HttpService } from '@nestjs/axios';
-import { ApiBody, ApiOperation, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { ApiBody, ApiOperation, ApiParam, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
 
 import { AxiosExceptionFilter } from '../filters/axios-exception.filter';
 
@@ -10,7 +10,7 @@ import { CheckAuthGuard } from '../guards/check-auth.guard';
 import { InjectUserIdInterceptor } from '@project/interceprots';
 
 import { BlogPostMessage } from '@project/blog-post';
-import { SortDirection, SortType } from '@project/shared/core';
+import { SortDirection, SortType, TokenPayloadInterface } from '@project/shared/core';
 import { BasePostWithPaginationRDO } from 'libs/post/blog-post/src/lib/rdo/base-post-with-pagination.rdo';
 import { GetPostsListQuery } from 'libs/post/blog-post/src/lib/types/queries/get-posts-list.query';
 import { ServicesURLs } from '../types/services-urls';
@@ -18,6 +18,7 @@ import { SearchPostsQuery } from 'libs/post/blog-post/src/lib/types/queries/sear
 import { BasePostWithExtraFieldsRDO } from 'libs/post/blog-post/src/lib/rdo/base-post-with-extra-fields';
 import { CreateBasePostDTO } from 'libs/post/blog-post/src/lib/dto/create-base-post.dto';
 import { CreateRepostDTO } from 'libs/post/blog-post/src/lib/dto/create-repost.dto';
+import { UpdateBasePostDTO } from 'libs/post/blog-post/src/lib/dto/update-base-post.dto';
 
 
 @ApiTags('Api-gateway: posts')
@@ -155,6 +156,30 @@ export class PostsController {
     return data;
   }
 
+  @Get(':postId')
+  @ApiOperation({ summary: BlogPostMessage.DESCRIPTION.SHOW })
+  @ApiResponse({
+    status: HttpStatus.OK,
+    description: BlogPostMessage.SUCCESS.FOUND,
+    type: BasePostWithExtraFieldsRDO
+  })
+  @ApiResponse({
+    status: HttpStatus.NOT_FOUND,
+    description: BlogPostMessage.ERROR.NOT_FOUND
+  })
+  @ApiParam({
+    name: "postId",
+    example: 'b0103f3e-a6ac-4719-94bc-60c8294c08c6',
+    description: BlogPostMessage.DESCRIPTION.POST_ID,
+    required: true
+  })
+  public async getDetail(@Param('postId') postId: string) {
+    const serviceUrl = `${this.servicesURLs.posts}/${postId}`;
+    const { data } = await this.httpService.axiosRef.get(serviceUrl);
+
+    return data;
+  }
+
   // Поиск по заголовку (ТЗ п.8)
   @Get('search')
   @ApiOperation({ summary: BlogPostMessage.DESCRIPTION.SEARCH })
@@ -237,18 +262,66 @@ export class PostsController {
     return data;
   }
 
-  @Patch('update')
+  @Patch(':postId')
   @UseGuards(CheckAuthGuard)
   @UseInterceptors(InjectUserIdInterceptor)
-  public async update() {
+  @ApiOperation({ summary: BlogPostMessage.DESCRIPTION.UPDATE })
+  @ApiResponse({
+    status: HttpStatus.CREATED,
+    description: BlogPostMessage.SUCCESS.UPDATED,
+    type: BasePostWithExtraFieldsRDO
+  })
+  @ApiResponse({
+    status: HttpStatus.NOT_FOUND,
+    description: BlogPostMessage.ERROR.NOT_FOUND
+  })
+  @ApiParam({
+    name: "postId",
+    example: 'b0103f3e-a6ac-4719-94bc-60c8294c08c6',
+    description: BlogPostMessage.DESCRIPTION.POST_ID,
+    required: true
+  })
+  @ApiBody({
+    type: UpdateBasePostDTO
+  })
+  public async update(
+    @Param('postId') postId: string,
+    @Body() updatedFields: UpdateBasePostDTO & TokenPayloadInterface
+  ) {
+    const serviceUrl = `${this.servicesURLs.posts}/${postId}/`;
+    const { data } = await this.httpService.axiosRef.patch(serviceUrl, updatedFields);
 
+    return data;
   }
 
-  @Delete('delete')
+  @Delete(':postId')
   @UseGuards(CheckAuthGuard)
   @UseInterceptors(InjectUserIdInterceptor)
-  public async delete() {
+  @ApiOperation({ summary: BlogPostMessage.DESCRIPTION.DELETE })
+  @ApiParam({
+    name: "postId",
+    example: 'b0103f3e-a6ac-4719-94bc-60c8294c08c6',
+    description: BlogPostMessage.DESCRIPTION.POST_ID,
+    required: true
+  })
+  @ApiResponse({
+    status: HttpStatus.NO_CONTENT,
+    description: BlogPostMessage.SUCCESS.DELETED
+  })
+  @ApiResponse({
+    status: HttpStatus.NOT_FOUND,
+    description: BlogPostMessage.ERROR.NOT_FOUND
+  })
+  @HttpCode(HttpStatus.NO_CONTENT)
+  public async delete(
+    @Param('postId') postId: string,
+    @Body('userId') userId: string
+  ) {
+    const serviceUrl = `${this.servicesURLs.posts}/${postId}/`;
+    const { data } = await this.httpService.axiosRef.delete(serviceUrl, { data: { userId } });
+    console.log('SERVICE URL: ', serviceUrl)
 
+    return data;
   }
 
   // Likes

@@ -359,7 +359,10 @@ export class BlogPostController {
   @ApiBody({
     type: UpdateBasePostDTO
   })
-  public async update(@Param('postId') postId: string, @Body() updatedFields: UpdateBasePostDTO & TokenPayloadInterface) {
+  public async update(
+    @Param('postId') postId: string,
+    @Body() updatedFields: UpdateBasePostDTO & TokenPayloadInterface
+  ) {
     const userId = updatedFields.userId;
     const filteredUpdatedFields = fillDTO(UpdateBasePostDTO, updatedFields);
     const updatedPost = this.blogPostService.update(postId, userId, filteredUpdatedFields);
@@ -385,7 +388,10 @@ export class BlogPostController {
     description: BlogPostMessage.ERROR.NOT_FOUND
   })
   @HttpCode(HttpStatus.NO_CONTENT)
-  public async delete(@Param('postId') postId: string, @Body('userId') userId: string): Promise<void> {
+  public async delete(
+    @Param('postId') postId: string,
+    @Body('userId') userId: string
+  ): Promise<void> {
     await this.blogPostService.delete(postId, userId);
   }
 

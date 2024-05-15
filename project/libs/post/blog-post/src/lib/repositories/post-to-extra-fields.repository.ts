@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { BasePostgresRepository } from '@project/shared/data-access';
 import { PostToExtraFieldsEntity } from '../entities/post-to-extra-fields.entity';
 import { PostToExtraFieldsInterface, PostTypeEnum } from '@project/shared/core';
@@ -40,6 +40,11 @@ export class PostToExtraFieldsRepository extends BasePostgresRepository<PostToEx
     });
     const extraFieldsRepository = await this.blogPostRepositoryDeterminant.getRepository(postType)
     const document = await extraFieldsRepository.findById(postToExtraFields.extraFieldsId);
+
+    if(!document) {
+      throw new NotFoundException(`Can't found extra-fields for '${postType}' post ${postId}`);
+    }
+
     const extraFields = extraFieldsRepository.createEntityFromDocument(document)
 
     return extraFields;
