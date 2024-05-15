@@ -333,14 +333,6 @@ export class PostsController {
     return data;
   }
 
-  // Likes
-  @Post('toggle-like')
-  @UseGuards(CheckAuthGuard)
-  @UseInterceptors(InjectUserIdInterceptor)
-  public async toggleLike() {
-
-  }
-
   // Comments
   @Post(':postId/comments')
   @UseGuards(CheckAuthGuard)
@@ -449,4 +441,10 @@ export class PostsController {
 
     return data;
   }
+
+  // TODO: Likes
+  // @Post('toggle-like')
+  // @UseGuards(CheckAuthGuard)
+  // @UseInterceptors(InjectUserIdInterceptor)
+  // public async toggleLike() {}
 }
