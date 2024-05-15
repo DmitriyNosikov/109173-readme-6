@@ -1,6 +1,6 @@
 import { BadRequestException, Inject, Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common';
 import { BCryptHasher } from '@project/shared/hasher';
-import { omitUndefined } from '@project/shared/helpers';
+import { omitUndefined, validateMongoID } from '@project/shared/helpers';
 
 import { BlogUserRepository } from './blog-user.repository';
 import { BlogUserMessage } from './blog-user.constant';
@@ -22,6 +22,8 @@ export class BlogUserService {
   ) {}
 
   public async getUserDetail(userId: string): Promise<BlogUserEntityWithSubscribers | null> {
+    await validateMongoID(userId);
+
     const user = await this.blogUserRepository.findById(userId);
 
     if(!user) {
@@ -37,6 +39,8 @@ export class BlogUserService {
   }
 
   public async updateUser(userId: string, updatedFields: UpdateUserDTO): Promise<BlogUserEntity | null> {
+    await validateMongoID(userId);
+
     const isUserExists = await this.blogUserRepository.exists(userId);
 
     if(!isUserExists) {
@@ -55,6 +59,8 @@ export class BlogUserService {
   }
 
   public async changePassword(userId: string, password: string, newPassword: string): Promise<BlogUserEntity>{
+    await validateMongoID(userId);
+
     const user = await this.blogUserRepository.findById(userId);
 
     if(!user) {
@@ -74,6 +80,8 @@ export class BlogUserService {
   }
 
   public async deleteUser(userId: string): Promise<void> {
+    await validateMongoID(userId);
+
     const isUserExists = await this.blogUserRepository.exists(userId);
 
     if(!isUserExists) {
@@ -84,6 +92,8 @@ export class BlogUserService {
   }
 
   public async getUserSubscribers(userId: string): Promise<BlogUserEntity[] | null> {
+    await validateMongoID(userId);
+
     const isUserExists = await this.blogUserRepository.exists(userId);
 
     if(!isUserExists) {
@@ -111,6 +121,10 @@ export class BlogUserService {
     if(userId === targetUserId) {
       throw new BadRequestException(BlogUserMessage.ERROR.SAME_SUBSCRIPTIONS);
     }
+
+    await validateMongoID(userId);
+
+    await validateMongoID(targetUserId);
 
     const isCurentUserExists = await this.blogUserRepository.exists(userId);
     const isTargetUserExists = await this.blogUserRepository.exists(targetUserId);
