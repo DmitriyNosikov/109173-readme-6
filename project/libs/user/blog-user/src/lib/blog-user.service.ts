@@ -1,11 +1,17 @@
 import { BadRequestException, Inject, Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common';
+import { BCryptHasher } from '@project/shared/hasher';
+import { omitUndefined } from '@project/shared/helpers';
+
 import { BlogUserRepository } from './blog-user.repository';
 import { BlogUserMessage } from './blog-user.constant';
 import { BlogUserEntity } from './blog-user.entity';
-import { BCryptHasher } from '@project/shared/hasher';
-import { omitUndefined } from '@project/shared/helpers';
+
 import { UpdateUserDTO } from './dto/update-user.dto';
 
+type BlogUserEntityWithSubscribers = {
+  user: BlogUserEntity,
+  subscribersCount: number;
+};
 @Injectable()
 export class BlogUserService {
   constructor(
@@ -15,14 +21,19 @@ export class BlogUserService {
     private readonly hasher: BCryptHasher
   ) {}
 
-  public async getUser(userId: string): Promise<BlogUserEntity | null> {
+  public async getUserDetail(userId: string): Promise<BlogUserEntityWithSubscribers | null> {
     const user = await this.blogUserRepository.findById(userId);
 
     if(!user) {
       throw new NotFoundException(BlogUserMessage.ERROR.NOT_FOUND);
     }
 
-    return user;
+    const subscribers = await this.getUserSubscribers(user.id);
+
+    return {
+      user,
+      subscribersCount: subscribers.length
+    };
   }
 
   public async updateUser(userId: string, updatedFields: UpdateUserDTO): Promise<BlogUserEntity | null> {

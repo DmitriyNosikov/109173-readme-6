@@ -10,6 +10,7 @@ import { BlogUserService } from './blog-user.service';
 import { ChangePasswordDTO } from './dto/change-password.dto';
 import { UpdateUserDTO } from './dto/update-user.dto';
 import { UserRDO } from './rdo/user.rdo';
+import { UserWithSubscribersRDO } from './rdo/user-with.subscribers.rdo';
 
 @ApiTags('users')
 @Controller('users')
@@ -18,7 +19,7 @@ export class BlogUserController {
     private readonly blogUserService: BlogUserService
   ){}
 
-  @Get(':userId')
+  @Post('/')
   @ApiOperation({ summary: BlogUserMessage.DESCRIPTION.USER_DETAIL })
   @ApiResponse({
     type: UserRDO,
@@ -29,10 +30,15 @@ export class BlogUserController {
     status: HttpStatus.NOT_FOUND,
     description: BlogUserMessage.ERROR.NOT_FOUND
   })
-  public async show(@Param('userId', MongoIdValidationPipe) userId: string): Promise<UserRDO | UserRDO[]> {
-    const user = await this.blogUserService.getUser(userId);
+  public async show(@Body('userId') userId: string): Promise<UserWithSubscribersRDO> {
+    console.log('USER ID: ', userId);
+    const userDetail = await this.blogUserService.getUserDetail(userId);
+    const userWithSubscribersCount = {
+      ...userDetail.user.toPOJO(),
+      subscribersCount: userDetail.subscribersCount
+    }
 
-    return fillDTO(UserRDO, user.toPOJO());
+    return fillDTO(UserWithSubscribersRDO, userWithSubscribersCount);
   }
 
   @Patch(':userId')

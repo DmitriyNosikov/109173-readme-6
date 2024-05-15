@@ -1,14 +1,17 @@
 import { HttpService } from '@nestjs/axios';
 import { ConfigType } from '@nestjs/config';
-import { Body, Controller, HttpStatus, Inject, Post, Req, UseFilters } from '@nestjs/common';
+import { Body, Controller, Get, HttpStatus, Inject, Post, Req, UseFilters, UseGuards, UseInterceptors } from '@nestjs/common';
 import { ApiResponse, ApiTags } from '@nestjs/swagger';
 
+import { CheckAuthGuard } from '../guards/check-auth.guard';
+import { InjectUserIdInterceptor } from '@project/interceprots'
 import { apiGatewayConfig } from '@project/api-gateway-config';
 
 import { AxiosExceptionFilter } from '../filters/axios-exception.filter';
 
 import { CreateUserDTO, LoginUserDTO, UserRDO } from '@project/user/blog-user';
 import { AuthenticationMessage } from '@project/user/authentication'
+
 
 
 @ApiTags('Api-gateway: Users')
@@ -77,6 +80,32 @@ export class UsersController {
       headers: {
         'Authorization': req.headers['authorization']
       }
+    });
+
+    return data;
+  }
+
+  @Post('detail')
+  @UseGuards(CheckAuthGuard)
+  @UseInterceptors(InjectUserIdInterceptor)
+  @ApiResponse({
+    type: UserRDO,
+    status: HttpStatus.OK,
+    description: AuthenticationMessage.SUCCESS.NEW_TOKENS
+  })
+  @ApiResponse({
+    type: UserRDO,
+    status: HttpStatus.INTERNAL_SERVER_ERROR,
+    description: AuthenticationMessage.SUCCESS.CANT_CREATE_TOKENS
+  })
+  public async gerUserDetail(@Body() dto: string, @Req() req: Request) {
+    // TODO: Нужно получение количества публикаций юзера
+    const serviceUrl = `${this.config.userServiceURL}/`;
+
+    const { data } = await this.httpService.axiosRef.post(serviceUrl, dto, {
+      headers: {
+        'Authorization': req.headers['authorization']
+      },
     });
 
     return data;
