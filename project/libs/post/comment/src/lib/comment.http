@@ -1,6 +1,6 @@
 @host = 127.0.0.1
 @port = 9000
-@baseUrl = http://{{host}}:{{port}}/api/{{postId}}/comments/
+@baseUrl = http://{{host}}:{{port}}/api/posts/{{postId}}/comments
 #Test Request to JSON Placeholder
 GET https://jsonplaceholder.typicode.com/todos/1 HTTP/1.1
 Content-Type: application/json
@@ -9,8 +9,13 @@ Content-Type: application/json
 @postId = abdb5908-7ac4-467e-ab2a-76d11a5feeaf
 @commentId = b3c1fd04-d867-4b96-9cbe-7cc9b7783a90
 
+# Get paginated comments
+GET {{baseUrl}}/?limit=3 HTTP/1.1
+Content-Type: application/json
+###
+
 # Create comment for post
-POST {{baseUrl}} HTTP/1.1
+POST {{baseUrl}}/ HTTP/1.1
 Content-Type: application/json
 
 {
@@ -20,7 +25,7 @@ Content-Type: application/json
 ###
 
 # Update comment
-PATCH  {{baseUrl}}/posts/{{commentId}} HTTP/1.1
+PATCH  {{baseUrl}}/{{commentId}} HTTP/1.1
 Content-Type: application/json
 
 {
@@ -30,6 +35,6 @@ Content-Type: application/json
 ###
 
 # Delete comment
-DELETE  {{baseUrl}}/posts/{{commentId}} HTTP/1.1
+DELETE  {{baseUrl}}/{{commentId}} HTTP/1.1
 Content-Type: application/json
 ###

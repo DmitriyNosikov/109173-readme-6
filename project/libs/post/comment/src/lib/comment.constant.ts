@@ -1,6 +1,8 @@
 import { MessagesType } from '@project/shared/core';
 
 export const CommentValidation = {
+  MAX_COMMENTS_PER_PAGE: 50,
+  DEFAULT_PAGE_NUMBER: 1,
   TEXT: {
     MIN_LENGTH: 10,
     MAX_LENGTH: 300
@@ -27,5 +29,12 @@ export const CommentMessage: MessagesType = {
     DELETE: 'Delete exists comment by id',
     POST_ID: "Post ID",
     COMMENT_ID: "Comment ID",
+
+    // PAGINATION
+    LIMIT: '[Pagination] Limit posts count for 1 page',
+    DEFAULT_LIMIT: `Default limit: ${CommentValidation.MAX_COMMENTS_PER_PAGE}`,
+
+    PAGE: `[Pagination] Current page in pagination`,
+    DEFAULT_PAGE: `Default page number: ${CommentValidation.DEFAULT_PAGE_NUMBER}`,
   }
 } as const;
