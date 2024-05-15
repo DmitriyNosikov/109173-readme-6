@@ -1,7 +1,7 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { BadRequestException } from '@nestjs/common';
 
-import { fillDTO, getDate, omitUndefined } from '@project/shared/helpers';
+import { fillDTO, omitUndefined } from '@project/shared/helpers';
 import { PostNotifyService } from '@project/post-notify';
 
 import { CreateBasePostDTO } from './dto/create-base-post.dto';
@@ -140,11 +140,15 @@ export class BlogPostService {
     return userPostsCount;
   }
 
-  public async update(postId: string, updatedFields: Partial<UpdateBasePostDTO>) {
-    const basePost: BasePostEntity = await this.basePostRepository.findById(postId);
+  public async update(postId: string, userId: string, updatedFields: UpdateBasePostDTO) {
+    const basePost = await this.getPostAndCheckPermissions(postId, userId);
 
     if(!basePost) {
-      throw new NotFoundException(`Post with ID ${postId} not found`);
+      throw new NotFoundException(`Post with ID ${postId} not found.`);
+    }
+
+    if(basePost.authorId !== userId) {
+      throw new BadRequestException(`Only author can update post with id "${postId}". User "${userId}" can't.`);
     }
 
     // Пока подразумеваем, что тип поста не меняется
@@ -174,12 +178,8 @@ export class BlogPostService {
     return updatedPost;
   }
 
-  public async delete(postId: string): Promise<void> {
-    const post = await this.findById(postId);
-
-    if(!post) {
-      throw new NotFoundException(`Post with ID ${postId} not found`);
-    }
+  public async delete(postId: string, userId: string): Promise<void> {
+    const post = await this.getPostAndCheckPermissions(postId, userId);
 
     // Удаляем ExtraFields для Post
     await this.postToExtraFieldsRepository.deleteExtraFieldsByPost(post.id, post.type)
@@ -237,6 +237,24 @@ export class BlogPostService {
   }
 
   ////////////////////// SERVICE METHODS //////////////////////
+  private async getPostAndCheckPermissions(postId: string, userId: string): Promise<BasePostEntity | null> {
+    if(!userId) {
+      throw new BadRequestException(`User id hasn't been passed. To update/delete post '${postId}' you have to pass user id`);
+    }
+
+    const post = await this.basePostRepository.findById(postId);
+
+    if(!post) {
+      throw new NotFoundException(`Post with ID ${postId} not found.`);
+    }
+
+    if(post.authorId !== userId) {
+      throw new BadRequestException(`Only author can update/delete post with id '${postId}'. User '${userId}' can't.`);
+    }
+
+    return post;
+  }
+
   private async getPostWithExtraFields(postId: string) {
     const post = await this.basePostRepository.findById(postId);
 

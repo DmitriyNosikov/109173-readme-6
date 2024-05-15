@@ -10,9 +10,14 @@ import { BlogPostMessage } from './blog-post.constant';
 import { BlogPostQuery } from './types/queries/blog-post.query';
 import { BasePostWithPaginationRDO } from './rdo/base-post-with-pagination.rdo';
 import { BasePostWithExtraFieldsRDO } from './rdo/base-post-with-extra-fields';
-import { SortDirection, SortType } from '@project/shared/core';
+import { SortDirection, SortType, TokenPayloadInterface } from '@project/shared/core';
 import { GetPostsListQuery } from './types/queries/get-posts-list.query';
 import { SearchPostsQuery } from './types/queries/search-posts.query';
+
+// TODO: Везде, где используются MongoID - было бы
+// неплохо добавить проверку на валидность, вне
+// зависимости от того, где передан параметр, в теле
+// или в параметрах запроса
 
 @ApiTags('posts')
 @Controller('posts')
@@ -336,8 +341,10 @@ export class BlogPostController {
   @ApiBody({
     type: UpdateBasePostDTO
   })
-  public async update(@Param('postId') postId: string, @Body() updatedFields: UpdateBasePostDTO) {
-    const updatedPost = this.blogPostService.update(postId, updatedFields);
+  public async update(@Param('postId') postId: string, @Body() updatedFields: UpdateBasePostDTO & TokenPayloadInterface) {
+    const userId = updatedFields.userId;
+    const filteredUpdatedFields = fillDTO(UpdateBasePostDTO, updatedFields);
+    const updatedPost = this.blogPostService.update(postId, userId, filteredUpdatedFields);
 
     return fillDTO(BasePostWithExtraFieldsRDO, updatedPost);
   }
@@ -360,8 +367,8 @@ export class BlogPostController {
     description: BlogPostMessage.ERROR.NOT_FOUND
   })
   @HttpCode(HttpStatus.NO_CONTENT)
-  public async delete(@Param('postId') postId: string): Promise<void> {
-    await this.blogPostService.delete(postId);
+  public async delete(@Param('postId') postId: string, @Body('userId') userId: string): Promise<void> {
+    await this.blogPostService.delete(postId, userId);
   }
 
   @Post('count')

@@ -11,6 +11,7 @@ import { AxiosExceptionFilter } from '../filters/axios-exception.filter';
 
 import { ChangePasswordDTO, CreateUserDTO, LoginUserDTO, UserRDO } from '@project/user/blog-user';
 import { AuthenticationMessage } from '@project/user/authentication'
+import { TokenPayloadInterface } from '@project/shared/core';
 
 type ServicesURLs = {
   auth: string,
@@ -84,7 +85,7 @@ export class UsersController {
     status: HttpStatus.UNAUTHORIZED,
     description: AuthenticationMessage.ERROR.INCORRECT_CREDENTIALS
   })
-  public async changePassword(@Body() dto: ChangePasswordDTO & { userId }) {
+  public async changePassword(@Body() dto: ChangePasswordDTO & TokenPayloadInterface) {
     const serviceUrl = `${this.servicesURLs.users}/${dto.userId}/password`;
 
     const { data } = await this.httpService.axiosRef.patch(`${serviceUrl}`, dto);

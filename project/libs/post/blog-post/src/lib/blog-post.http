@@ -8,7 +8,7 @@
 @searchType=global-search
 @userId = 662253e794534cbee6562f7d
 @userToken = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NjM4ZDIzZDgyNGQ3ZTdkNzQ3NzNjYmIiLCJlbWFpbCI6Imlyb24tbWFuM0BzdGFya2luZHVzdHJpZXMuaXQiLCJmaXJzdG5hbWUiOiJUb255IiwibGFzdG5hbWUiOiJTdGFyazEyMyIsImlhdCI6MTcxNTAwNTE4MCwiZXhwIjoxNzE1MDA1NDgwfQ.ICvT_awGBKungmnqBCp3_1is0qwGgDJMW61IG7SmksM
-@postId = 1441fe74-464f-495a-a0a6-b3c5ccc4d881
+@postId = b6e3ce4e-f122-4fb5-8559-1aee80f514b5
 
 ############# GETTING POSTS LIST (Technical task, paragraph 3 ) ############
 # LIST
@@ -76,14 +76,12 @@ Content-Type: application/json
 ###
 
 ################################# FINDING #################################
-
 # Find post by id
 GET {{baseUrl}}/{{postId}} HTTP/1.1
 Content-Type: application/json
 ###
 
 ################################# CREATE #################################
-
 # Create text-post
 POST {{baseUrl}} HTTP/1.1
 Content-Type: application/json
@@ -94,7 +92,7 @@ Authorization: Bearer {{userToken}}
   "tags": ["test", "test", "news", "other"],
   "isPublished": true,
   "isRepost": false,
-  "authorId": "66224f68a3f9a165a1ab5fbd",
+  "authorId": "66445cd36b3b4b923441d7ef",
   "likes": ["sssss"],
   "extraFields": {
     "announce": "Some announce text",
@@ -134,7 +132,8 @@ PATCH  {{baseUrl}}/{{postId}} HTTP/1.1
 Content-Type: application/json
 
 {
-  "isPublished": false
+  "isPublished": true,
+  "userId": "66445cd36b3b4b923441d7ef"
 }
 ###
 
@@ -173,10 +172,13 @@ Content-Type: application/json
 
 
 ################################# DELETING #################################
-
 # Delete post by id
 DELETE  {{baseUrl}}/{{postId}} HTTP/1.1
 Content-Type: application/json
+
+{
+  "userId": "66445cd36b3b4b923441d7ef"
+}
 ###
 
 ################################# NOTIFYING #################################

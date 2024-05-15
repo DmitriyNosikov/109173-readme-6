@@ -2,6 +2,7 @@ export {
   // Functions
   fillDTO,
   omitUndefined,
+  excludeKeys,
   getDate,
   parseTime,
   getMongoConnectionString,

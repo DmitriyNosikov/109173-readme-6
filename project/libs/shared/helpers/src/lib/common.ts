@@ -32,6 +32,17 @@ export function omitUndefined(value: Record<string, unknown>) {
   return Object.fromEntries(filteredEntries);
 }
 
+// Exclude keys from object
+export function excludeKeys<T, Key extends keyof T>(
+  object: T,
+  keys: Key[]
+): Omit<T, Key> {
+  const excludedKeysObject = Object.fromEntries(
+    Object.entries(object).filter(([key]) => !keys.includes(key as Key))
+  );
+  return excludedKeysObject as Omit<T, Key>;
+}
+
 export function getDate(): string {
   return new Date().toISOString();
 }

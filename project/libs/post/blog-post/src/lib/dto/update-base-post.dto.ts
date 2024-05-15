@@ -1,5 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger'
 import { ArrayMaxSize, IsArray, IsBoolean, IsMongoId, IsNotEmpty, IsOptional, IsString, MaxLength, MinLength } from 'class-validator';
+import { Expose } from 'class-transformer';
 
 import { BasePostInterface, UserInterface } from '@project/shared/core';
 import { CreateBasePostDTO, ExtraFieldsDTO } from './create-base-post.dto';
@@ -14,6 +15,7 @@ import { CreatePhotoPostDTO } from './create-photo-post.dto';
 import { CreateVideoPostDTO } from './create-video-post.dto';
 
 export class UpdateBasePostDTO {
+  @Expose()
   @ApiProperty({
     type: [String],
     description: 'Post tags (names)',
@@ -31,6 +33,7 @@ export class UpdateBasePostDTO {
   public tags?: string[] | null;
 
   // TODO: Разобраться с этими полями
+  // @Expose()
   // @ApiProperty({
   //   description: 'Post comments id`s (can be undefined)',
   //   type: [CreateCommentRDO]
@@ -40,6 +43,7 @@ export class UpdateBasePostDTO {
   // @IsOptional()
   // public comments?: CommentInterface[] | null;
 
+  // @Expose()
   // @ApiProperty({
   //   type: [String],
   //   description: 'Post likes id`s (can be undefined)',
@@ -50,6 +54,7 @@ export class UpdateBasePostDTO {
   // @IsOptional()
   // public likes?: LikeInterface[] | null;
 
+  @Expose()
   @ApiProperty({
     description: 'Is post published flag',
     example: 'true',
@@ -60,6 +65,7 @@ export class UpdateBasePostDTO {
   @IsOptional()
   public isPublished?: boolean;
 
+  @Expose()
   @ApiProperty({
     description: 'Is repost flag',
     example: 'false',
@@ -70,6 +76,7 @@ export class UpdateBasePostDTO {
   @IsOptional()
   public isRepost?: boolean;
 
+  @Expose()
   @ApiProperty({
     description: 'Post author MongoDB id',
     example: '66224f68a3f9a165a1ab5fbd',
@@ -80,6 +87,7 @@ export class UpdateBasePostDTO {
   @IsOptional()
   public authorId?: UserInterface['id'];
 
+  @Expose()
   @ApiProperty({
     description: 'Original post author MongoDB id (when reposted)',
     example: '66224f68a3f9a165a1ab5fbd',
@@ -89,7 +97,7 @@ export class UpdateBasePostDTO {
   @IsOptional()
   public originAuthorId?: UserInterface['id'] | null;
 
-
+  @Expose()
   @ApiProperty({
     description: 'Original post id (when reposted)',
     example: '6dd03634-9785-49b8-a403-9ab61bb5656e',
@@ -98,6 +106,7 @@ export class UpdateBasePostDTO {
   @IsOptional()
   public originPostId?: BasePostInterface['id'] | null;
 
+  @Expose()
   @ApiProperty({
     description: 'Extra-fields, specific for each post type (text, link, quote etc.)',
     enum: [CreateBasePostDTO, CreateLinkPostDTO, CreateTextPostDTO, CreateQuotePostDTO, CreatePhotoPostDTO, CreateVideoPostDTO],
@@ -108,7 +117,8 @@ export class UpdateBasePostDTO {
   public extraFields?: ExtraFieldsDTO;
 
   // TODO: Разобраться
-    // ПОКА ЗАПРЕЩАЕМ МЕНЯТЬ ТИП ПОСТА
+  // ПОКА ЗАПРЕЩАЕМ МЕНЯТЬ ТИП ПОСТА
+  // @Expose()
   // @ApiProperty({
   //   description: 'Post type',
   //   enum: PostType,
