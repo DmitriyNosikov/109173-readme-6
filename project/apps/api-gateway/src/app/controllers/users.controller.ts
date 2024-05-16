@@ -124,13 +124,13 @@ export class UsersController {
     status: HttpStatus.INTERNAL_SERVER_ERROR,
     description: AuthenticationMessage.SUCCESS.CANT_CREATE_TOKENS
   })
-  public async gerUserDetail(@Body() dto: string) {
+  public async gerUserDetail(@Body('userId') userId: string) {
     const userServiceUrl = `${this.servicesURLs.users}/`;
     const postServiceUrl = `${this.servicesURLs.posts}/count`;
 
-    const { data: userData } = await this.httpService.axiosRef.post(userServiceUrl, dto);
+    const { data: userData } = await this.httpService.axiosRef.post(userServiceUrl, { userId });
 
-    const { data: userPostsCount } = await this.httpService.axiosRef.post(postServiceUrl, dto);
+    const { data: userPostsCount } = await this.httpService.axiosRef.post(postServiceUrl, { userId });
 
     return { ...userData, userPostsCount: userPostsCount };
   }
