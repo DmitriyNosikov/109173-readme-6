@@ -196,6 +196,16 @@ export class PostsController {
   @Get('feed')
   @UseGuards(CheckAuthGuard)
   @UseInterceptors(InjectUserIdInterceptor)
+  @ApiOperation({ summary: 'Get user posts feed' })
+  @ApiResponse({
+    status: HttpStatus.OK,
+    description: BlogPostMessage.SUCCESS.FOUND,
+    type: BasePostWithPaginationRDO
+  })
+  @ApiResponse({
+    status: HttpStatus.NOT_FOUND,
+    description: BlogPostMessage.ERROR.NOT_FOUND
+  })
   public async getUserFeed(
     @Body('userId') userId: string,
     @Req() req: Request
